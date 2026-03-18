@@ -1,4 +1,5 @@
 import json
+import os
 from pathlib import Path
 from typing import Annotated
 
@@ -102,12 +103,25 @@ def seed_demo_data():
 
 @app.on_event("startup")
 def on_startup():
-    init_db()
-    # Ejecutar seed en segundo plano para no bloquear el arranque (importante en PythonAnywhere)
-    import threading
-    def _run_seed():
-        seed_demo_data()
-    threading.Thread(target=_run_seed, daemon=True).start()
+    """
+    En hosting tipo PythonAnywhere (uWSGI con múltiples workers), ejecutar migraciones/seed
+    automáticamente puede provocar locks en SQLite y timeouts ("harakiri").
+
+    Por defecto NO hacemos init/seed en startup. Para habilitarlo explícitamente:
+    - AUTO_INIT_DB=1
+    - AUTO_SEED_DEMO=1
+    """
+    if os.getenv("AUTO_INIT_DB") == "1":
+        init_db()
+
+    if os.getenv("AUTO_SEED_DEMO") == "1":
+        # Ejecutar seed en segundo plano para no bloquear el arranque
+        import threading
+
+        def _run_seed():
+            seed_demo_data()
+
+        threading.Thread(target=_run_seed, daemon=True).start()
 
 
 app.include_router(stories_router.router)
