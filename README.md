@@ -10,7 +10,7 @@ Aplicación web infantil para leer y escuchar cuentos interactivos con modo kara
 ## Instalación
 
 ```bash
-cd cuentame_un_cuento
+cd cuentameuncuento
 pip install -r requirements.txt
 ```
 
@@ -31,4 +31,3 @@ Luego:
 - En la PC: `http://localhost:8000/`
 - En el celular: `http://192.168.100.76:8000/` (usa la IP de tu PC en la red; si cambia, revisa con `ipconfig` en Windows).
 - Panel admin: `/admin`
-
