@@ -103,7 +103,11 @@ def seed_demo_data():
 @app.on_event("startup")
 def on_startup():
     init_db()
-    seed_demo_data()
+    # Ejecutar seed en segundo plano para no bloquear el arranque (importante en PythonAnywhere)
+    import threading
+    def _run_seed():
+        seed_demo_data()
+    threading.Thread(target=_run_seed, daemon=True).start()
 
 
 app.include_router(stories_router.router)

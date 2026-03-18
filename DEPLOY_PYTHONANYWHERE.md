@@ -28,12 +28,18 @@ pip install -r requirements.txt
 
 Si `python3.10` no existe, prueba `python3.9` o el que ofrezca tu cuenta.
 
-## 4. Crear la base de datos y cargar cuentos (opcional)
+## 4. Crear la base de datos y cargar cuentos
+
+**Importante:** primero crea las tablas con `init_db()`; luego ya puedes cargar cuentos.
 
 ```bash
-# Sigue en la misma consola con el venv activado (source venv/bin/activate)
+# Con el venv activado (source venv/bin/activate)
 python -c "from backend.main import init_db; init_db()"
-# Si tienes cuentos.json y quieres cargarlos:
+# Si sale "No module named 'itsdangerous'", instala y repite:
+# pip install itsdangerous
+# python -c "from backend.main import init_db; init_db()"
+
+# Cargar cuentos desde cuentos.json e integrar imágenes:
 python scripts/cargar_cuentos_en_db.py
 python scripts/integrar_imagenes_escenas.py
 ```
@@ -64,10 +70,10 @@ if PROJECT_DIR not in sys.path:
     sys.path.insert(0, PROJECT_DIR)
 os.chdir(PROJECT_DIR)
 
-from mangum import Mangum
+from a2wsgi import ASGIMiddleware
 from backend.main import app
 
-application = Mangum(app)
+application = ASGIMiddleware(app)
 ```
 
 Guarda el archivo (Save).
@@ -117,6 +123,13 @@ Luego configura la Web app (Manual config, Python 3.10), virtualenv, WSGI y Stat
 
 ## Problemas frecuentes
 
+- **ModuleNotFoundError: No module named 'itsdangerous':** Instala la dependencia y vuelve a ejecutar init_db:
+  ```bash
+  pip install itsdangerous
+  python -c "from backend.main import init_db; init_db()"
+  ```
+- **no such table: stories:** La base de datos no se ha inicializado. Ejecuta primero `python -c "from backend.main import init_db; init_db()"` (tras tener itsdangerous instalado) y luego los scripts de carga.
+- **"Error Reloading web app" / sitio se queda cargando:** PythonAnywhere hace un "ping" tras el Reload con timeout de 20 segundos. Si la app tarda más en responder la primera vez, verás ese mensaje. Prueba a abrir la URL en el navegador: a veces la app sí está funcionando y solo la primera carga es lenta. Revisa el **Error log** y el **Server log** (en la pestaña Web) por 502/504 o mensajes "harakiri". La app está preparada para arrancar rápido (el seed de datos se ejecuta en segundo plano).
 - **502 Bad Gateway:** Revisa el **Error log** en la pestaña Web. Suele ser un fallo al importar (falta dependencia o ruta incorrecta en el WSGI).
 - **Static files no cargan:** Comprueba que las rutas en Static files usen tu usuario y que existan las carpetas `frontend/static`, `uploads`, `imagenes`.
-- **Base de datos vacía:** Ejecuta `python scripts/cargar_cuentos_en_db.py` y `python scripts/integrar_imagenes_escenas.py` desde la consola con el venv activado.
+- **Base de datos vacía:** Ejecuta `python -c "from backend.main import init_db; init_db()"`, después `python scripts/cargar_cuentos_en_db.py` y `python scripts/integrar_imagenes_escenas.py` desde la consola con el venv activado.

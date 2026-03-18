@@ -14,7 +14,7 @@ if PROJECT_DIR not in sys.path:
 
 os.chdir(PROJECT_DIR)
 
-from mangum import Mangum
+from a2wsgi import ASGIMiddleware
 from backend.main import app
 
-application = Mangum(app)
+application = ASGIMiddleware(app)
