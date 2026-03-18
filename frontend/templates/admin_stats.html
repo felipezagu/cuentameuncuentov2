@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="px-4 sm:px-8 py-8 max-w-5xl mx-auto space-y-6">
+  <div class="flex items-center justify-between gap-2">
+    <div>
+      <h1 class="text-xl sm:text-2xl font-extrabold text-purple-900">Estadísticas</h1>
+      <p class="text-xs sm:text-sm text-purple-900/70">
+        Visitas al sitio y lecturas de cuentos.
+      </p>
+    </div>
+    <a href="/admin/cuentos" class="text-xs sm:text-sm text-purple-700 hover:underline">← Volver al panel</a>
+  </div>
+
+  <div class="grid gap-4 sm:grid-cols-3">
+    <div class="bg-white/80 rounded-2xl p-4 shadow border border-white/70">
+      <p class="text-xs text-purple-900/70 mb-1">Visitas últimos días</p>
+      <p class="text-2xl font-extrabold text-purple-900">{{ total_visits }}</p>
+    </div>
+    <div class="bg-white/80 rounded-2xl p-4 shadow border border-white/70">
+      <p class="text-xs text-purple-900/70 mb-1">Lecturas de cuentos últimos días</p>
+      <p class="text-2xl font-extrabold text-purple-900">{{ total_reads }}</p>
+    </div>
+    <div class="bg-white/80 rounded-2xl p-4 shadow border border-white/70">
+      <p class="text-xs text-purple-900/70 mb-1">Días con datos</p>
+      <p class="text-2xl font-extrabold text-purple-900">{{ daily|length }}</p>
+    </div>
+  </div>
+
+  <div class="grid gap-4 lg:grid-cols-2">
+    <div class="bg-white/80 rounded-2xl p-4 shadow border border-white/70">
+      <h2 class="text-sm font-semibold text-purple-900 mb-2">Visitas por día</h2>
+      <div class="max-h-64 overflow-y-auto text-xs sm:text-sm">
+        <table class="w-full text-left">
+          <thead class="text-[11px] text-purple-900/60 border-b border-purple-100">
+            <tr>
+              <th class="py-1 pr-2">Fecha</th>
+              <th class="py-1 pr-2 text-right">Visitas</th>
+              <th class="py-1 pr-2 text-right">Lecturas</th>
+            </tr>
+          </thead>
+          <tbody>
+          {% for d in daily %}
+            <tr class="border-b border-purple-50">
+              <td class="py-1 pr-2">{{ d.date }}</td>
+              <td class="py-1 pr-2 text-right">{{ d.visits_total }}</td>
+              <td class="py-1 pr-2 text-right">{{ d.story_reads_total }}</td>
+            </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="bg-white/80 rounded-2xl p-4 shadow border border-white/70">
+      <h2 class="text-sm font-semibold text-purple-900 mb-2">Cuentos más leídos</h2>
+      <div class="max-h-64 overflow-y-auto text-xs sm:text-sm">
+        <table class="w-full text-left">
+          <thead class="text-[11px] text-purple-900/60 border-b border-purple-100">
+            <tr>
+              <th class="py-1 pr-2">Cuento</th>
+              <th class="py-1 pr-2 text-right">Lecturas</th>
+            </tr>
+          </thead>
+          <tbody>
+          {% for stat, story in top_stories %}
+            <tr class="border-b border-purple-50">
+              <td class="py-1 pr-2">{{ story.titulo }}</td>
+              <td class="py-1 pr-2 text-right">{{ stat.read_count }}</td>
+            </tr>
+          {% endfor %}
+          {% if not top_stories %}
+            <tr>
+              <td colspan="2" class="py-2 text-purple-900/60">Aún no hay lecturas registradas.</td>
+            </tr>
+          {% endif %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
+

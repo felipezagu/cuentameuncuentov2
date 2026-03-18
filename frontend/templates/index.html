@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-badge">🌟 ¡Bienvenido, pequeño lector! 🌟</div>
+    <button id="btn-random-story" class="btn-cta">
+      <span class="btn-cta-icon">▶</span>
+      ¡Cuéntame uno al azar!
+    </button>
+    <div class="deco-row" aria-hidden="true">
+      <span>🦁</span><span>🧚</span><span>🐉</span><span>🌙</span><span>⭐</span>
+    </div>
+  </div>
+</section>
+
+<section id="lista-cuentos" class="section-wrap">
+  <div id="filtro-categorias">
+    <button type="button" class="categoria-btn active" data-categoria="">🎉 Todos</button>
+  </div>
+
+  <div id="contenedor-por-categoria"></div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/js/main.js?v=2"></script>
+{% endblock %}
+
