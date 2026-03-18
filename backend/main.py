@@ -172,6 +172,9 @@ def _run_in_background(fn):
 
 @app.get("/", response_class=HTMLResponse)
 async def home(request: Request):
+    if os.getenv("DISABLE_STATS") == "1":
+        return templates.TemplateResponse("index.html", {"request": request})
+
     def _bump():
         db = SessionLocal()
         try:
@@ -186,6 +189,11 @@ async def home(request: Request):
 
 @app.get("/cuento/{story_id}", response_class=HTMLResponse)
 async def story_page(request: Request, story_id: int):
+    if os.getenv("DISABLE_STATS") == "1":
+        return templates.TemplateResponse(
+            "story.html", {"request": request, "story_id": story_id}
+        )
+
     def _bump():
         db = SessionLocal()
         try:

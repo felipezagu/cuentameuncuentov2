@@ -1,5 +1,14 @@
 async function fetchStories() {
-  const res = await fetch("/api/stories/");
+  const ctrl = new AbortController();
+  const t = setTimeout(() => ctrl.abort(), 7000);
+  let res;
+  try {
+    res = await fetch("/api/stories/", { signal: ctrl.signal });
+  } catch (e) {
+    return [];
+  } finally {
+    clearTimeout(t);
+  }
   if (!res.ok) return [];
   return await res.json();
 }

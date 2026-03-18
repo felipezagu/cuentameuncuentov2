@@ -3,6 +3,7 @@ from typing import Any, List
 
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
+from sqlalchemy.exc import OperationalError
 from sqlalchemy.orm import Session
 
 from ..database import get_db
@@ -42,8 +43,12 @@ class StoryDetailOut(StoryOut):
 
 @router.get("/", response_model=List[StoryOut])
 def list_stories(db: Session = Depends(get_db)):
-    stories = db.query(Story).order_by(Story.id).all()
-    return stories
+    try:
+        stories = db.query(Story).order_by(Story.id).all()
+        return stories
+    except OperationalError:
+        # Si SQLite está bloqueado, devolvemos rápido para que la UI no quede colgada.
+        return []
 
 
 @router.get("/{story_id}", response_model=StoryDetailOut)
