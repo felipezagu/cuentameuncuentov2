@@ -1,0 +1,14 @@
+services:
+  - type: web
+    name: cuentameuncuento
+    env: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn -k uvicorn.workers.UvicornWorker -w 2 -b 0.0.0.0:$PORT backend.main:app
+    envVars:
+      - key: AUTO_INIT_DB
+        value: "0"
+      - key: AUTO_SEED_DEMO
+        value: "0"
+      - key: DISABLE_STATS
+        value: "1"
