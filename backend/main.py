@@ -129,6 +129,7 @@ app.include_router(admin_router.router)
 
 
 from datetime import date
+import threading
 
 
 def _bump_daily_visits(db):
@@ -154,25 +155,46 @@ def _bump_story_read(db, story_id: int):
   sstat.read_count += 1
 
 
+def _run_in_background(fn):
+    """
+    Evita bloquear requests por locks de SQLite (PythonAnywhere/uWSGI multi-worker).
+    Si algo falla, lo ignoramos para que la página cargue igual.
+    """
+    def _wrapper():
+        try:
+            fn()
+        except Exception:
+            # No queremos tumbar la request por estadísticas
+            pass
+
+    threading.Thread(target=_wrapper, daemon=True).start()
+
+
 @app.get("/", response_class=HTMLResponse)
 async def home(request: Request):
-    db = SessionLocal()
-    try:
-        _bump_daily_visits(db)
-        db.commit()
-    finally:
-        db.close()
+    def _bump():
+        db = SessionLocal()
+        try:
+            _bump_daily_visits(db)
+            db.commit()
+        finally:
+            db.close()
+
+    _run_in_background(_bump)
     return templates.TemplateResponse("index.html", {"request": request})
 
 
 @app.get("/cuento/{story_id}", response_class=HTMLResponse)
 async def story_page(request: Request, story_id: int):
-    db = SessionLocal()
-    try:
-        _bump_story_read(db, story_id)
-        db.commit()
-    finally:
-        db.close()
+    def _bump():
+        db = SessionLocal()
+        try:
+            _bump_story_read(db, story_id)
+            db.commit()
+        finally:
+            db.close()
+
+    _run_in_background(_bump)
     return templates.TemplateResponse(
         "story.html", {"request": request, "story_id": story_id}
     )
