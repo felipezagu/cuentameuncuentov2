@@ -1,5 +1,6 @@
 import json
 import os
+import time
 from pathlib import Path
 from typing import Annotated
 
@@ -25,6 +26,24 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 app = FastAPI(title="Cuéntame un Cuento")
 
 app.add_middleware(SessionMiddleware, secret_key="super-secret-cuentos")
+
+@app.middleware("http")
+async def _request_timing_log(request: Request, call_next):
+    start = time.monotonic()
+    path = request.url.path
+    method = request.method
+    print(f"[req] start {method} {path}", flush=True)
+    try:
+        response = await call_next(request)
+        return response
+    finally:
+        dur_ms = int((time.monotonic() - start) * 1000)
+        print(f"[req] end   {method} {path} {dur_ms}ms", flush=True)
+
+
+@app.get("/healthz")
+async def healthz():
+    return {"ok": True}
 
 templates = Jinja2Templates(directory=str(BASE_DIR / "frontend" / "templates"))
 
