@@ -23,6 +23,22 @@ let currentWordIndex = 0;
 let wasPlayingBeforeConfig = false;
 let lastPlayGestureTs = 0;
 
+function hideStartButtons() {
+  const cover = document.getElementById("btn-play-cover");
+  const start = document.getElementById("btn-start-reading");
+  [cover, start].forEach((btn) => {
+    if (btn) btn.classList.add("hidden");
+  });
+}
+
+function showStartButtons() {
+  const cover = document.getElementById("btn-play-cover");
+  const start = document.getElementById("btn-start-reading");
+  [cover, start].forEach((btn) => {
+    if (btn) btn.classList.remove("hidden");
+  });
+}
+
 function splitSentences(text) {
   return text
     .split(/(?<=[\.\!\?])\s+/)
@@ -111,12 +127,7 @@ function renderCurrentPage(animate) {
     lastRenderedPageIndex = pageIdx;
 
     if (!storyData || !storyData.escenas || pageEscenas.length === 0) {
-      if (sentences.length > 0) {
-        const p = document.createElement("p");
-        p.className = "karaoke-line text-slate-500 text-center";
-        p.textContent = "Pulsa ▶ para comenzar";
-        container.appendChild(p);
-      }
+      // No mostramos hint extra: el inicio se controla con los botones fijos.
     } else {
       const sentenceIndicesOnPage = getSentenceIndicesOnPage(pageIdx);
       pageEscenas.forEach((escenaIdx) => {
@@ -285,7 +296,7 @@ function speakCurrent() {
 
   utter.onstart = () => {
     isPlaying = true;
-    updateCenterPlayVisibility();
+    hideStartButtons();
     highlight(currentIndex);
   };
 
@@ -831,11 +842,12 @@ function handlePlayClick(e) {
   }
   log("handlePlayClick (botón central)");
   if (!sentences.length) return;
-  const btn = document.getElementById("btn-play-center");
+  const btn = e && e.currentTarget ? e.currentTarget : null;
   if (btn && btn.disabled) return;
   const now = Date.now();
   if (now - lastPlayGestureTs < 400) return;
   lastPlayGestureTs = now;
+
   if (isMobileOrTablet()) scrollToCuentoInicio();
   play();
   updatePauseButtonLabels();
@@ -856,30 +868,31 @@ function handlePauseResumeClick() {
 }
 
 function initControls() {
-  const centerPlay = document.getElementById("btn-play-center");
+  const playCoverBtn = document.getElementById("btn-play-cover");
+  const startBtn = document.getElementById("btn-start-reading");
   const btnPause = document.getElementById("btn-pause");
   const btnPauseMain = document.getElementById("btn-pause-main");
   const btnPrev = document.getElementById("btn-prev");
   const btnNext = document.getElementById("btn-next");
-  log("initControls: btn-play-center=" + !!centerPlay + ", btn-pause=" + !!btnPause + ", btn-pause-main=" + !!btnPauseMain + ", prev=" + !!btnPrev + ", next=" + !!btnNext);
-  if (centerPlay) {
-    centerPlay.addEventListener("click", handlePlayClick);
-    centerPlay.addEventListener(
+  log(
+    "initControls: playCover=" + !!playCoverBtn + ", startBtn=" + !!startBtn + ", btn-pause=" + !!btnPause + ", btn-pause-main=" + !!btnPauseMain + ", prev=" + !!btnPrev + ", next=" + !!btnNext
+  );
+
+  function bindStartButtons(btn) {
+    if (!btn) return;
+    btn.addEventListener("click", handlePlayClick);
+    btn.addEventListener(
       "touchend",
       function (e) {
         handlePlayClick(e);
       },
       { passive: true }
     );
-    centerPlay.addEventListener("pointerup", handlePlayClick);
+    btn.addEventListener("pointerup", handlePlayClick);
   }
-  var overlay = document.querySelector(".book-play-overlay");
-  if (overlay) {
-    overlay.style.pointerEvents = "auto";
-    overlay.addEventListener("click", function (e) {
-      if (e.target === overlay || e.target.closest(".book-play-btn")) handlePlayClick(e);
-    });
-  }
+
+  bindStartButtons(playCoverBtn);
+  bindStartButtons(startBtn);
   if (btnPause) btnPause.addEventListener("click", handlePauseResumeClick);
   if (btnPauseMain) btnPauseMain.addEventListener("click", handlePauseResumeClick);
   if (btnPrev) btnPrev.addEventListener("click", goPrev);
@@ -919,7 +932,6 @@ function initControls() {
     if (wasPlayingBeforeConfig && synth && synth.speaking && synth.paused) {
       synth.resume();
       isPaused = false;
-      updateCenterPlayVisibility();
       updateHighlightOnly();
     }
     wasPlayingBeforeConfig = false;
@@ -955,8 +967,10 @@ async function initPage() {
   log("initPage: storyId=" + storyId);
 
   // Evita clicks antes de que el cuento esté cargado (sentences.length=0).
-  const centerPlayBtn = document.getElementById("btn-play-center");
-  if (centerPlayBtn) centerPlayBtn.disabled = true;
+  const coverBtn = document.getElementById("btn-play-cover");
+  const startBtn = document.getElementById("btn-start-reading");
+  if (coverBtn) coverBtn.disabled = true;
+  if (startBtn) startBtn.disabled = true;
 
   try {
     if (storyId == null) throw new Error("No hay STORY_ID en la página");
@@ -968,7 +982,9 @@ async function initPage() {
     updateSceneImageForIndex(0);
     log("initPage OK. Frases totales:", sentences.length);
 
-    if (centerPlayBtn) centerPlayBtn.disabled = false;
+    if (coverBtn) coverBtn.disabled = false;
+    if (startBtn) startBtn.disabled = false;
+    showStartButtons();
   } catch (e) {
     log("initPage ERROR:", e.message || e);
     const container = document.getElementById("karaoke-container");

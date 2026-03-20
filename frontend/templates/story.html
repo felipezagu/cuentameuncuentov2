@@ -25,6 +25,9 @@
           <div class="book-page-paper">
             <div id="story-cover" class="book-illustration kid-cover-placeholder">
             </div>
+            <button id="btn-play-cover" type="button" class="book-play-btn mt-3" title="Léeme el cuento">
+              <span class="book-play-icon">▶</span>
+            </button>
           </div>
         </div>
         <div class="book-page book-page-right">
@@ -37,16 +40,7 @@
           </div>
         </div>
       </div>
-      <div id="book-play-overlay" class="book-play-overlay">
-        <div class="flex flex-col items-center gap-2">
-          <button id="btn-play-center" type="button" class="book-play-btn" title="Léeme el cuento">
-            <span class="book-play-icon">▶</span>
-          </button>
-          <p class="kid-play-hint text-xs sm:text-sm rounded-full px-3 py-1 shadow-sm border">
-            Sube el volumen y pulsa ▶ para empezar
-          </p>
-        </div>
-      </div>
+      
       <div id="book-quiz-overlay" class="book-quiz-overlay hidden">
         <div class="book-quiz-inner">
           <div class="book-quiz-header">
@@ -59,6 +53,15 @@
         </div>
       </div>
     </div>
+  </div>
+
+  <div id="start-reading-area" class="start-reading-area mt-4 flex flex-col items-center gap-2">
+    <p class="kid-play-hint text-xs sm:text-sm rounded-full px-3 py-1 shadow-sm border">
+      Sube el volumen
+    </p>
+    <button id="btn-start-reading" type="button" class="book-quiz-btn book-quiz-btn-restart">
+      Iniciar lectura
+    </button>
   </div>
 
   <div class="story-controls">

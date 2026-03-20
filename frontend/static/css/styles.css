@@ -1080,6 +1080,15 @@ body.dark-mode .book-page-paper {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1), inset 0 0 0 1px rgba(0, 0, 0, 0.06);
 }
 
+/* En la hoja izquierda dejamos que la portada no "se coma" el espacio para el botón */
+.book-page-left .book-illustration {
+  flex: 0 0 auto;
+}
+
+.book-page-left .book-play-btn {
+  align-self: center;
+}
+
 @media (min-width: 768px) {
   .book-illustration {
     min-height: 180px;
