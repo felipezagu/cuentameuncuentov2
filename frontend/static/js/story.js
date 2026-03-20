@@ -391,12 +391,16 @@ function play() {
 }
 
 function pause() {
-  if (synth && synth.speaking && !synth.paused) {
-    synth.pause();
-    isPaused = true;
-    updateCenterPlayVisibility();
-    updateHighlightOnly();
+  if (synth) {
+    try {
+      if (synth.speaking) synth.pause();
+    } catch (e) {
+      // Ignoramos errores de pause según el navegador.
+    }
   }
+  isPaused = true;
+  updateCenterPlayVisibility();
+  updateHighlightOnly();
 }
 
 function stop() {
@@ -893,14 +897,17 @@ function handlePlayClick(e) {
 function handlePauseResumeClick() {
   log("handlePauseResumeClick. isPaused=" + isPaused);
   uiDebug("handlePauseResumeClick isPaused=" + isPaused);
-  if (isPaused) {
+  const synthPaused = synth && synth.paused;
+  const shouldResume = isPaused || synthPaused;
+
+  if (shouldResume) {
+    isPaused = false;
     play();
   } else {
     pause();
-    if (!synth || !synth.speaking) {
-      isPaused = true;
-      updateCenterPlayVisibility();
-    }
+    // Algunos móviles no actualizan `synth.speaking/synth.paused` de forma consistente.
+    // Forzamos el estado para que el próximo tap reanude.
+    isPaused = true;
   }
   updatePauseButtonLabels();
 }
