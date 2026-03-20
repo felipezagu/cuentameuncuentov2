@@ -92,7 +92,8 @@ body {
 }
 
 .kid-cover-placeholder {
-  background: linear-gradient(135deg, #EFF6FF 0%, #FEF3C7 50%, #ECFDF5 100%);
+  /* Para la caja de la portada en la página de lectura */
+  background: linear-gradient(135deg, #0f172a 0%, #0b1220 50%, #1f2937 100%);
 }
 
 .kid-play-hint {
@@ -284,24 +285,24 @@ body.dark-mode .karaoke-line {
 }
 
 body.dark-mode .karaoke-line.current {
-  color: #111827;
-  background: linear-gradient(90deg, rgba(250, 204, 21, 0.4), rgba(225, 29, 72, 0.3));
+  color: inherit;
+  background: none;
 }
 
 body.dark-mode .karaoke-strofa.current {
-  color: #111827;
-  background: linear-gradient(90deg, rgba(250, 204, 21, 0.4), rgba(225, 29, 72, 0.3));
+  color: inherit;
+  background: none;
 }
 
 body.dark-mode .karaoke-word.current {
-  color: #111827;
-  background: linear-gradient(90deg, rgba(250, 204, 21, 0.6), rgba(225, 29, 72, 0.5));
+  color: inherit;
+  background: none;
 }
 
 body.dark-mode .karaoke-sentence.current {
-  color: #111827;
-  background: linear-gradient(90deg, rgba(250, 204, 21, 0.5), rgba(225, 29, 72, 0.45));
-  box-shadow: 0 0 0 1px rgba(250, 204, 21, 0.35);
+  color: inherit;
+  background: none;
+  box-shadow: none;
 }
 
 body.dark-mode .book-page-number {
@@ -466,11 +467,11 @@ body.dark-mode .categoria-btn.active {
 }
 
 .karaoke-line.current {
-  background: linear-gradient(90deg, rgba(250, 204, 21, 0.4), rgba(225, 29, 72, 0.25));
-  color: #1f2933;
-  border-radius: 9999px;
-  padding-inline: 0.75rem;
-  transform: translateX(4px);
+  background: none;
+  color: inherit;
+  border-radius: 0;
+  padding-inline: 0;
+  transform: none;
 }
 
 .btn-control {
@@ -1018,6 +1019,9 @@ body.dark-mode .book-page-paper {
 
 .book-page-left .book-page-paper {
   margin-right: 4px;
+  /* Caja oscura para la portada/imagen durante la lectura (igual que modo nocturno). */
+  background: linear-gradient(145deg, #0f172a 0%, #0b1220 50%, #070b14 100%);
+  border-color: rgba(226, 232, 240, 0.35);
 }
 
 .book-page-right .book-page-paper {
@@ -1038,7 +1042,7 @@ body.dark-mode .book-page-paper {
   background-size: contain;
   background-position: center;
   background-repeat: no-repeat;
-  background-color: #e8e6e1;
+  background-color: #0b1220;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1), inset 0 0 0 1px rgba(0, 0, 0, 0.06);
 }
 
@@ -1048,7 +1052,7 @@ body.dark-mode .book-page-paper {
     max-height: 280px;
     background-size: contain;
     background-repeat: no-repeat;
-    background-color: #e8e6e1;
+    background-color: #0b1220;
   }
 }
 
@@ -1100,11 +1104,12 @@ body.dark-mode .book-page-paper {
 }
 
 .karaoke-line.current {
-  background: linear-gradient(90deg, rgba(250, 204, 21, 0.35), rgba(244, 114, 182, 0.25));
-  color: #111827;
-  border-radius: 6px;
-  padding: 0.35rem 0.75rem;
-  margin-inline: -0.25rem;
+  /* Resaltado sin color (sin "remarcación"): el foco lo da el aumento de tamaño. */
+  background: none;
+  color: inherit;
+  border-radius: 0;
+  padding: 0.2rem 0;
+  margin-inline: 0;
 }
 
 /* Tres estrofas por página: bloques con separación clara entre cada una */
@@ -1128,12 +1133,13 @@ body.dark-mode .book-page-paper {
 }
 
 .karaoke-strofa.current {
-  background: linear-gradient(90deg, rgba(250, 204, 21, 0.2), rgba(244, 114, 182, 0.15));
-  color: #111827;
-  border-radius: 8px;
-  padding: 0.5rem 0.75rem;
-  margin-inline: -0.25rem;
-  border-bottom-color: transparent;
+  /* Resaltado sin color. */
+  background: none;
+  color: inherit;
+  border-radius: 0;
+  padding: 0.6rem 0.5rem 0.6rem;
+  margin-inline: 0;
+  border-bottom-color: rgba(107, 91, 69, 0.2);
 }
 
 /* Envuelve cada oración: mismo layout siempre, no se mueve al cambiar de frase */
@@ -1147,13 +1153,18 @@ body.dark-mode .book-page-paper {
 
 /* Frase completa entre puntos: color solo cuando está leyendo (no en silencio) */
 .karaoke-sentence.current {
-  background: linear-gradient(90deg, rgba(252, 211, 77, 0.55) 0%, rgba(249, 168, 212, 0.5) 100%);
-  color: #1f2937;
-  border-radius: 6px;
-  padding: 0.2em 0.4em;
-  margin: 0 -0.2em;
-  transition: background 0.2s ease, box-shadow 0.2s ease;
-  box-shadow: 0 0 0 1px rgba(251, 191, 36, 0.25);
+  /* Resaltado por tamaño: al doble del tamaño actual. */
+  background: none;
+  color: inherit;
+  border-radius: 0;
+  padding: 0;
+  margin: 0;
+  transition: font-size 0.15s ease;
+  box-shadow: none;
+  display: inline-block;
+  transform-origin: center;
+  font-size: 2em;
+  line-height: 1.2;
 }
 
 .karaoke-space {
