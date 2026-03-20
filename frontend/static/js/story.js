@@ -893,14 +893,6 @@ function initControls() {
       else cfgPanel.classList.add("hidden");
     });
   }
-
-  const btnRestart = document.getElementById("btn-restart-story");
-  if (btnRestart) {
-    btnRestart.addEventListener("click", function (e) {
-      e.preventDefault();
-      restartStory();
-    });
-  }
   const btnAnother = document.getElementById("btn-another-story");
   if (btnAnother) {
     btnAnother.addEventListener("click", function () {
