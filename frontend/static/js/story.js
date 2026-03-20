@@ -827,7 +827,8 @@ function scrollToCuentoInicio() {
 
 function handlePlayClick(e) {
   if (e) {
-    e.preventDefault();
+    // En móviles, `preventDefault()` en `touchend` puede interferir con el
+    // "user gesture" necesario para SpeechSynthesis. Solo cortamos propagación.
     e.stopPropagation();
   }
   log("handlePlayClick (botón central)");
@@ -864,7 +865,15 @@ function initControls() {
   log("initControls: btn-play-center=" + !!centerPlay + ", btn-pause=" + !!btnPause + ", btn-pause-main=" + !!btnPauseMain + ", prev=" + !!btnPrev + ", next=" + !!btnNext);
   if (centerPlay) {
     centerPlay.addEventListener("click", handlePlayClick);
-    centerPlay.addEventListener("touchend", function (e) { e.preventDefault(); handlePlayClick(e); }, { passive: false });
+    // En móvil iOS/Android, evitamos `preventDefault()` para no romper el "user gesture"
+    centerPlay.addEventListener(
+      "touchend",
+      function (e) {
+        handlePlayClick(e);
+      },
+      { passive: true }
+    );
+    centerPlay.addEventListener("pointerup", handlePlayClick);
   }
   var overlay = document.querySelector(".book-play-overlay");
   if (overlay) {
