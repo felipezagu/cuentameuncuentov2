@@ -25,16 +25,18 @@ let lastPlayGestureTs = 0;
 
 function hideStartButtons() {
   const cover = document.getElementById("btn-play-cover");
+  const startPlay = document.getElementById("btn-start-play");
   const start = document.getElementById("btn-start-reading");
-  [cover, start].forEach((btn) => {
+  [cover, startPlay, start].forEach((btn) => {
     if (btn) btn.classList.add("hidden");
   });
 }
 
 function showStartButtons() {
   const cover = document.getElementById("btn-play-cover");
+  const startPlay = document.getElementById("btn-start-play");
   const start = document.getElementById("btn-start-reading");
-  [cover, start].forEach((btn) => {
+  [cover, startPlay, start].forEach((btn) => {
     if (btn) btn.classList.remove("hidden");
   });
 }
@@ -869,6 +871,7 @@ function handlePauseResumeClick() {
 
 function initControls() {
   const playCoverBtn = document.getElementById("btn-play-cover");
+  const startPlayBtn = document.getElementById("btn-start-play");
   const startBtn = document.getElementById("btn-start-reading");
   const btnPause = document.getElementById("btn-pause");
   const btnPauseMain = document.getElementById("btn-pause-main");
@@ -892,6 +895,7 @@ function initControls() {
   }
 
   bindStartButtons(playCoverBtn);
+  bindStartButtons(startPlayBtn);
   bindStartButtons(startBtn);
   if (btnPause) btnPause.addEventListener("click", handlePauseResumeClick);
   if (btnPauseMain) btnPauseMain.addEventListener("click", handlePauseResumeClick);
@@ -968,8 +972,10 @@ async function initPage() {
 
   // Evita clicks antes de que el cuento esté cargado (sentences.length=0).
   const coverBtn = document.getElementById("btn-play-cover");
+  const startPlayBtn = document.getElementById("btn-start-play");
   const startBtn = document.getElementById("btn-start-reading");
   if (coverBtn) coverBtn.disabled = true;
+  if (startPlayBtn) startPlayBtn.disabled = true;
   if (startBtn) startBtn.disabled = true;
 
   try {
@@ -983,6 +989,7 @@ async function initPage() {
     log("initPage OK. Frases totales:", sentences.length);
 
     if (coverBtn) coverBtn.disabled = false;
+    if (startPlayBtn) startPlayBtn.disabled = false;
     if (startBtn) startBtn.disabled = false;
     showStartButtons();
   } catch (e) {
