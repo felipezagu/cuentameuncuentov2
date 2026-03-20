@@ -22,14 +22,31 @@ body {
   backdrop-filter: blur(10px);
   box-shadow: 0 1px 8px rgba(15, 23, 42, 0.18);
   border-bottom: 4px solid #2563EB;
+  position: relative;
+  z-index: 30;
+}
+
+/* Enlace marca → inicio: siempre clicable (p. ej. tras panel final del cuento) */
+.kid-home-link {
+  position: relative;
+  z-index: 2;
+  pointer-events: auto;
 }
 
 .kid-logo {
   width: 3rem;
   height: 3rem;
   border-radius: 1rem;
-  background: #2563EB;
-  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.4);
+  background: transparent;
+  box-shadow: 0 2px 10px rgba(37, 99, 235, 0.35);
+}
+
+.kid-logo-img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  border-radius: inherit;
 }
 
 .kid-title {
@@ -92,8 +109,8 @@ body {
 }
 
 .kid-cover-placeholder {
-  /* Para la caja de la portada en la página de lectura */
-  background: linear-gradient(135deg, #0f172a 0%, #0b1220 50%, #1f2937 100%);
+  /* Solo color base: no usar shorthand `background` aquí o tapa la imagen puesta por JS */
+  background-color: #0b1220;
 }
 
 .kid-play-hint {
@@ -263,7 +280,8 @@ body.dark-mode .kid-header {
 }
 
 body.dark-mode .kid-logo {
-  background: #2563EB;
+  background: transparent;
+  box-shadow: 0 2px 12px rgba(37, 99, 235, 0.45);
 }
 
 body.dark-mode header a,
@@ -596,9 +614,10 @@ body.dark-mode .categoria-btn.active {
 
 .book-spread {
   display: flex;
+  flex-direction: column;
   flex: 1;
   gap: 0;
-  border-radius: 12px 8px 8px 12px;
+  border-radius: 12px;
   overflow: visible;
   background: transparent;
   position: relative;
@@ -607,93 +626,57 @@ body.dark-mode .categoria-btn.active {
   transform-style: preserve-3d;
 }
 
-/* Imagen a la izquierda; lomo pegado al borde derecho de la foto (no al medio) */
+/* Imagen arriba, texto abajo: móvil, tablet y escritorio */
 .book-page-left {
-  flex: 0 0 32%;
-  max-width: 280px;
-  border-radius: 12px 0 0 12px;
+  flex: 0 0 auto;
+  width: 100%;
+  max-width: none;
+  border-radius: 12px 12px 0 0;
   overflow: visible;
   position: relative;
 }
 
-/* Lomo: franja pegada al borde derecho de la hoja de la imagen */
+/* Lomo horizontal entre ilustración y texto (solo escritorio; en móvil añade franja) */
 .book-page-left::after {
   content: "";
   position: absolute;
-  right: 0;
-  top: 10px;
-  bottom: 10px;
-  width: 10px;
-  background: linear-gradient(90deg, #8b7355 0%, #9d8260 40%, #8b7355 100%);
-  box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.25), 2px 0 6px rgba(0, 0, 0, 0.08);
+  right: 10px;
+  left: 10px;
+  top: auto;
+  bottom: 0;
+  width: auto;
+  height: 8px;
+  background: linear-gradient(180deg, #8b7355 0%, #9d8260 50%, #8b7355 100%);
+  box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.25), 0 2px 6px rgba(0, 0, 0, 0.08);
   z-index: 2;
-  border-radius: 0 4px 4px 0;
+  border-radius: 0 0 4px 4px;
+}
+
+@media (max-width: 1024px) {
+  .book-page-left::after {
+    display: none;
+  }
 }
 
 .book-page-right {
   flex: 1 1 auto;
   min-width: 0;
-  border-radius: 0 12px 12px 0;
+  border-radius: 0 0 12px 12px;
   overflow: visible;
   transform-style: preserve-3d;
 }
 
-/* En celular y tablet: imagen arriba, texto abajo; caja de texto más alargada */
-@media (max-width: 1024px) {
-  .book-spread {
-    flex-direction: column;
-    border-radius: 8px;
-    gap: 0;
-  }
-  .book-page-left {
-    order: 1;
-    flex: 0 0 auto;
-    max-width: none;
-    min-height: 0;
-    border-radius: 8px 8px 0 0;
-  }
-  .book-page-left::after {
-    right: 10px;
-    left: 10px;
-    top: auto;
-    bottom: 0;
-    width: auto;
-    height: 8px;
-    background: linear-gradient(180deg, #8b7355 0%, #9d8260 50%, #8b7355 100%);
-    border-radius: 0 0 4px 4px;
-  }
-  .book-page-right {
-    order: 2;
-    flex: 1 1 auto;
-    min-width: 0;
-  }
-  .book-illustration {
-    min-height: 140px;
-  }
-  .book-page-left .book-page-paper {
-    margin-bottom: 6px;
-  }
-  .book-page-right .book-page-paper {
-    margin-top: 0;
-    flex: 1;
-    padding: 1rem 1rem 1.25rem;
-  }
-}
-
 @media (max-width: 767px) {
-  .book-page-left {
-    max-height: 28vh;
-  }
-  .book-illustration {
-    max-height: 28vh;
+  .book-spread {
+    border-radius: 8px;
   }
   .book-page-right {
-    min-height: 420px;
+    min-height: 0;
   }
   .book-text {
     font-size: 1.15rem;
     line-height: 1.75;
-    min-height: 280px;
+    min-height: 0;
   }
   .karaoke-line {
     font-size: 1.1rem;
@@ -702,17 +685,30 @@ body.dark-mode .categoria-btn.active {
 }
 
 @media (min-width: 768px) and (max-width: 1024px) {
-  .book-page-left {
-    max-height: 32vh;
-  }
-  .book-illustration {
-    max-height: 32vh;
-  }
   .book-page-right {
-    min-height: 380px;
+    min-height: 0;
   }
   .book-text {
-    min-height: 240px;
+    min-height: 0;
+  }
+}
+
+@media (min-width: 1025px) {
+  .book-spread {
+    max-width: 900px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
+  }
+}
+
+/* Móvil/tablet: libro a ancho del viewport (compensa el padding del section) */
+@media (max-width: 1024px) {
+  .story-reading .book-outer {
+    width: 100vw;
+    max-width: 100vw;
+    margin-left: calc(50% - 50vw);
+    margin-right: calc(50% - 50vw);
   }
 }
 
@@ -721,6 +717,17 @@ body.dark-mode .categoria-btn.active {
   min-width: 0;
   min-height: 0;
   display: flex;
+}
+
+/* En columna (imagen arriba, texto abajo): la hoja de la imagen NO debe estirarse */
+.book-spread > .book-page.book-page-left {
+  flex: 0 0 auto;
+  align-self: stretch;
+}
+
+.book-spread > .book-page.book-page-right {
+  flex: 1 1 auto;
+  min-height: 0;
 }
 
 /* Hoja tipo papel: tono crema, sombra interior, borde suave */
@@ -747,22 +754,24 @@ body.dark-mode .book-page-paper {
 }
 
 .book-page-right .book-page-paper {
-  border-radius: 6px 2px 2px 6px;
-  margin: 10px 8px 10px 10px;
+  border-radius: 6px;
+  margin: 0 8px 10px 8px;
   transform-origin: left center;
   backface-visibility: hidden;
 }
 
-/* Overlay de preguntas: mismo cuadro que el libro, una pregunta a la vez */
+/* Overlay de preguntas: caja arriba, botones secundarios abajo (fuera de la caja) */
 .book-quiz-overlay {
   position: absolute;
   inset: 0;
   z-index: 15;
   display: flex;
+  flex-direction: column;
   align-items: stretch;
-  justify-content: center;
-  border-radius: 0 8px 8px 0;
-  overflow: hidden;
+  justify-content: flex-start;
+  border-radius: 8px;
+  overflow-x: hidden;
+  overflow-y: auto;
   background: #fdfbf7;
   box-shadow: inset 0 0 0 1px rgba(148, 163, 184, 0.2), inset 0 2px 8px rgba(0,0,0,0.04);
 }
@@ -773,16 +782,89 @@ body.dark-mode .book-page-paper {
   }
 }
 
+/* Pantalla final del cuestionario: fondo semitransparente para ver estrellas/globos del layout */
+.book-quiz-overlay--motivational {
+  justify-content: center;
+  align-items: stretch;
+  padding: 0.4rem 0 0.35rem;
+  background: linear-gradient(
+    165deg,
+    rgba(253, 251, 247, 0.82) 0%,
+    rgba(253, 251, 247, 0.45) 45%,
+    rgba(255, 255, 255, 0.22) 100%
+  );
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: inset 0 0 0 1px rgba(148, 163, 184, 0.18);
+}
+
+.book-quiz-overlay--motivational .book-quiz-inner {
+  background: rgba(255, 255, 255, 0.58);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  margin-bottom: 0.25rem;
+  flex: 0 1 auto;
+  max-height: min(52vh, 100%);
+}
+
+.book-quiz-overlay--motivational .book-quiz-actions {
+  padding: 0.25rem 0.65rem 0.45rem;
+  background: transparent;
+  flex: 0 0 auto;
+}
+
+.book-quiz-overlay--motivational .book-quiz-card--done {
+  background: linear-gradient(
+    145deg,
+    rgba(239, 246, 255, 0.75) 0%,
+    rgba(254, 243, 199, 0.55) 50%,
+    rgba(255, 255, 255, 0.5) 100%
+  );
+  border-color: rgba(37, 99, 235, 0.18);
+  box-shadow: 0 4px 18px rgba(37, 99, 235, 0.08);
+}
+
+body.dark-mode .book-quiz-overlay--motivational {
+  background: linear-gradient(
+    165deg,
+    rgba(15, 23, 42, 0.88) 0%,
+    rgba(30, 41, 59, 0.55) 55%,
+    rgba(15, 23, 42, 0.35) 100%
+  );
+  box-shadow: inset 0 0 0 1px rgba(148, 163, 184, 0.12);
+}
+
+body.dark-mode .book-quiz-overlay--motivational .book-quiz-inner {
+  background: rgba(15, 23, 42, 0.65);
+}
+
+body.dark-mode .book-quiz-overlay--motivational .book-quiz-card--done {
+  background: linear-gradient(
+    145deg,
+    rgba(30, 58, 138, 0.45) 0%,
+    rgba(30, 41, 59, 0.55) 100%
+  );
+  border-color: rgba(96, 165, 250, 0.25);
+  color: #e2e8f0;
+}
+
+body.dark-mode .book-quiz-overlay--motivational .book-quiz-card--done p {
+  color: #e2e8f0 !important;
+}
+
 .book-quiz-inner {
-  flex: 1;
+  flex: 0 1 auto;
   display: flex;
   flex-direction: column;
   min-height: 0;
+  max-height: min(58vh, 100%);
   padding: 0.75rem 1rem;
   margin: 6px;
   border-radius: 4px;
   background: #fdfbf7;
-  width: 100%;
+  width: calc(100% - 12px);
+  box-sizing: border-box;
+  overflow-y: auto;
 }
 
 @media (min-width: 640px) {
@@ -811,6 +893,23 @@ body.dark-mode .book-page-paper {
   flex-shrink: 0;
   text-align: center;
   margin-top: 0.5rem;
+}
+
+/* Botones fuera de la caja del overlay (OTRO CUENTO, mismo cuento, LEER OTRO) */
+.book-quiz-actions {
+  flex-shrink: 0;
+  width: 100%;
+  padding: 0.35rem 0.75rem 0.65rem;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.5rem;
+  box-sizing: border-box;
+}
+
+.book-quiz-actions .book-quiz-btn {
+  width: 100%;
+  max-width: 100%;
 }
 
 .book-quiz-btn {
@@ -855,11 +954,44 @@ body.dark-mode .book-page-paper {
   background: linear-gradient(145deg, #22c55e 0%, #16a34a 100%);
   color: #f9fafb;
   box-shadow: 0 4px 12px rgba(22, 163, 74, 0.35);
+  padding: 0.85rem 2.25rem;
+  font-size: 1.2rem;
+  font-weight: 800;
+  min-width: 10rem;
 }
 
 .book-quiz-btn-yes:hover {
   background: linear-gradient(145deg, #16a34a 0%, #15803d 100%);
   transform: translateY(-1px);
+}
+
+.book-quiz-btn-same-again {
+  background: linear-gradient(145deg, #6366f1 0%, #4f46e5 100%);
+  color: #f9fafb;
+  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.35);
+  padding: 0.55rem 1.25rem;
+  font-size: 0.95rem;
+}
+
+.book-quiz-btn-same-again:hover {
+  background: linear-gradient(145deg, #4f46e5 0%, #4338ca 100%);
+  transform: translateY(-1px);
+}
+
+/* Solo botón grande al terminar el cuestionario */
+.book-quiz-btn-leer-otro {
+  width: 100%;
+  max-width: 22rem;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 1rem 1.5rem;
+  font-size: 1.15rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+}
+
+.book-quiz-card--done {
+  padding: 1rem 1.1rem;
 }
 
 /* Bloque de pregunta: se destaca en la caja, compacto para evitar scroll */
@@ -1052,40 +1184,250 @@ body.dark-mode .book-page-paper {
 }
 
 .book-page-left .book-page-paper {
-  margin-right: 4px;
+  margin: 10px 8px 0 8px;
+  flex: 0 0 auto;
+  /* Solo el alto del contenido: sin franja negra vacía debajo */
+  min-height: 0;
+  /* Menos padding = ilustración más grande dentro de la misma caja */
+  padding: 0.35rem 0.35rem 0.45rem;
   /* Caja oscura para la portada/imagen durante la lectura (igual que modo nocturno). */
   background: linear-gradient(145deg, #0f172a 0%, #0b1220 50%, #070b14 100%);
   border-color: rgba(226, 232, 240, 0.35);
 }
 
-.book-page-right .book-page-paper {
-  margin-left: 4px;
-}
-
-@media (max-width: 767px) {
-  .book-page-left .book-page-paper { margin-bottom: 4px; margin-right: 8px; }
-  .book-page-right .book-page-paper { margin-top: 4px; margin-left: 8px; }
-}
-
-/* Caja de la imagen: proporción 1:1 para que las ilustraciones cuadradas se vean completas */
-.book-illustration {
-  flex: 1;
-  min-height: 140px;
-  border-radius: 4px;
-  aspect-ratio: 1 / 1;
-  background-size: contain;
-  background-position: center;
-  background-repeat: no-repeat;
+/*
+ * Imagen en flujo normal (sin position:absolute): el truco height:0+padding
+ * dejaba el marco con altura 0 en varios navegadores → imagen invisible.
+ */
+.book-illustration-frame {
+  position: relative;
+  flex: 0 0 auto;
+  flex-shrink: 0;
+  overflow: hidden;
+  box-sizing: border-box;
   background-color: #0b1220;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1), inset 0 0 0 1px rgba(0, 0, 0, 0.06);
+  border-radius: 4px;
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  line-height: 0;
 }
 
-/* En la hoja izquierda dejamos que la portada no "se coma" el espacio para el botón */
-.book-page-left .book-illustration {
-  flex: 0 0 auto;
+.book-page-left .book-illustration-frame {
+  align-self: stretch;
+  width: 100%;
+  max-width: none;
 }
 
-.book-page-left .book-play-btn {
+/* Contenedor extra: en celular centra el marco; en tablet/PC es solo ancho completo */
+.book-mobile-cover-wrap {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+/* Móvil/tablet primero: 16:9 + cover */
+.book-page-left .story-cover-img {
+  display: block;
+  width: 100%;
+  height: auto;
+  min-height: 120px;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  object-position: center center;
+}
+
+/* Móvil/tablet: edge-to-edge, sin padding ni lomo */
+@media (max-width: 1024px) {
+  .book-spread {
+    border-radius: 0;
+    filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.12));
+  }
+
+  .book-page-left .book-page-paper {
+    margin: 0;
+    padding: 0;
+    border-radius: 0;
+    border-width: 0 0 1px 0;
+    border-bottom-color: rgba(0, 0, 0, 0.35);
+    box-shadow: none;
+  }
+
+  .book-page-left {
+    border-radius: 0;
+  }
+
+  .book-page-right .book-page-paper {
+    margin: 0;
+    border-radius: 0;
+  }
+
+  .book-page-left .book-illustration-frame {
+    margin: 0;
+    border-radius: 0;
+    box-shadow: none;
+    background-color: #000;
+  }
+
+  .book-page-left .story-cover-img {
+    aspect-ratio: 16 / 9;
+    max-height: min(42vh, 280px);
+    object-fit: cover;
+  }
+
+  .book-page-left .book-play-btn {
+    margin: 0.5rem auto;
+  }
+}
+
+/*
+ * Solo celular: portada dentro de #book-page-text-paper (misma caja y padding que el texto).
+ * JS mueve #book-cover-slot aquí y oculta #book-page-cover-host.
+ */
+@media (max-width: 767px) {
+  #book-page-cover-host {
+    display: none;
+  }
+
+  #book-page-text-paper {
+    align-items: stretch;
+  }
+
+  #book-cover-slot {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    margin: 0 0 0.35rem;
+    padding: 0;
+    text-align: center;
+    line-height: 0;
+    box-sizing: border-box;
+  }
+
+  #book-cover-slot .book-illustration-frame {
+    display: inline-block;
+    vertical-align: top;
+    width: min(42vh, 100%);
+    max-width: 100%;
+    min-width: 0;
+    margin: 0;
+    box-sizing: border-box;
+    background-color: transparent;
+    background: transparent;
+    box-shadow: none;
+    border-radius: 6px;
+    overflow: hidden;
+  }
+
+  #book-cover-slot .story-cover-img {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    aspect-ratio: 1 / 1;
+    max-height: min(48vh, 92vw);
+    height: auto;
+    margin: 0;
+    object-fit: contain;
+    object-position: center center;
+  }
+
+  #btn-play-cover.book-play-btn {
+    margin: 0.35rem auto 0.5rem;
+  }
+}
+
+/* PC: franja oscura a todo el ancho + imagen cuadrada centrada; decoración en los laterales */
+@media (min-width: 1025px) {
+  .book-page-left {
+    width: 100%;
+    align-self: stretch;
+    isolation: isolate;
+    /* Fondo ancho completo: sensación “cinemática”, lados oscuros */
+    background: radial-gradient(ellipse 130% 90% at 50% 20%, #1e293b 0%, #0f172a 42%, #070b14 100%);
+    border-radius: 12px 12px 0 0;
+  }
+
+  /* Estrellas y globos en los paneles oscuros laterales (solo PC; sin opacity global para que se vean) */
+  .book-page-left::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 12px 12px 0 0;
+    pointer-events: none;
+    z-index: 0;
+    background-image:
+      /* Globos (elipses más visibles, solo en bandas ~0–24% y ~76–100%) */
+      radial-gradient(ellipse 85% 100% at 11% 48%, rgba(147, 197, 253, 0.16) 0%, rgba(99, 102, 241, 0.08) 38%, transparent 58%),
+      radial-gradient(ellipse 70% 85% at 20% 72%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+      radial-gradient(ellipse 85% 100% at 89% 50%, rgba(251, 191, 36, 0.12) 0%, rgba(245, 158, 11, 0.06) 40%, transparent 58%),
+      radial-gradient(ellipse 70% 85% at 80% 28%, rgba(255, 255, 255, 0.09) 0%, transparent 48%),
+      /* Estrellas izquierda (2–3px + halo) */
+      radial-gradient(circle 2.5px at 3% 18%, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.35) 55%, transparent 100%),
+      radial-gradient(circle 2px at 8% 32%, rgba(255, 255, 255, 0.85) 0%, rgba(255, 255, 255, 0.25) 55%, transparent 100%),
+      radial-gradient(circle 2.5px at 14% 22%, rgba(255, 255, 255, 0.75) 0%, transparent 100%),
+      radial-gradient(circle 2px at 6% 48%, rgba(255, 255, 255, 0.8) 0%, transparent 100%),
+      radial-gradient(circle 2px at 12% 58%, rgba(255, 255, 255, 0.7) 0%, transparent 100%),
+      radial-gradient(circle 2.5px at 18% 44%, rgba(255, 255, 255, 0.65) 0%, transparent 100%),
+      radial-gradient(circle 2px at 4% 68%, rgba(255, 255, 255, 0.72) 0%, transparent 100%),
+      radial-gradient(circle 2px at 10% 78%, rgba(255, 255, 255, 0.68) 0%, transparent 100%),
+      radial-gradient(circle 2px at 16% 88%, rgba(255, 255, 255, 0.6) 0%, transparent 100%),
+      radial-gradient(circle 1.5px at 20% 12%, rgba(255, 255, 255, 0.55) 0%, transparent 100%),
+      /* Estrellas derecha */
+      radial-gradient(circle 2.5px at 97% 20%, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.35) 55%, transparent 100%),
+      radial-gradient(circle 2px at 92% 34%, rgba(255, 255, 255, 0.85) 0%, transparent 100%),
+      radial-gradient(circle 2.5px at 86% 24%, rgba(255, 255, 255, 0.75) 0%, transparent 100%),
+      radial-gradient(circle 2px at 94% 50%, rgba(255, 255, 255, 0.8) 0%, transparent 100%),
+      radial-gradient(circle 2px at 88% 60%, rgba(255, 255, 255, 0.7) 0%, transparent 100%),
+      radial-gradient(circle 2.5px at 82% 46%, rgba(255, 255, 255, 0.65) 0%, transparent 100%),
+      radial-gradient(circle 2px at 96% 70%, rgba(255, 255, 255, 0.72) 0%, transparent 100%),
+      radial-gradient(circle 2px at 90% 80%, rgba(255, 255, 255, 0.68) 0%, transparent 100%),
+      radial-gradient(circle 2px at 84% 90%, rgba(255, 255, 255, 0.6) 0%, transparent 100%),
+      radial-gradient(circle 1.5px at 80% 14%, rgba(255, 255, 255, 0.55) 0%, transparent 100%);
+  }
+
+  .book-page-left .book-page-paper {
+    margin: 0;
+    padding: 1rem 1.25rem 0.85rem;
+    width: 100%;
+    max-width: none;
+    align-items: center;
+    position: relative;
+    z-index: 1;
+    /* El oscuro lo da .book-page-left; el papel solo centra el contenido */
+    background: transparent;
+    border-width: 0 0 1px 0;
+    border-bottom-color: rgba(148, 163, 184, 0.2);
+    box-shadow: none;
+  }
+
+  .book-page-left .book-illustration-frame {
+    align-self: center;
+    width: 100%;
+    max-width: min(480px, 90%);
+    margin-left: auto;
+    margin-right: auto;
+    flex-shrink: 0;
+    background-color: rgba(0, 0, 0, 0.4);
+    border-radius: 8px;
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.06);
+  }
+
+  .book-page-left .story-cover-img {
+    aspect-ratio: 1 / 1;
+    max-height: min(40vh, 440px);
+    width: 100%;
+    object-fit: contain;
+    object-position: center center;
+  }
+}
+
+.book-page-left .book-play-btn,
+#btn-play-cover {
   align-self: center;
 }
 
@@ -1096,16 +1438,6 @@ body.dark-mode .book-page-paper {
 
 body.dark-mode .play-status {
   color: #cbd5e1;
-}
-
-@media (min-width: 768px) {
-  .book-illustration {
-    min-height: 180px;
-    max-height: 280px;
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-color: #0b1220;
-  }
 }
 
 .book-text {
@@ -1125,6 +1457,18 @@ body.dark-mode .play-status {
   .book-text {
     font-size: 1.1rem;
     line-height: 1.65;
+  }
+
+  /* Lectura con voz: solo frase actual visible; silencio/pausa = clase quitada por JS */
+  .book-text.book-text--mobile-compact-read {
+    justify-content: flex-start;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .book-text.book-text--mobile-compact-read .karaoke-strofa--past-mobile,
+  .book-text.book-text--mobile-compact-read .karaoke-sentence--past-mobile {
+    display: none !important;
   }
 }
 
@@ -1506,29 +1850,6 @@ body.dark-mode .hero-text {
   font-size: 1rem;
 }
 
-.deco-row {
-  display: flex;
-  justify-content: center;
-  gap: 8px;
-  margin-top: 24px;
-  font-size: 2rem;
-}
-
-.deco-row span {
-  display: inline-block;
-  animation: rock 2s ease-in-out infinite;
-}
-
-.deco-row span:nth-child(2) { animation-delay: 0.3s; }
-.deco-row span:nth-child(3) { animation-delay: 0.6s; }
-.deco-row span:nth-child(4) { animation-delay: 0.9s; }
-.deco-row span:nth-child(5) { animation-delay: 1.2s; }
-
-@keyframes rock {
-  0%,100% { transform: rotate(-8deg); }
-  50%      { transform: rotate(8deg); }
-}
-
 /* Lista de cuentos y filtros */
 .section-wrap {
   padding: 0 20px 60px;
@@ -1561,6 +1882,9 @@ body.dark-mode .hero-text {
   flex-wrap: wrap;
   gap: 8px;
   margin-bottom: 28px;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
 }
 
 .categoria-btn {

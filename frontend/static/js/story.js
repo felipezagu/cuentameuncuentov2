@@ -35,6 +35,17 @@ let pageForSentence = [];
 let lastRenderedPageIndex = -1;
 let currentWordIndex = 0;
 let wasPlayingBeforeConfig = false;
+let narrationStarted = false;
+let storyTitle = "";
+let lastHandlePlayClickAt = 0;
+let lastHandlePlayClickType = "";
+let countdownActive = false;
+let userGestureUnlocked = false;
+
+function hideCountdownOverlay() {
+  const overlay = document.getElementById("countdown-overlay");
+  if (overlay) overlay.classList.add("hidden");
+}
 function setPlayStatus(msg) {
   const el = document.getElementById("play-status");
   if (el) el.textContent = msg;
@@ -44,9 +55,11 @@ function hideStartButtons() {
   const cover = document.getElementById("btn-play-cover");
   const startPlay = document.getElementById("btn-start-play");
   const start = document.getElementById("btn-start-reading");
+  const startArea = document.getElementById("start-reading-area");
   [cover, startPlay, start].forEach((btn) => {
     if (btn) btn.classList.add("hidden");
   });
+  if (startArea) startArea.classList.add("hidden");
 }
 
 function showStartButtons() {
@@ -56,6 +69,121 @@ function showStartButtons() {
   [cover, startPlay, start].forEach((btn) => {
     if (btn) btn.classList.remove("hidden");
   });
+}
+
+function startCountdownAndAutoplay() {
+  narrationStarted = false;
+  countdownActive = true;
+  userGestureUnlocked = false;
+  const overlay = document.getElementById("countdown-overlay");
+  const numberEl = document.getElementById("countdown-number");
+  const headingEl = document.getElementById("countdown-heading");
+  const titleEl = document.getElementById("countdown-title");
+  const startArea = document.getElementById("start-reading-area");
+  const startBtn = document.getElementById("btn-start-reading");
+  if (!overlay || !numberEl) return;
+
+  overlay.classList.remove("hidden");
+
+  let remaining = 5;
+  const stepMs = 1000;
+  numberEl.textContent = String(remaining);
+  if (titleEl) titleEl.textContent = storyTitle || "";
+
+  const showManualStartFallback = () => {
+    if (startArea) startArea.classList.remove("hidden");
+    if (startBtn) startBtn.classList.remove("hidden");
+    if (startBtn) startBtn.disabled = false;
+    // Nunca mostramos el play grande como fallback.
+    const big = document.getElementById("btn-start-play");
+    if (big) big.classList.add("hidden");
+  };
+
+  const startFromUserGesture = () => {
+    if (!countdownActive) return;
+    countdownActive = false;
+    userGestureUnlocked = true;
+    hideCountdownOverlay();
+    setReadingUIVisible(true);
+    hideStartButtons();
+    isPlaying = false;
+    isPaused = false;
+    currentIndex = 0;
+    highlight(currentIndex);
+    play();
+  };
+
+  // En muchos móviles, SpeechSynthesis no funciona sin "user gesture".
+  // Si el usuario toca la pantalla durante el conteo, iniciamos de inmediato.
+  const gestureHandler = () => {
+    userGestureUnlocked = true;
+    startFromUserGesture();
+  };
+  // Poniéndolo en `overlay` + captura es más robusto en móviles
+  // (a veces el toque sobre overlays no llega a `document` como esperamos).
+  overlay.addEventListener("touchend", gestureHandler, { passive: true, once: true });
+  overlay.addEventListener("pointerup", gestureHandler, { passive: true, once: true });
+  overlay.addEventListener("click", gestureHandler, { once: true });
+
+  document.addEventListener("touchend", gestureHandler, { passive: true, once: true, capture: true });
+  document.addEventListener("pointerup", gestureHandler, { passive: true, once: true, capture: true });
+
+  const intervalId = window.setInterval(() => {
+    remaining -= 1;
+    if (remaining <= 0) {
+      window.clearInterval(intervalId);
+      countdownActive = false;
+
+      // Termina la cuenta: intentamos iniciar automáticamente.
+      setTimeout(() => {
+        // Quitamos el overlay para que se vea la caja del cuento.
+        hideCountdownOverlay();
+        hideStartButtons();
+        isPlaying = false;
+        isPaused = false;
+        currentIndex = 0;
+
+        // Pre-render para que el texto quede destacado.
+        highlight(currentIndex);
+
+        // Mostrar controles desde el inicio (sin el play grande).
+        setReadingUIVisible(true);
+
+        // Solo intentamos "auto" si ya hubo user gesture válida durante el conteo.
+        if (userGestureUnlocked) {
+          play();
+          setTimeout(() => {
+            if (!narrationStarted) showManualStartFallback();
+          }, 600);
+        } else {
+          // Sin user gesture, en iOS/Android normalmente se bloquea.
+          showManualStartFallback();
+          setPlayStatus("Autoinicio bloqueado en móvil. Toca 'Iniciar lectura'.");
+        }
+      }, 150);
+    } else {
+      numberEl.textContent = String(remaining);
+    }
+  }, stepMs);
+}
+
+function setReadingUIVisible(visible) {
+  const container = document.getElementById("karaoke-container");
+  const indicator = document.getElementById("page-indicator");
+  const controls = document.querySelector(".story-controls");
+  const cfgToggle = document.getElementById("config-toggle");
+
+  if (container) container.classList.toggle("hidden", !visible);
+  if (indicator) indicator.classList.toggle("hidden", !visible);
+  if (controls) controls.classList.toggle("hidden", !visible);
+  if (cfgToggle) cfgToggle.classList.toggle("hidden", !visible);
+}
+
+function setKaraokeBoxVisible(visible) {
+  const container = document.getElementById("karaoke-container");
+  const indicator = document.getElementById("page-indicator");
+  if (container) container.classList.toggle("hidden", !visible);
+  if (indicator) indicator.classList.toggle("hidden", !visible);
 }
 
 function splitSentences(text) {
@@ -166,6 +294,7 @@ function renderCurrentPage(animate) {
           const sentenceWrap = document.createElement("span");
           sentenceWrap.className = "karaoke-sentence";
           sentenceWrap.setAttribute("data-sentence-index", String(localSentenceIndex));
+          sentenceWrap.setAttribute("data-global-sentence-index", String(globalIdx));
           if (isCurrentSentence) sentenceWrap.classList.add("current");
 
           const parts = s.split(/(\s+)/);
@@ -224,6 +353,48 @@ function triggerPageTurnEffect(flipContentClone) {
   }, 750);
 }
 
+/** Celular: modo “solo lectura activa” (ocultar frases ya leídas). */
+function isNarrowMobileKaraokeViewport() {
+  return typeof window.matchMedia === "function" && window.matchMedia("(max-width: 767px)").matches;
+}
+
+/**
+ * En móvil, mientras suena la voz: oculta oraciones ya leídas (queda la actual bajo la imagen).
+ * En silencio/pausa o fuera de móvil: muestra todo el texto.
+ * Sin scroll automático al cambiar de frase (evita subir la vista y perder la imagen).
+ */
+function updateMobileKaraokeReadVisibility() {
+  const container = document.getElementById("karaoke-container");
+  if (!container) return;
+
+  const narrow = isNarrowMobileKaraokeViewport();
+  const compactRead = narrow && isPlaying && !isPaused && currentIndex >= 0 && currentIndex < sentences.length;
+
+  container.classList.toggle("book-text--mobile-compact-read", compactRead);
+
+  container.querySelectorAll(".karaoke-strofa--past-mobile").forEach((el) => el.classList.remove("karaoke-strofa--past-mobile"));
+  container.querySelectorAll(".karaoke-sentence--past-mobile").forEach((el) => el.classList.remove("karaoke-sentence--past-mobile"));
+
+  if (!compactRead) return;
+
+  container.querySelectorAll(".karaoke-strofa").forEach((block) => {
+    const spans = block.querySelectorAll(".karaoke-sentence");
+    if (!spans.length) return;
+    const hasCurrent = [...spans].some(function (el) {
+      const g = parseInt(el.getAttribute("data-global-sentence-index"), 10);
+      return !Number.isNaN(g) && g === currentIndex;
+    });
+    if (!hasCurrent) {
+      block.classList.add("karaoke-strofa--past-mobile");
+      return;
+    }
+    spans.forEach(function (el) {
+      const g = parseInt(el.getAttribute("data-global-sentence-index"), 10);
+      if (!Number.isNaN(g) && g !== currentIndex) el.classList.add("karaoke-sentence--past-mobile");
+    });
+  });
+}
+
 function updateHighlightOnly() {
   const container = document.getElementById("karaoke-container");
   if (!container) return;
@@ -236,17 +407,19 @@ function updateHighlightOnly() {
   if (active) document.body.classList.add("story-reading-active");
   else document.body.classList.remove("story-reading-active");
 
-  if (!active) return;
+  if (active) {
+    const pageIdx = getCurrentPageIndex();
+    const sentenceIndicesOnPage = getSentenceIndicesOnPage(pageIdx);
+    const localSentenceIndex = sentenceIndicesOnPage.indexOf(currentIndex);
+    const currentSentenceEl = container.querySelector(".karaoke-sentence[data-sentence-index=\"" + localSentenceIndex + "\"]");
+    if (currentSentenceEl) currentSentenceEl.classList.add("current");
 
-  const pageIdx = getCurrentPageIndex();
-  const sentenceIndicesOnPage = getSentenceIndicesOnPage(pageIdx);
-  const localSentenceIndex = sentenceIndicesOnPage.indexOf(currentIndex);
-  const currentSentenceEl = container.querySelector(".karaoke-sentence[data-sentence-index=\"" + localSentenceIndex + "\"]");
-  if (currentSentenceEl) currentSentenceEl.classList.add("current");
+    const sceneIdx = currentIndex >= 0 && currentIndex < sentences.length ? sceneForSentence[currentIndex] : -1;
+    const currentBlock = sceneIdx >= 0 ? container.querySelector(".karaoke-strofa[data-scene-index=\"" + sceneIdx + "\"]") : null;
+    if (currentBlock) currentBlock.classList.add("current");
+  }
 
-  const sceneIdx = currentIndex >= 0 && currentIndex < sentences.length ? sceneForSentence[currentIndex] : -1;
-  const currentBlock = sceneIdx >= 0 ? container.querySelector(".karaoke-strofa[data-scene-index=\"" + sceneIdx + "\"]") : null;
-  if (currentBlock) currentBlock.classList.add("current");
+  updateMobileKaraokeReadVisibility();
 }
 
 function highlightKaraokeWord(wordIndex) {
@@ -272,34 +445,142 @@ function highlight(index) {
   renderCurrentPage(shouldAnimate);
 }
 
-function updateSceneImageForIndex(index) {
-  if (!storyData || !storyData.escenas || index < 0) return;
-  const sceneIdx = sceneForSentence[index];
-  const escena = storyData.escenas[sceneIdx];
-  const coverEl = document.getElementById("story-cover");
-  if (!coverEl) return;
-  if (escena && escena.imagen) {
-    coverEl.style.backgroundImage = `url('${escena.imagen}')`;
-    coverEl.style.backgroundSize = "contain";
-    coverEl.style.backgroundPosition = "center";
-  } else if (storyData.portada) {
-    coverEl.style.backgroundImage = `url('${storyData.portada}')`;
-    coverEl.style.backgroundSize = "contain";
-    coverEl.style.backgroundPosition = "center";
+function normalizeMediaUrl(url) {
+  if (url == null || url === "") return "";
+  const s = String(url).trim();
+  if (!s) return "";
+  if (/^https?:\/\//i.test(s)) return s;
+  if (s.startsWith("/")) return s;
+  return "/" + s.replace(/^\/+/, "");
+}
+
+/** Tablet/escritorio: portada en la franja oscura (columna izquierda). */
+function isWideStoryCoverLayout() {
+  return typeof window.matchMedia === "function" && window.matchMedia("(min-width: 768px)").matches;
+}
+
+/**
+ * Mueve #book-cover-slot (y el play) entre la hoja oscura y la hoja del texto.
+ * En celular (≤767px) la imagen queda en la misma caja crema que el karaoke → centrado simple con CSS.
+ */
+function syncCoverSlot() {
+  const slot = document.getElementById("book-cover-slot");
+  const btn = document.getElementById("btn-play-cover");
+  const leftPaper = document.getElementById("book-left-paper-slot");
+  const rightPaper = document.getElementById("book-page-text-paper");
+  const karaoke = document.getElementById("karaoke-container");
+  const leftHost = document.getElementById("book-page-cover-host");
+  if (!slot || !leftPaper || !rightPaper || !karaoke) return;
+
+  if (isWideStoryCoverLayout()) {
+    if (leftHost) leftHost.style.display = "";
+    if (slot.parentElement !== leftPaper) {
+      leftPaper.insertBefore(slot, leftPaper.firstChild);
+      if (btn) slot.insertAdjacentElement("afterend", btn);
+    }
+  } else {
+    if (slot.parentElement !== rightPaper) {
+      rightPaper.insertBefore(slot, karaoke);
+      if (btn) slot.insertAdjacentElement("afterend", btn);
+    }
+    if (leftHost) leftHost.style.display = "none";
   }
+}
+
+function clearCoverFrameInlineStyles() {
+  const frame = document.querySelector("#book-cover-slot .book-illustration-frame");
+  if (!frame) return;
+  [
+    "width",
+    "maxWidth",
+    "marginLeft",
+    "marginRight",
+    "marginTop",
+    "marginBottom",
+    "left",
+    "transform",
+    "display",
+    "position",
+    "boxSizing",
+  ].forEach(function (p) {
+    frame.style[p] = "";
+  });
+}
+
+let _centerCoverTimer = null;
+function scheduleCenterMobileStoryCover() {
+  if (_centerCoverTimer) clearTimeout(_centerCoverTimer);
+  _centerCoverTimer = setTimeout(function () {
+    _centerCoverTimer = null;
+    requestAnimationFrame(function () {
+      syncCoverSlot();
+      clearCoverFrameInlineStyles();
+    });
+  }, 32);
+}
+
+function applyStoryCoverImage(url) {
+  const coverEl = document.getElementById("story-cover");
+  if (!coverEl || url == null || url === "") return;
+  const u = normalizeMediaUrl(url);
+  if (!u) return;
+  /* <img src> es más fiable que background-image en div (menos conflictos con CSS) */
+  if (coverEl.tagName === "IMG") {
+    coverEl.onerror = function () {
+      log("story-cover: no se pudo cargar", u);
+    };
+    coverEl.onload = function () {
+      log("story-cover: imagen lista", u);
+      scheduleCenterMobileStoryCover();
+    };
+    coverEl.src = u;
+    coverEl.alt = storyTitle || "Ilustración del cuento";
+    coverEl.removeAttribute("srcset");
+    log("story-cover: src asignado →", u);
+    if (coverEl.complete) scheduleCenterMobileStoryCover();
+  } else {
+    const isWide = typeof window.matchMedia === "function" && window.matchMedia("(min-width: 1025px)").matches;
+    coverEl.style.backgroundImage = "url(" + JSON.stringify(u) + ")";
+    coverEl.style.backgroundPosition = "center";
+    coverEl.style.backgroundRepeat = "no-repeat";
+    coverEl.style.backgroundSize = isWide ? "contain" : "cover";
+  }
+}
+
+function updateSceneImageForIndex(index) {
+  if (!storyData || index < 0) return;
+  let url = null;
+  if (Array.isArray(storyData.escenas) && storyData.escenas.length > 0) {
+    const sceneIdx = sceneForSentence[index];
+    const escena = typeof sceneIdx === "number" ? storyData.escenas[sceneIdx] : null;
+    if (escena && escena.imagen && String(escena.imagen).trim()) url = String(escena.imagen).trim();
+  }
+  if (!url && storyData.portada && String(storyData.portada).trim()) url = String(storyData.portada).trim();
+  if (url) {
+    applyStoryCoverImage(url);
+  } else {
+    log("updateSceneImageForIndex: sin URL (ni escena ni portada) índice=", index);
+  }
+  scheduleCenterMobileStoryCover();
 }
 
 function speakCurrent() {
   if (!sentences.length || currentIndex < 0 || currentIndex >= sentences.length) return;
   if (!synth) return;
 
-  // Limpia cualquier cola anterior para que en móvil no se "pierda" el user gesture.
-  synth.cancel();
+  // En móviles, `cancel()` puede interferir si estamos iniciando desde cero.
+  // Solo cancelamos si ya hay algo hablando/pausado.
+  try {
+    if (synth.speaking || synth.paused) synth.cancel();
+  } catch (e) {
+    // Ignoramos errores de cancel según el navegador.
+  }
   currentUtterance = null;
 
-  const rate = parseFloat(document.getElementById("rate-range").value || "1");
+  const rateEl = document.getElementById("rate-range");
+  const rate = parseFloat((rateEl && rateEl.value ? rateEl.value : "1") || "1");
   const voiceSelect = document.getElementById("voice-select");
-  const voiceId = voiceSelect.value;
+  const voiceId = voiceSelect && voiceSelect.value ? voiceSelect.value : "";
 
   const sentenceText = sentences[currentIndex].text;
   const utter = new SpeechSynthesisUtterance(sentenceText);
@@ -317,8 +598,19 @@ function speakCurrent() {
   utter.onstart = () => {
     setPlayStatus("onstart: idx=" + currentIndex);
     isPlaying = true;
+    narrationStarted = true;
+    hideCountdownOverlay();
+    setReadingUIVisible(true);
     hideStartButtons();
     highlight(currentIndex);
+  };
+
+  utter.onerror = (event) => {
+    const msg =
+      event && event.error
+        ? String(event.error)
+        : "unknown";
+    setPlayStatus("utter.onerror: " + msg);
   };
 
   utter.onboundary = (event) => {
@@ -329,6 +621,11 @@ function speakCurrent() {
   };
 
   utter.onend = () => {
+    // Ignorar fin de frases canceladas (p. ej. al pulsar Avanzar): si no es el utter activo, no avanzar.
+    if (utter !== currentUtterance) return;
+    // En algunos móviles, al pausar puede dispararse `onend` como si la frase hubiera terminado.
+    // Eso avanzaba el índice o mostraba el final y al reanudar volvía al inicio.
+    if (isPaused) return;
     setPlayStatus("onend: idx=" + currentIndex);
     isPaused = false;
     if (!isPlaying) return;
@@ -349,8 +646,22 @@ function speakCurrent() {
 
   currentUtterance = utter;
   try {
-    setPlayStatus("speak() rate=" + rate + " idx=" + currentIndex);
+    setPlayStatus(
+      "speak() llamado. rate=" +
+        rate +
+        " idx=" +
+        currentIndex +
+        " voiceId=" +
+        (voiceId || "(auto)")
+    );
     synth.speak(utter);
+    // `speaking/paused` puede tardar en actualizar; sirve como pista rápida.
+    setPlayStatus(
+      "speak() llamado OK. speaking=" +
+        (synth.speaking ? "1" : "0") +
+        " paused=" +
+        (synth.paused ? "1" : "0")
+    );
   } catch (err) {
     setPlayStatus("speak() ERROR: " + (err && err.message ? err.message : err));
     throw err;
@@ -361,28 +672,70 @@ function play() {
   log("play() llamada. sentences.length=" + sentences.length + ", isPaused=" + isPaused + ", isPlaying=" + isPlaying);
   if (!sentences.length) {
     log("play() NO hace nada: no hay frases (¿cargó el cuento?)");
+    setPlayStatus("play(): no hay texto (sentences=0)");
+    return;
+  }
+  if (!synth) {
+    setPlayStatus("play(): SpeechSynthesis no disponible en este navegador");
     return;
   }
   if (isPaused && synth) {
-    isPaused = false;
-    if (synth.speaking && synth.paused) {
-      synth.resume();
+    // Priorizar resume real: en móvil a veces `speaking` no refleja bien el estado.
+    if (synth.paused) {
+      try {
+        synth.resume();
+      } catch (e) {
+        // Ignorar
+      }
+      isPaused = false;
       updateCenterPlayVisibility();
       updateHighlightOnly();
       return;
     }
-    if (currentIndex >= sentences.length || currentIndex < 0) currentIndex = 0;
+    if (synth.speaking) {
+      try {
+        synth.resume();
+      } catch (e) {
+        // Ignorar
+      }
+      isPaused = false;
+      updateCenterPlayVisibility();
+      updateHighlightOnly();
+      return;
+    }
+    // Sin cola activa: volver a hablar la frase actual (no reiniciar al inicio).
+    if (currentIndex < 0 || currentIndex >= sentences.length) {
+      currentIndex = Math.max(0, Math.min(sentences.length - 1, currentIndex));
+    }
+    isPaused = false;
     isPlaying = true;
-    speakCurrent();
+    try {
+      speakCurrent();
+    } catch (err) {
+      setPlayStatus("play(): speakCurrent ERROR: " + (err && err.message ? err.message : err));
+    }
     return;
   }
-  if (!isPlaying) {
-    if (currentIndex >= sentences.length || currentIndex < 0) {
-      currentIndex = 0;
-    }
+
+  // Si SpeechSynthesis se bloqueó en el primer intento (autoplay),
+  // puede quedar `isPlaying=true` pero sin estar hablando ni en pausa.
+  // En ese caso, al tocar “Iniciar lectura” debemos reintentar speakCurrent().
+  const synthIsSpeaking = synth.speaking ? true : false;
+  const synthIsPaused = synth.paused ? true : false;
+  const shouldRetrySpeak = isPlaying && !synthIsSpeaking && !synthIsPaused;
+
+  if (!isPlaying || shouldRetrySpeak) {
+    if (currentIndex >= sentences.length || currentIndex < 0) currentIndex = 0;
     isPlaying = true;
-    speakCurrent();
-  } else if (synth && synth.paused) {
+    try {
+      speakCurrent();
+    } catch (err) {
+      setPlayStatus("play(): speakCurrent ERROR: " + (err && err.message ? err.message : err));
+    }
+    return;
+  }
+
+  if (synthIsPaused) {
     synth.resume();
     isPaused = false;
     updateCenterPlayVisibility();
@@ -401,6 +754,9 @@ function pause() {
   isPaused = true;
   updateCenterPlayVisibility();
   updateHighlightOnly();
+  setReadingUIVisible(true);
+  // No mostramos el botón de play grande; el usuario reanuda desde los controles.
+  hideStartButtons();
 }
 
 function stop() {
@@ -428,14 +784,11 @@ async function fetchStory(id) {
 function populateHeader(story) {
   const titleEl = document.getElementById("story-title");
   const descEl = document.getElementById("story-description");
-  const coverEl = document.getElementById("story-cover");
 
   titleEl.textContent = story.titulo;
   descEl.textContent = story.descripcion || "";
   if (story.portada) {
-    coverEl.style.backgroundImage = `url('${story.portada}')`;
-    coverEl.style.backgroundSize = "cover";
-    coverEl.style.backgroundPosition = "center";
+    applyStoryCoverImage(story.portada);
   }
 }
 
@@ -605,6 +958,30 @@ let currentQuestionIndex = 0;
 let quizPreguntas = [];
 let quizUtterance = null;
 
+/** Mensajes al terminar el cuestionario: uno al azar, tono motivacional para niños (~20) */
+const QUIZ_DONE_MESSAGES = [
+  "¡Bravo! Has respondido todas las preguntas. Eres un explorador de cuentos muy valiente. ¡Sigue leyendo y soñando!",
+  "¡Lo lograste! Cada respuesta que diste es una estrella en tu mente. ¡Estamos muy orgullosos de ti!",
+  "¡Genial! Aprendes un poquito más cada día. Así se hace: curiosidad, esfuerzo y mucha imaginación.",
+  "¡Fantástico! Has terminado el cuestionario como un campeón. Los cuentos te abren puertas a mundos increíbles.",
+  "¡Muy bien! Tu cabeza brilla como un tesoro. Sigue así: leer y preguntar te hace más fuerte cada día.",
+  "¡Increíble! Completaste todas las preguntas. Eso demuestra que prestaste atención y que te gusta aprender. ¡Eres genial!",
+  "¡Felicitaciones! Eres un lector valiente. Cada cuento que escuchas y cada pregunta que respondes te hace crecer.",
+  "¡Qué bien! Terminaste el cuestionario con todo tu esfuerzo. Recuerda: leer es un superpoder que llevas dentro.",
+  "¡Sí se puede! Respondiste todo el cuestionario. Eres capaz de muchas cosas bonitas cuando te concentras.",
+  "¡Enhorabuena! Has llegado al final de las preguntas. Sigue disfrutando los cuentos: son magia para el corazón y la mente.",
+  "¡Eres una estrella! Cada pregunta superada es un pasito más hacia ser un gran lector. ¡Sigue así!",
+  "¡Qué orgullo! Escuchaste con atención y lo demostraste con tus respuestas. Los cuentos te acompañan siempre.",
+  "¡Brillante! Tu imaginación y tu esfuerzo hacen equipo. ¡El próximo cuento te espera con más aventuras!",
+  "¡Campeón o campeona del cuento! Terminaste las preguntas con alegría. Eso también es aprender jugando.",
+  "¡Tú puedes! Las historias te enseñan cosas sin que casi te des cuenta. ¡Sigue preguntando y descubriendo!",
+  "¡Un aplauso para ti! Completar el cuestionario no es fácil, y tú lo lograste. ¡Eres muy capaz!",
+  "¡Magia pura! Cuando lees y respondes, entrenas tu memoria y tu corazón. ¡Eres increíble!",
+  "¡Súper! Las respuestas correctas importan, pero lo más bonito es que te hayas atrevido a intentarlo todo.",
+  "¡Héroe o heroína de la lectura! Cada cuento te deja algo bueno. ¡Hoy te dejó una sonrisa y un ¡muy bien hecho!",
+  "¡Dale una estrella a tu esfuerzo! Terminaste el cuestionario. El mundo de los cuentos siempre te abrirá la puerta.",
+];
+
 function speakQuizText(text, onEnd) {
   if (!window.speechSynthesis || !text) return;
   if (quizUtterance) window.speechSynthesis.cancel();
@@ -638,6 +1015,7 @@ function speakQuestionAndOptions(questionText, opts) {
 
 function renderOneQuestion(container, q, qIdx, total) {
   if (!container) return;
+  hideQuizActionsBar();
   container.innerHTML = "";
   const opts = q.opciones || [];
   const correcta = typeof q.correcta === "number" ? q.correcta : 0;
@@ -730,75 +1108,99 @@ function renderOneQuestion(container, q, qIdx, total) {
   speakQuestionAndOptions(questionLabel, opts);
 }
 
+function hideQuizActionsBar() {
+  const el = document.getElementById("book-quiz-actions");
+  if (el) {
+    el.innerHTML = "";
+    el.classList.add("hidden");
+  }
+  const overlay = document.getElementById("book-quiz-overlay");
+  if (overlay) overlay.classList.remove("book-quiz-overlay--motivational");
+}
+
 function showQuizDone(container) {
   if (!container) return;
   container.innerHTML = "";
+  const actionsClear = document.getElementById("book-quiz-actions");
+  if (actionsClear) {
+    actionsClear.innerHTML = "";
+    actionsClear.classList.remove("hidden");
+  }
+  const motivational =
+    QUIZ_DONE_MESSAGES[Math.floor(Math.random() * QUIZ_DONE_MESSAGES.length)];
+
   const card = document.createElement("div");
-  card.className = "book-quiz-card";
-  const title = document.createElement("h3");
-  title.className = "text-lg font-bold text-purple-900 mb-2";
-  title.textContent = "¿Qué tal te fue?";
-  card.appendChild(title);
+  card.className = "book-quiz-card book-quiz-card--done text-center";
   const p = document.createElement("p");
-  p.className = "text-purple-800/90 text-base mb-4";
-  p.textContent = "Has terminado las preguntas. Puedes reanudar el cuento o leer otro.";
+  p.className = "text-purple-900/95 text-base sm:text-lg font-semibold leading-relaxed";
+  p.textContent = motivational;
   card.appendChild(p);
-
-  const buttonsWrap = document.createElement("div");
-  buttonsWrap.className = "flex flex-col sm:flex-row gap-3 justify-center items-center";
-
-  const btnReanudar = document.createElement("button");
-  btnReanudar.type = "button";
-  btnReanudar.className = "book-quiz-btn book-quiz-btn-restart";
-  btnReanudar.textContent = "Reanudar el cuento";
-  btnReanudar.addEventListener("click", function () {
-    hideEndPanel();
-    restartStory();
-  });
-  buttonsWrap.appendChild(btnReanudar);
-
-  const btnOtro = document.createElement("button");
-  btnOtro.type = "button";
-  btnOtro.className = "book-quiz-btn book-quiz-btn-another";
-  btnOtro.textContent = "Leer otro cuento";
-  btnOtro.addEventListener("click", async function () {
-    try {
-      const res = await fetch("/api/stories/");
-      if (!res.ok) return;
-      const stories = await res.json();
-      if (!stories || stories.length === 0) {
-        window.location.href = "/";
-        return;
-      }
-      const currentId = storyData && storyData.id;
-      const otras = currentId ? stories.filter(function (s) { return s.id !== currentId; }) : stories;
-      const list = otras.length ? otras : stories;
-      const pick = list[Math.floor(Math.random() * list.length)];
-      if (pick && pick.id) {
-        stopNarrationOnLeave();
-        window.location.href = "/cuento/" + pick.id;
-      } else {
-        window.location.href = "/";
-      }
-    } catch {
-      window.location.href = "/";
-    }
-  });
-  buttonsWrap.appendChild(btnOtro);
-
-  card.appendChild(buttonsWrap);
   container.appendChild(card);
+
+  const actionsEl = document.getElementById("book-quiz-actions");
+  if (actionsEl) {
+    actionsEl.innerHTML = "";
+    actionsEl.classList.remove("hidden");
+    const btnOtro = document.createElement("button");
+    btnOtro.type = "button";
+    btnOtro.className = "book-quiz-btn book-quiz-btn-yes book-quiz-btn-leer-otro";
+    btnOtro.textContent = "LEER OTRO CUENTO";
+    btnOtro.addEventListener("click", async function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      try {
+        const res = await fetch("/api/stories/");
+        if (!res.ok) return;
+        const stories = await res.json();
+        if (!stories || stories.length === 0) {
+          window.location.href = "/";
+          return;
+        }
+        const currentId = storyData && storyData.id;
+        const otras = currentId ? stories.filter(function (s) { return s.id !== currentId; }) : stories;
+        const list = otras.length ? otras : stories;
+        const pick = list[Math.floor(Math.random() * list.length)];
+        if (pick && pick.id) {
+          stopNarrationOnLeave();
+          window.location.href = "/cuento/" + pick.id;
+        } else {
+          window.location.href = "/";
+        }
+      } catch {
+        window.location.href = "/";
+      }
+    });
+    actionsEl.appendChild(btnOtro);
+  }
+
+  if (window.speechSynthesis) {
+    window.speechSynthesis.cancel();
+  }
+  window.setTimeout(function () {
+    speakQuizText(motivational);
+  }, 350);
+
+  const overlay = document.getElementById("book-quiz-overlay");
+  if (overlay) overlay.classList.add("book-quiz-overlay--motivational");
 }
 
 function showEndPanel() {
   const overlay = document.getElementById("book-quiz-overlay");
   const body = document.getElementById("book-quiz-body");
+  const actionsEl = document.getElementById("book-quiz-actions");
   if (!overlay || !body) return;
+
+  overlay.classList.remove("book-quiz-overlay--motivational");
 
   quizPreguntas = (storyData && storyData.preguntas && Array.isArray(storyData.preguntas)) ? storyData.preguntas : [];
   currentQuestionIndex = 0;
 
   body.innerHTML = "";
+  if (actionsEl) {
+    actionsEl.innerHTML = "";
+    actionsEl.classList.remove("hidden");
+  }
+
   const card = document.createElement("div");
   card.className = "book-quiz-card text-center";
   const title = document.createElement("h3");
@@ -814,10 +1216,10 @@ function showEndPanel() {
   }
   card.appendChild(p);
 
-  const buttonsWrap = document.createElement("div");
-  buttonsWrap.className = "flex flex-col gap-3 mt-1 justify-center items-center";
-
+  // Solo el botón SI dentro de la caja (si hay preguntas)
   if (quizPreguntas.length > 0) {
+    const buttonsWrap = document.createElement("div");
+    buttonsWrap.className = "flex flex-col gap-3 mt-1 justify-center items-center";
     const btnQuiz = document.createElement("button");
     btnQuiz.type = "button";
     btnQuiz.className = "book-quiz-btn book-quiz-btn-restart book-quiz-btn-yes";
@@ -826,25 +1228,58 @@ function showEndPanel() {
       renderOneQuestion(body, quizPreguntas[0], 0, quizPreguntas.length);
     });
     buttonsWrap.appendChild(btnQuiz);
+    card.appendChild(buttonsWrap);
   }
 
-  const btnAnother = document.createElement("a");
-  btnAnother.href = "/";
-  btnAnother.className = "book-quiz-btn book-quiz-btn-another";
-  btnAnother.textContent = "OTRO CUENTO";
-  btnAnother.addEventListener("click", function () {
-    stopNarrationOnLeave();
-  });
-  buttonsWrap.appendChild(btnAnother);
-
-  card.appendChild(buttonsWrap);
   body.appendChild(card);
 
+  // OTRO CUENTO y Leer mismo: fuera de la caja
+  if (actionsEl) {
+    const btnAnother = document.createElement("button");
+    btnAnother.type = "button";
+    btnAnother.className = "book-quiz-btn book-quiz-btn-another";
+    btnAnother.textContent = "OTRO CUENTO";
+    btnAnother.addEventListener("click", function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      stopNarrationOnLeave();
+      window.location.href = "/";
+    });
+    actionsEl.appendChild(btnAnother);
+
+    const btnSameAgain = document.createElement("button");
+    btnSameAgain.type = "button";
+    btnSameAgain.className = "book-quiz-btn book-quiz-btn-same-again";
+    btnSameAgain.textContent = "Leer mismo cuento nuevamente";
+    btnSameAgain.addEventListener("click", function () {
+      hideEndPanel();
+      restartStory();
+    });
+    actionsEl.appendChild(btnSameAgain);
+  }
+
   overlay.classList.remove("hidden");
+  document.body.classList.add("story-end-panel-open");
+
+  const announce =
+    "¡Has llegado al final del cuento! " +
+    (quizPreguntas.length > 0
+      ? "¿Quieres responder algunas preguntas sobre la historia o prefieres escuchar otro cuento?"
+      : "¿Quieres escuchar otro cuento?");
+  // Retraso: en móvil, al terminar el último utterance a veces hay un "ghost click"
+  // que activaba el enlace del logo (/) antes de que el usuario tocara nada.
+  if (window.speechSynthesis) {
+    window.speechSynthesis.cancel();
+  }
+  window.setTimeout(function () {
+    speakQuizText(announce);
+  }, 400);
 }
 
 function hideEndPanel() {
   if (window.speechSynthesis) window.speechSynthesis.cancel();
+  document.body.classList.remove("story-end-panel-open");
+  hideQuizActionsBar();
   const overlay = document.getElementById("book-quiz-overlay");
   if (overlay) overlay.classList.add("hidden");
 }
@@ -867,6 +1302,20 @@ function scrollToCuentoInicio() {
 }
 
 function handlePlayClick(e) {
+  const now = Date.now();
+  const type = e && e.type ? e.type : "";
+  // En móvil, al tener `onclick/ontouchend` en el HTML + listeners en JS,
+  // suele dispararse `handlePlayClick` 2-3 veces seguidas (touchend + click).
+  // Como `speakCurrent()` hace `synth.cancel()`, esas llamadas duplicadas evitan que arranque.
+  // Así que ignoramos taps duplicados muy rápidos.
+  if (now - lastHandlePlayClickAt < 650) {
+    if (type === "click" && lastHandlePlayClickType === "touchend") return;
+    // También ignoramos duplicados genéricos en ventana corta.
+    return;
+  }
+  lastHandlePlayClickAt = now;
+  lastHandlePlayClickType = type;
+
   if (e) {
     // En móviles, `preventDefault()` en `touchend` puede interferir con el
     // "user gesture" necesario para SpeechSynthesis. Solo cortamos propagación.
@@ -887,9 +1336,13 @@ function handlePlayClick(e) {
     return;
   }
   const btn = e && e.currentTarget ? e.currentTarget : null;
-  if (btn && btn.disabled) return;
+  if (btn && btn.disabled) btn.disabled = false;
 
-  if (isMobileOrTablet()) scrollToCuentoInicio();
+  // Evita scroll suave que a veces puede afectar la "user gesture"
+  // necesaria en algunos móviles para SpeechSynthesis.
+  if (isMobileOrTablet() && btn && btn.id === "btn-play-cover") {
+    scrollToCuentoInicio();
+  }
   play();
   updatePauseButtonLabels();
 }
@@ -1028,17 +1481,24 @@ async function initPage() {
     storyData = await fetchStory(storyId);
     log("Cuento cargado:", storyData.titulo, "escenas:", storyData.escenas ? storyData.escenas.length : 0);
     uiDebug("fetchStory OK titulo=" + (storyData && storyData.titulo ? storyData.titulo : ""));
+    storyTitle = storyData && storyData.titulo ? storyData.titulo : "";
     populateHeader(storyData);
     buildSentencesAndPages(storyData);
     renderCurrentPage(false);
     updateSceneImageForIndex(0);
+    scheduleCenterMobileStoryCover();
     log("initPage OK. Frases totales:", sentences.length);
     uiDebug("initPage OK sentences=" + sentences.length);
 
     if (coverBtn) coverBtn.disabled = false;
     if (startPlayBtn) startPlayBtn.disabled = false;
     if (startBtn) startBtn.disabled = false;
-    showStartButtons();
+    // Mostramos overlay de "play" y mantenemos la hoja en pausa.
+    setKaraokeBoxVisible(false);
+    setReadingUIVisible(false);
+    const overlayTitle = document.getElementById("overlay-story-title");
+    if (overlayTitle) overlayTitle.textContent = storyData && storyData.titulo ? storyData.titulo : "";
+    hideStartButtons();
   } catch (e) {
     log("initPage ERROR:", e.message || e);
     uiDebug("initPage ERROR: " + (e && e.message ? e.message : e));
@@ -1046,6 +1506,9 @@ async function initPage() {
     if (container) {
       container.textContent = "No se pudo cargar el cuento.";
     }
+    setKaraokeBoxVisible(false);
+    setReadingUIVisible(false);
+    hideStartButtons();
   }
 
   initVoices();
@@ -1055,6 +1518,17 @@ async function initPage() {
   initRateControl();
   initAmbient();
   initControls();
+
+  let resizeCoverTimer = null;
+  function onResizeCoverLayout() {
+    clearTimeout(resizeCoverTimer);
+    resizeCoverTimer = setTimeout(function () {
+      scheduleCenterMobileStoryCover();
+      updateHighlightOnly();
+    }, 80);
+  }
+  window.addEventListener("resize", onResizeCoverLayout);
+  window.addEventListener("orientationchange", scheduleCenterMobileStoryCover);
 
   if (isMobileOrTablet()) {
     if (!window.location.hash || window.location.hash !== "#cuento-inicio") {
@@ -1070,7 +1544,18 @@ async function initPage() {
   document.addEventListener("visibilitychange", function () {
     if (document.visibilityState === "hidden") stopNarrationOnLeave();
   });
+
 }
 
-document.addEventListener("DOMContentLoaded", initPage);
+function bootstrapStoryPage() {
+  syncCoverSlot();
+  clearCoverFrameInlineStyles();
+  initPage();
+}
+
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", bootstrapStoryPage);
+} else {
+  bootstrapStoryPage();
+}
 

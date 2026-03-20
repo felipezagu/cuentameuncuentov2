@@ -2,7 +2,7 @@
 
 {% block header_actions %}
   <button id="config-toggle"
-          class="kid-config-btn inline-flex items-center justify-center w-10 h-10 rounded-full shadow-md border-2 transition"
+          class="kid-config-btn inline-flex items-center justify-center w-10 h-10 rounded-full shadow-md border-2 transition hidden"
           title="Configuración de voz">
     ⚙
   </button>
@@ -10,10 +10,6 @@
 
 {% block content %}
 <section class="story-reading px-3 sm:px-6 md:px-8 py-4 sm:py-6 max-w-5xl mx-auto">
-  <div id="js-debug"
-       style="position:fixed;left:10px;bottom:10px;z-index:99999;max-width:90vw;max-height:40vh;overflow:auto;background:rgba(0,0,0,0.75);color:#e5e7eb;font-family:monospace;font-size:12px;padding:10px;border-radius:10px;display:block;">
-    JS-debug: esperando...
-  </div>
   <header class="story-reading-header flex items-center justify-between gap-2 mb-3 sm:mb-4">
     <div class="min-w-0 flex-1">
       <h1 id="story-title" class="text-lg sm:text-2xl md:text-3xl font-extrabold kid-text-main truncate"></h1>
@@ -22,25 +18,46 @@
     <div class="flex items-center gap-2 shrink-0"></div>
   </header>
 
+  <div id="countdown-overlay"
+       class="fixed inset-0 z-50 flex items-center justify-center bg-black/70 text-white">
+    <div class="text-center px-6">
+      <div class="text-lg sm:text-2xl font-extrabold mb-2">
+        Te leeré el cuento <span id="overlay-story-title"></span>
+      </div>
+      <div class="mt-2 text-xl sm:text-2xl font-extrabold">
+        Súbele el volumen y dale al play
+      </div>
+
+      <button id="btn-play-overlay" type="button" class="book-play-btn mt-6"
+        title="Dale al play"
+        onclick="handlePlayClick(event)">
+        <span class="book-play-icon">▶</span>
+      </button>
+    </div>
+  </div>
+
   <div id="cuento-inicio" class="book-wrapper">
     <div class="book-outer">
       <div class="book-spread">
-        <div class="book-page book-page-left">
-          <div class="book-page-paper">
-            <div id="story-cover" class="book-illustration kid-cover-placeholder">
+        <div class="book-page book-page-left" id="book-page-cover-host">
+          <!-- En ≥768px el marco y el play se insertan aquí (franja oscura). En celular queda vacío. -->
+          <div class="book-page-paper" id="book-left-paper-slot"></div>
+        </div>
+        <div class="book-page book-page-right">
+          <div class="book-page-paper" id="book-page-text-paper">
+            <div class="book-mobile-cover-wrap" id="book-cover-slot">
+              <div class="book-illustration-frame">
+                <img id="story-cover" class="story-cover-img kid-cover-placeholder" alt="" decoding="async" />
+              </div>
             </div>
-            <button id="btn-play-cover" type="button" class="book-play-btn mt-3" title="Léeme el cuento"
+            <button id="btn-play-cover" type="button" class="book-play-btn mt-3 hidden" title="Léeme el cuento"
               onclick="handlePlayClick(event)" ontouchend="handlePlayClick(event)">
               <span class="book-play-icon">▶</span>
             </button>
-          </div>
-        </div>
-        <div class="book-page book-page-right">
-          <div class="book-page-paper">
-            <div id="karaoke-container" class="book-text">
+            <div id="karaoke-container" class="book-text hidden">
             </div>
             <div class="book-page-footer">
-              <span id="page-indicator" class="book-page-number">Página 1</span>
+              <span id="page-indicator" class="book-page-number hidden">Página 1</span>
             </div>
           </div>
         </div>
@@ -48,38 +65,35 @@
       
       <div id="book-quiz-overlay" class="book-quiz-overlay hidden">
         <div class="book-quiz-inner">
-          <div class="book-quiz-header">
-            <!-- Botón de reanudar eliminado para que no aparezca al responder cuestionario -->
-          </div>
           <div id="book-quiz-body" class="book-quiz-body">
-            <!-- Una pregunta a la vez + feedback + Siguiente -->
+            <!-- Texto / SI dentro de la caja; preguntas -->
           </div>
-          <div class="book-quiz-footer"></div>
+        </div>
+        <div id="book-quiz-actions" class="book-quiz-actions hidden" aria-label="Acciones del cuento">
+          <!-- Botones fuera de la caja: OTRO CUENTO, LEER MISMO, LEER OTRO (cuestionario) -->
         </div>
       </div>
     </div>
   </div>
 
-  <div id="start-reading-area" class="start-reading-area mt-4 flex flex-col items-center gap-2">
+  <div id="start-reading-area" class="start-reading-area mt-4 flex flex-col items-center gap-2 hidden">
     <!-- Oculta el párrafo inicial y deja el espacio para el play grande -->
-    <button id="btn-start-play" type="button" class="book-play-btn" title="Léeme el cuento"
+    <button id="btn-start-play" type="button" class="book-play-btn hidden" title="Léeme el cuento"
       onclick="handlePlayClick(event)" ontouchend="handlePlayClick(event)">
       <span class="book-play-icon">▶</span>
     </button>
     <p id="play-status" class="play-status kid-text-muted text-xs sm:text-sm mt-1"></p>
-    <button id="btn-start-reading" type="button" class="book-quiz-btn book-quiz-btn-restart"
-      onclick="handlePlayClick(event)" ontouchend="handlePlayClick(event)">
+    <button id="btn-start-reading" type="button" class="book-quiz-btn book-quiz-btn-restart">
       Iniciar lectura
     </button>
   </div>
 
-  <div class="story-controls">
+  <div class="story-controls hidden">
     <button type="button" id="btn-prev" class="story-control-btn" title="Retroceder">
       <span class="story-control-btn-icon" aria-hidden="true">⏪</span>
       <span class="story-control-btn-label">Retroceder</span>
     </button>
-    <button type="button" id="btn-pause-main" class="story-control-btn story-control-btn-pause" title="Silencio"
-      onclick="handlePauseResumeClick()" ontouchend="handlePauseResumeClick()">
+    <button type="button" id="btn-pause-main" class="story-control-btn story-control-btn-pause" title="Silencio">
       <span class="story-control-btn-icon" aria-hidden="true">🔇</span>
       <span class="story-control-btn-label">Silencio</span>
     </button>
@@ -135,6 +149,6 @@
 <script>
   window.STORY_ID = {{ story_id }};
 </script>
-<script src="/static/js/story.js?v=8"></script>
+<script src="/static/js/story.js?v=26"></script>
 {% endblock %}
 
