@@ -7,6 +7,20 @@ log("story.js cargado");
 
 const ESTROFAS_PER_PAGE = 1;
 
+function uiDebug(msg) {
+  const el = document.getElementById("js-debug");
+  if (!el) return;
+  el.style.display = "block";
+  const ts = new Date().toLocaleTimeString();
+  el.textContent = el.textContent ? el.textContent + "\n" + ts + " " + msg : ts + " " + msg;
+}
+
+window.onerror = function (message, source, lineno, colno, error) {
+  uiDebug("JS ERROR: " + message + " @ " + (source || "") + ":" + lineno + ":" + colno);
+};
+
+uiDebug("init: script loaded");
+
 let currentIndex = 0;
 let sentences = [];
 let isPlaying = false;
@@ -855,6 +869,9 @@ function handlePlayClick(e) {
     e.stopPropagation();
   }
   log("handlePlayClick (botón central)");
+  uiDebug(
+    "handlePlayClick type=" + (e && e.type ? e.type : "") + " target=" + (e && e.target ? e.target.id : "")
+  );
   setPlayStatus(
     "Tap: type=" +
       (e && e.type ? e.type : "click") +
@@ -875,6 +892,7 @@ function handlePlayClick(e) {
 
 function handlePauseResumeClick() {
   log("handlePauseResumeClick. isPaused=" + isPaused);
+  uiDebug("handlePauseResumeClick isPaused=" + isPaused);
   if (isPaused) {
     play();
   } else {
@@ -898,6 +916,7 @@ function initControls() {
   log(
     "initControls: playCover=" + !!playCoverBtn + ", startBtn=" + !!startBtn + ", btn-pause=" + !!btnPause + ", btn-pause-main=" + !!btnPauseMain + ", prev=" + !!btnPrev + ", next=" + !!btnNext
   );
+  uiDebug("initControls bound");
 
   function bindStartButtons(btn) {
     if (!btn) return;
@@ -987,6 +1006,7 @@ function initControls() {
 async function initPage() {
   const storyId = typeof window.STORY_ID !== "undefined" ? window.STORY_ID : null;
   log("initPage: storyId=" + storyId);
+  uiDebug("initPage start storyId=" + storyId);
 
   // Evita clicks antes de que el cuento esté cargado (sentences.length=0).
   const coverBtn = document.getElementById("btn-play-cover");
@@ -1000,11 +1020,13 @@ async function initPage() {
     if (storyId == null) throw new Error("No hay STORY_ID en la página");
     storyData = await fetchStory(storyId);
     log("Cuento cargado:", storyData.titulo, "escenas:", storyData.escenas ? storyData.escenas.length : 0);
+    uiDebug("fetchStory OK titulo=" + (storyData && storyData.titulo ? storyData.titulo : ""));
     populateHeader(storyData);
     buildSentencesAndPages(storyData);
     renderCurrentPage(false);
     updateSceneImageForIndex(0);
     log("initPage OK. Frases totales:", sentences.length);
+    uiDebug("initPage OK sentences=" + sentences.length);
 
     if (coverBtn) coverBtn.disabled = false;
     if (startPlayBtn) startPlayBtn.disabled = false;
@@ -1012,6 +1034,7 @@ async function initPage() {
     showStartButtons();
   } catch (e) {
     log("initPage ERROR:", e.message || e);
+    uiDebug("initPage ERROR: " + (e && e.message ? e.message : e));
     const container = document.getElementById("karaoke-container");
     if (container) {
       container.textContent = "No se pudo cargar el cuento.";
