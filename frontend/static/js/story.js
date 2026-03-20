@@ -866,6 +866,14 @@ function initControls() {
   if (centerPlay) {
     centerPlay.addEventListener("click", handlePlayClick);
     // En móvil iOS/Android, evitamos `preventDefault()` para no romper el "user gesture"
+    // En algunos móviles funciona mejor con touchstart (no touchend).
+    centerPlay.addEventListener(
+      "touchstart",
+      function (e) {
+        handlePlayClick(e);
+      },
+      { passive: true }
+    );
     centerPlay.addEventListener(
       "touchend",
       function (e) {
