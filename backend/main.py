@@ -243,8 +243,17 @@ async def admin_login(
     request: Request,
     password: Annotated[str, Form(...)] = "",
 ):
-    # Clave única para acceder al panel de administración
-    ADMIN_KEY = 'FELI14157!"#'
+    # Clave del panel: define ADMIN_KEY en .env o .env.local (no en el código)
+    ADMIN_KEY = (os.getenv("ADMIN_KEY") or "").strip()
+    if not ADMIN_KEY:
+        return templates.TemplateResponse(
+            "admin_login.html",
+            {
+                "request": request,
+                "error": "Panel no configurado: falta la variable ADMIN_KEY en el servidor.",
+            },
+            status_code=503,
+        )
     if password == ADMIN_KEY:
         request.session["is_admin"] = True
         return RedirectResponse(url="/admin/cuentos", status_code=302)
