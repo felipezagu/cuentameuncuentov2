@@ -253,7 +253,7 @@ function updateSceneImageForIndex(index) {
     coverEl.style.backgroundPosition = "center";
   } else if (storyData.portada) {
     coverEl.style.backgroundImage = `url('${storyData.portada}')`;
-    coverEl.style.backgroundSize = "cover";
+    coverEl.style.backgroundSize = "contain";
     coverEl.style.backgroundPosition = "center";
   }
 }
@@ -327,12 +327,10 @@ function play() {
     isPaused = false;
     if (synth.speaking && synth.paused) {
       synth.resume();
-      hideCenterPlayNow();
+      updateCenterPlayVisibility();
       updateHighlightOnly();
       return;
     }
-    markCenterButtonUsed();
-    hideCenterPlayNow();
     if (currentIndex >= sentences.length || currentIndex < 0) currentIndex = 0;
     isPlaying = true;
     speakCurrent();
@@ -344,11 +342,10 @@ function play() {
     }
     isPlaying = true;
     speakCurrent();
-    hideCenterPlayNow();
   } else if (synth && synth.paused) {
     synth.resume();
     isPaused = false;
-    hideCenterPlayNow();
+    updateCenterPlayVisibility();
     updateHighlightOnly();
   }
 }
@@ -835,7 +832,6 @@ function handlePlayClick(e) {
   if (!sentences.length) return;
   const btn = document.getElementById("btn-play-center");
   if (btn && btn.disabled) return;
-  markCenterButtonUsed();
   if (isMobileOrTablet()) scrollToCuentoInicio();
   play();
   updatePauseButtonLabels();
@@ -843,7 +839,6 @@ function handlePlayClick(e) {
 
 function handlePauseResumeClick() {
   log("handlePauseResumeClick. isPaused=" + isPaused);
-  markCenterButtonUsed();
   if (isPaused) {
     play();
   } else {
