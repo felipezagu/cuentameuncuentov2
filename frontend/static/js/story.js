@@ -21,6 +21,7 @@ let pageForSentence = [];
 let lastRenderedPageIndex = -1;
 let currentWordIndex = 0;
 let wasPlayingBeforeConfig = false;
+let lastPlayGestureTs = 0;
 
 function splitSentences(text) {
   return text
@@ -832,6 +833,9 @@ function handlePlayClick(e) {
   if (!sentences.length) return;
   const btn = document.getElementById("btn-play-center");
   if (btn && btn.disabled) return;
+  const now = Date.now();
+  if (now - lastPlayGestureTs < 400) return;
+  lastPlayGestureTs = now;
   if (isMobileOrTablet()) scrollToCuentoInicio();
   play();
   updatePauseButtonLabels();
@@ -860,15 +864,6 @@ function initControls() {
   log("initControls: btn-play-center=" + !!centerPlay + ", btn-pause=" + !!btnPause + ", btn-pause-main=" + !!btnPauseMain + ", prev=" + !!btnPrev + ", next=" + !!btnNext);
   if (centerPlay) {
     centerPlay.addEventListener("click", handlePlayClick);
-    // En móvil iOS/Android, evitamos `preventDefault()` para no romper el "user gesture"
-    // En algunos móviles funciona mejor con touchstart (no touchend).
-    centerPlay.addEventListener(
-      "touchstart",
-      function (e) {
-        handlePlayClick(e);
-      },
-      { passive: true }
-    );
     centerPlay.addEventListener(
       "touchend",
       function (e) {
