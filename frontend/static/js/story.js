@@ -276,9 +276,9 @@ function speakCurrent() {
   if (!sentences.length || currentIndex < 0 || currentIndex >= sentences.length) return;
   if (!synth) return;
 
-  if (currentUtterance) {
-    synth.cancel();
-  }
+  // Limpia cualquier cola anterior para que en móvil no se "pierda" el user gesture.
+  synth.cancel();
+  currentUtterance = null;
 
   const rate = parseFloat(document.getElementById("rate-range").value || "1");
   const voiceSelect = document.getElementById("voice-select");
@@ -286,6 +286,7 @@ function speakCurrent() {
 
   const sentenceText = sentences[currentIndex].text;
   const utter = new SpeechSynthesisUtterance(sentenceText);
+  utter.lang = "es-ES";
   utter.rate = rate;
 
   if (voiceId && synth.getVoices) {
@@ -884,14 +885,14 @@ function initControls() {
   function bindStartButtons(btn) {
     if (!btn) return;
     btn.addEventListener("click", handlePlayClick);
+    // En móviles, suele funcionar mejor `pointerdown` como "user gesture".
     btn.addEventListener(
-      "touchend",
+      "pointerdown",
       function (e) {
         handlePlayClick(e);
       },
       { passive: true }
     );
-    btn.addEventListener("pointerup", handlePlayClick);
   }
 
   bindStartButtons(playCoverBtn);
