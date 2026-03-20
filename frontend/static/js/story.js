@@ -327,6 +327,7 @@ function play() {
     if (synth.speaking && synth.paused) {
       synth.resume();
       hideCenterPlayNow();
+      updateHighlightOnly();
       return;
     }
     markCenterButtonUsed();
@@ -347,6 +348,7 @@ function play() {
     synth.resume();
     isPaused = false;
     hideCenterPlayNow();
+    updateHighlightOnly();
   }
 }
 
@@ -445,6 +447,8 @@ function initRateControl() {
 function initAmbient() {
   const select = document.getElementById("ambient-select");
   const audio = document.getElementById("ambient-sound");
+  if (!select || !audio) return; // panel reducido (solo voz/velocidad)
+
   select.addEventListener("change", () => {
     const value = select.value;
     audio.pause();

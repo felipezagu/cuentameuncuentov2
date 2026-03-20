@@ -130,9 +130,10 @@ body.dark-mode .kid-config-btn:hover {
   color: #93c5fd;
 }
 body.dark-mode .kid-play-hint {
-  background: rgba(255,255,255,0.15);
+  background: #000;
   color: #cbd5e1;
-  border-color: rgba(255,255,255,0.2);
+  border-color: rgba(255,255,255,0.35);
+  backdrop-filter: none;
 }
 body.dark-mode .kid-config-panel {
   background: rgba(30, 41, 59, 0.9);

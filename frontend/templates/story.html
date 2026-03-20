@@ -8,11 +8,7 @@
       <p id="story-description" class="mt-0.5 text-xs sm:text-sm kid-text-muted line-clamp-2 sm:line-clamp-none"></p>
     </div>
     <div class="flex items-center gap-2 shrink-0">
-      <button id="config-toggle"
-              class="kid-config-btn inline-flex items-center justify-center w-10 h-10 rounded-full shadow-md border-2 transition"
-              title="Configuración de voz">
-        ⚙
-      </button>
+      <!-- config toggle se muestra al final del cuento -->
     </div>
   </header>
 
@@ -78,8 +74,16 @@
     </a>
   </div>
 
+  <div class="flex justify-end mt-4">
+    <button id="config-toggle"
+            class="kid-config-btn inline-flex items-center justify-center w-10 h-10 rounded-full shadow-md border-2 transition"
+            title="Configuración de voz">
+      ⚙
+    </button>
+  </div>
+
   <div id="config-panel" class="kid-config-panel mt-3 backdrop-blur-xl rounded-2xl p-3 sm:p-4 shadow-lg border hidden text-xs sm:text-sm">
-    <div class="grid gap-3 sm:grid-cols-3">
+    <div class="grid gap-3 sm:grid-cols-2">
       <div>
         <label class="block mb-1 kid-label">Tipo de voz</label>
         <select id="voice-select" class="kid-input w-full rounded-xl border-2 px-3 py-1.5 text-xs sm:text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#2563EB] focus:border-[#2563EB]">
@@ -89,31 +93,11 @@
       <div>
         <label class="block mb-1 kid-label">Velocidad</label>
         <div class="flex items-center gap-2">
-          <input id="rate-range" type="range" min="0.5" max="1.5" step="0.25" value="1"
+          <input id="rate-range" type="range" min="0.5" max="1.5" step="0.25" value="0.5"
                  class="w-full kid-accent">
-          <span id="rate-label" class="w-10 text-right kid-text-muted text-xs sm:text-sm">1x</span>
+          <span id="rate-label" class="w-10 text-right kid-text-muted text-xs sm:text-sm">0.5x</span>
         </div>
       </div>
-      <div>
-        <label class="block mb-1 kid-label">Sonido</label>
-        <select id="ambient-select" class="kid-input w-full rounded-xl border-2 px-3 py-1.5 text-xs sm:text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#2563EB] focus:border-[#2563EB]">
-          <option value="">Ninguno</option>
-          <option value="bosque">Bosque suave</option>
-          <option value="mar">Olas del mar</option>
-          <option value="noche">Noche estrellada</option>
-        </select>
-      </div>
-    </div>
-    <div class="flex flex-wrap gap-2 mt-3">
-      <button id="btn-pause" class="btn-control bg-amber-400 text-white">
-        🔇 Silencio
-      </button>
-      <button id="btn-stop" class="btn-control bg-rose-500 text-white">
-        ⏹ Detener
-      </button>
-      <button id="btn-repeat" class="btn-control bg-sky-500 text-white">
-        🔁 Repetir
-      </button>
     </div>
   </div>
 </section>
