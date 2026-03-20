@@ -108,6 +108,38 @@ body {
   border: 2px solid #E5E7EB;
 }
 
+/* Modal de configuración (overlay) */
+.config-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  background: rgba(0, 0, 0, 0.65);
+}
+
+.config-modal .kid-config-panel {
+  width: min(520px, 100%);
+}
+
+/* Asegurar contraste en modo oscuro dentro del modal (select voz) */
+.kid-config-panel .kid-input {
+  background: #ffffff;
+  color: #111827;
+}
+
+body.dark-mode .kid-config-panel .kid-input {
+  background: #0b1220 !important;
+  color: #e5e7eb !important;
+}
+
+body.dark-mode .kid-config-panel .kid-input option {
+  background: #0b1220 !important;
+  color: #e5e7eb !important;
+}
+
 .kid-label { color: #4B5563; }
 
 .kid-input {

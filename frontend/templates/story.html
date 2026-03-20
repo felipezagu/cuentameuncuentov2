@@ -1,5 +1,13 @@
 {% extends "base.html" %}
 
+{% block header_actions %}
+  <button id="config-toggle"
+          class="kid-config-btn inline-flex items-center justify-center w-10 h-10 rounded-full shadow-md border-2 transition"
+          title="Configuración de voz">
+    ⚙
+  </button>
+{% endblock %}
+
 {% block content %}
 <section class="story-reading px-3 sm:px-6 md:px-8 py-4 sm:py-6 max-w-5xl mx-auto">
   <header class="story-reading-header flex items-center justify-between gap-2 mb-3 sm:mb-4">
@@ -7,9 +15,7 @@
       <h1 id="story-title" class="text-lg sm:text-2xl md:text-3xl font-extrabold kid-text-main truncate"></h1>
       <p id="story-description" class="mt-0.5 text-xs sm:text-sm kid-text-muted line-clamp-2 sm:line-clamp-none"></p>
     </div>
-    <div class="flex items-center gap-2 shrink-0">
-      <!-- config toggle se muestra al final del cuento -->
-    </div>
+    <div class="flex items-center gap-2 shrink-0"></div>
   </header>
 
   <div id="cuento-inicio" class="book-wrapper">
@@ -74,29 +80,38 @@
     </a>
   </div>
 
-  <div class="flex justify-end mt-4">
-    <button id="config-toggle"
-            class="kid-config-btn inline-flex items-center justify-center w-10 h-10 rounded-full shadow-md border-2 transition"
-            title="Configuración de voz">
-      ⚙
-    </button>
-  </div>
-
-  <div id="config-panel" class="kid-config-panel mt-3 backdrop-blur-xl rounded-2xl p-3 sm:p-4 shadow-lg border hidden text-xs sm:text-sm">
-    <div class="grid gap-3 sm:grid-cols-2">
-      <div>
-        <label class="block mb-1 kid-label">Tipo de voz</label>
-        <select id="voice-select" class="kid-input w-full rounded-xl border-2 px-3 py-1.5 text-xs sm:text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#2563EB] focus:border-[#2563EB]">
-          <option value="">Automática</option>
-        </select>
+  <div id="config-panel"
+       class="config-modal hidden"
+       role="dialog"
+       aria-modal="true"
+       aria-label="Configuración de voz">
+    <div class="kid-config-panel backdrop-blur-xl rounded-2xl p-4 sm:p-5 shadow-lg border text-xs sm:text-sm"
+         onClick="event.stopPropagation()">
+      <div class="flex items-center justify-between mb-3">
+        <h2 class="text-sm sm:text-base font-extrabold kid-text-main">Configuración</h2>
       </div>
-      <div>
-        <label class="block mb-1 kid-label">Velocidad</label>
-        <div class="flex items-center gap-2">
-          <input id="rate-range" type="range" min="0.5" max="1.5" step="0.25" value="0.5"
-                 class="w-full kid-accent">
-          <span id="rate-label" class="w-10 text-right kid-text-muted text-xs sm:text-sm">0.5x</span>
+
+      <div class="grid gap-3 sm:grid-cols-2">
+        <div>
+          <label class="block mb-1 kid-label">Tipo de voz</label>
+          <select id="voice-select" class="kid-input w-full rounded-xl border-2 px-3 py-1.5 text-xs sm:text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#2563EB] focus:border-[#2563EB]">
+            <option value="">Automática</option>
+          </select>
         </div>
+        <div>
+          <label class="block mb-1 kid-label">Velocidad</label>
+          <div class="flex items-center gap-2">
+            <input id="rate-range" type="range" min="0.5" max="1.5" step="0.25" value="0.5"
+                   class="w-full kid-accent">
+            <span id="rate-label" class="w-10 text-right kid-text-muted text-xs sm:text-sm">0.5x</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex justify-end mt-4">
+        <button id="btn-save-config" type="button" class="btn-control bg-emerald-500 text-white">
+          Guardar
+        </button>
       </div>
     </div>
   </div>

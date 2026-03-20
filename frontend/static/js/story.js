@@ -20,6 +20,7 @@ let pages = [];
 let pageForSentence = [];
 let lastRenderedPageIndex = -1;
 let currentWordIndex = 0;
+let wasPlayingBeforeConfig = false;
 
 function splitSentences(text) {
   return text
@@ -894,12 +895,41 @@ function initControls() {
 
   const cfgToggle = document.getElementById("config-toggle");
   const cfgPanel = document.getElementById("config-panel");
+  const btnSave = document.getElementById("btn-save-config");
+
+  function openConfigModal() {
+    wasPlayingBeforeConfig = isPlaying && !isPaused;
+    if (wasPlayingBeforeConfig && synth && synth.speaking && !synth.paused) {
+      pause();
+    }
+    cfgPanel.classList.remove("hidden");
+  }
+
+  function closeConfigModal() {
+    cfgPanel.classList.add("hidden");
+    if (wasPlayingBeforeConfig && synth && synth.speaking && synth.paused) {
+      synth.resume();
+      isPaused = false;
+      updateCenterPlayVisibility();
+      updateHighlightOnly();
+    }
+    wasPlayingBeforeConfig = false;
+  }
+
   if (cfgToggle && cfgPanel) {
     cfgToggle.addEventListener("click", () => {
       const isHidden = cfgPanel.classList.contains("hidden");
-      if (isHidden) cfgPanel.classList.remove("hidden");
-      else cfgPanel.classList.add("hidden");
+      if (isHidden) openConfigModal();
+      else closeConfigModal();
     });
+
+    cfgPanel.addEventListener("click", (e) => {
+      if (e.target === cfgPanel) closeConfigModal();
+    });
+  }
+
+  if (btnSave && cfgPanel) {
+    btnSave.addEventListener("click", closeConfigModal);
   }
   const btnAnother = document.getElementById("btn-another-story");
   if (btnAnother) {
