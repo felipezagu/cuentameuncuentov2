@@ -200,7 +200,11 @@ function updateHighlightOnly() {
   container.querySelectorAll(".karaoke-word").forEach((el) => el.classList.remove("current"));
   container.querySelectorAll(".karaoke-strofa").forEach((block) => block.classList.remove("current"));
 
-  if (!isPlaying || isPaused) return;
+  const active = isPlaying && !isPaused;
+  if (active) document.body.classList.add("story-reading-active");
+  else document.body.classList.remove("story-reading-active");
+
+  if (!active) return;
 
   const pageIdx = getCurrentPageIndex();
   const sentenceIndicesOnPage = getSentenceIndicesOnPage(pageIdx);
