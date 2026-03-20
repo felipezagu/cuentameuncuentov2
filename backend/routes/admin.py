@@ -29,6 +29,8 @@ class StoryIn(BaseModel):
     categoria: str | None = None
     ambiente: str | None = None
     destacado: bool = False
+    narracion_audio: str | None = None
+    narracion_sync: str | None = None
     escenas: List[SceneIn]
 
 
@@ -71,6 +73,8 @@ def update_story(story_id: int, payload: StoryIn, db: Session = Depends(get_db))
     story.categoria = payload.categoria
     story.ambiente = payload.ambiente
     story.destacado = payload.destacado
+    story.narracion_audio = (payload.narracion_audio or "").strip() or None
+    story.narracion_sync = (payload.narracion_sync or "").strip() or None
 
     db.query(Scene).filter(Scene.story_id == story.id).delete()
     for s in payload.escenas:
@@ -146,6 +150,8 @@ def export_cuentos(db: Session = Depends(get_db)):
             "ambiente": s.ambiente or "",
             "destacado": bool(s.destacado),
             "preguntas": s.preguntas,
+            "narracion_audio": getattr(s, "narracion_audio", None) or "",
+            "narracion_sync": getattr(s, "narracion_sync", None) or "",
             "escenas": escenas,
         })
     body = json.dumps({"cuentos": cuentos}, ensure_ascii=False, indent=2)
@@ -173,6 +179,8 @@ def import_cuentos(payload: dict, db: Session = Depends(get_db)):
         preguntas = c.get("preguntas")
         if isinstance(preguntas, list):
             preguntas = json.dumps(preguntas)
+        narracion_audio = (c.get("narracion_audio") or "").strip() or None
+        narracion_sync = (c.get("narracion_sync") or "").strip() or None
         escenas_data = c.get("escenas") or []
         story = Story(
             titulo=titulo,
@@ -182,6 +190,8 @@ def import_cuentos(payload: dict, db: Session = Depends(get_db)):
             ambiente=ambiente,
             destacado=destacado,
             preguntas=preguntas,
+            narracion_audio=narracion_audio,
+            narracion_sync=narracion_sync,
         )
         db.add(story)
         db.flush()

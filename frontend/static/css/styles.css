@@ -413,12 +413,25 @@ body.dark-mode .book-page-number {
   background-size: cover;
   background-position: center;
   background-color: #E5E7EB;
+  overflow: hidden;
+}
+
+/* Portada con <img>: evita fallos de url() en CSS (caracteres especiales en la URL) */
+.story-card-cover .story-card-cover-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
 }
 
 .story-card-cover::after {
   content: "";
   position: absolute;
   inset: 0;
+  z-index: 1;
   background: linear-gradient(to top, rgba(0, 0, 0, 0.6) 0%, transparent 45%);
   pointer-events: none;
 }
@@ -429,7 +442,7 @@ body.dark-mode .book-page-number {
   right: 0;
   bottom: 0;
   padding: 0.5rem 0.6rem 0.5rem;
-  z-index: 1;
+  z-index: 2;
 }
 
 .story-card-title {

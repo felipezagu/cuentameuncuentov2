@@ -77,6 +77,12 @@ def init_db():
         if "luma_revisado" not in cols:
             conn.execute(text("ALTER TABLE stories ADD COLUMN luma_revisado BOOLEAN DEFAULT 0"))
             conn.commit()
+        if "narracion_audio" not in cols:
+            conn.execute(text("ALTER TABLE stories ADD COLUMN narracion_audio VARCHAR(500)"))
+            conn.commit()
+        if "narracion_sync" not in cols:
+            conn.execute(text("ALTER TABLE stories ADD COLUMN narracion_sync VARCHAR(500)"))
+            conn.commit()
 
 
 def seed_demo_data():

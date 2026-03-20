@@ -1,0 +1,28 @@
+{
+  "version": 3,
+  "audio": "caperucitarojahombre.mp3",
+  "sources": {
+    "text": "caperucitaroja.txt",
+    "timings": "caperucitarojahombre.txt"
+  },
+  "method": "segments_from_transcript_line_starts",
+  "note": "Cada segmento: startSec = marca (mm:ss) de la línea; endSec = startSec del siguiente (último hasta fin del audio). sceneIndex = escena/página (0–4).",
+  "segments": [
+    { "index": 0, "sceneIndex": 0, "startSec": 0, "endSec": 8, "text": "Érase una vez una niña, a la que todos llamaban \"caperucita roja\", porque llevaba una capa roja." },
+    { "index": 1, "sceneIndex": 0, "startSec": 8, "endSec": 13, "text": "Vivía con su madre en una casita al borde del bosque." },
+    { "index": 2, "sceneIndex": 0, "startSec": 13, "endSec": 19, "text": "Un día su madre le preparó una cesta con pan y miel para su abuelita, que estaba enferma." },
+    { "index": 3, "sceneIndex": 0, "startSec": 19, "endSec": 24, "text": "Le dijo que no se entretuviera ni hablara con desconocidos." },
+    { "index": 4, "sceneIndex": 1, "startSec": 24, "endSec": 31, "text": "Caperucita cogió la cesta y fue por el sendero del bosque, recogió flores para su abuela." },
+    { "index": 5, "sceneIndex": 1, "startSec": 31, "endSec": 35, "text": "Apareció un lobo astuto que le preguntó adónde iba." },
+    { "index": 6, "sceneIndex": 1, "startSec": 35, "endSec": 44, "text": "Ella le contó que iba a casa de su abuelita, el lobo le sugirió que recogiera más flores y tomó un atajo." },
+    { "index": 7, "sceneIndex": 2, "startSec": 44, "endSec": 52, "text": "El lobo llegó antes a casa de la abuela, la abuelita se escondió en el armario y el lobo se puso su gorro y su camisón" },
+    { "index": 8, "sceneIndex": 2, "startSec": 52, "endSec": 55, "text": "y se metió en la cama." },
+    { "index": 9, "sceneIndex": 2, "startSec": 55, "endSec": 63, "text": "Cuando Caperucita llegó, entró y se acercó a la cama extrañada de ver a su abuela con tan extraño aspecto." },
+    { "index": 10, "sceneIndex": 3, "startSec": 63, "endSec": 77, "text": "Caperucita dijo: Abuelita, qué orejas tan grandes tienes. Para oírte mejor. Y qué ojos tan grandes. Para verte mejor. Y qué boca tan grande. ¡Para darte un abrazo mejor!" },
+    { "index": 11, "sceneIndex": 3, "startSec": 77, "endSec": 83, "text": "El lobo se abalanzó pero en ese momento entró un leñador que había oído voces." },
+    { "index": 12, "sceneIndex": 4, "startSec": 83, "endSec": 88, "text": "El leñador asustó al lobo y este salió corriendo del bosque." },
+    { "index": 13, "sceneIndex": 4, "startSec": 88, "endSec": 93, "text": "Abrieron el armario y sacaron a la abuelita, que estaba bien." },
+    { "index": 14, "sceneIndex": 4, "startSec": 93, "endSec": 100, "text": "Caperucita aprendió a no hablar con desconocidos y a no apartarse del camino." },
+    { "index": 15, "sceneIndex": 4, "startSec": 100, "endSec": 110, "text": "Las tres se sentaron a merendar juntas.", "endSecEstimated": true }
+  ]
+}

@@ -31,6 +31,8 @@ class StoryOut(BaseModel):
     categoria: str | None
     ambiente: str | None
     destacado: bool
+    narracion_audio: str | None = None
+    narracion_sync: str | None = None
 
     class Config:
         from_attributes = True
@@ -70,6 +72,8 @@ def get_story(story_id: int, db: Session = Depends(get_db)):
         categoria=story.categoria,
         ambiente=story.ambiente,
         destacado=story.destacado,
+        narracion_audio=getattr(story, "narracion_audio", None),
+        narracion_sync=getattr(story, "narracion_sync", None),
         escenas=story.escenas,
         preguntas=preguntas,
     )

@@ -21,7 +21,10 @@ def main():
         sys.exit(1)
 
     from backend.database import SessionLocal
+    from backend.main import init_db
     from backend.models import Story, Scene
+
+    init_db()
 
     with open(PATH_JSON, "r", encoding="utf-8") as f:
         data = json.load(f)
@@ -43,6 +46,8 @@ def main():
             preguntas = c.get("preguntas")
             if isinstance(preguntas, list):
                 preguntas = json.dumps(preguntas)
+            narracion_audio = (c.get("narracion_audio") or "").strip() or None
+            narracion_sync = (c.get("narracion_sync") or "").strip() or None
             escenas_data = c.get("escenas") or []
             story = Story(
                 titulo=titulo,
@@ -52,6 +57,8 @@ def main():
                 ambiente=ambiente,
                 destacado=destacado,
                 preguntas=preguntas,
+                narracion_audio=narracion_audio,
+                narracion_sync=narracion_sync,
             )
             db.add(story)
             db.flush()

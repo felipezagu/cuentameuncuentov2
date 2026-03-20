@@ -42,6 +42,12 @@ let lastHandlePlayClickType = "";
 let countdownActive = false;
 let userGestureUnlocked = false;
 
+/** Narración pregrabada (MP3 + JSON de tiempos por párrafo) */
+let useRecordedNarration = false;
+let narracionSyncData = null;
+let narracionAudioEl = null;
+let narracionTimeUpdateAttached = false;
+
 function hideCountdownOverlay() {
   const overlay = document.getElementById("countdown-overlay");
   if (overlay) overlay.classList.add("hidden");
@@ -193,7 +199,7 @@ function splitSentences(text) {
     .filter(Boolean);
 }
 
-function buildSentencesAndPages(story) {
+function buildSentencesAndPages(story, useRecording) {
   sentences = [];
   sceneForSentence = [];
   pages = [];
@@ -202,6 +208,7 @@ function buildSentencesAndPages(story) {
     log("buildSentencesAndPages: no hay escenas", story);
     return;
   }
+  const recorded = !!useRecording;
   const numEscenas = story.escenas.length;
   for (let start = 0; start < numEscenas; start += ESTROFAS_PER_PAGE) {
     const pageEscenas = [];
@@ -210,8 +217,35 @@ function buildSentencesAndPages(story) {
     }
     pages.push(pageEscenas);
   }
+  if (
+    recorded &&
+    narracionSyncData &&
+    Array.isArray(narracionSyncData.segments) &&
+    narracionSyncData.segments.length > 0
+  ) {
+    narracionSyncData.segments.forEach(function (seg) {
+      const si = typeof seg.sceneIndex === "number" ? seg.sceneIndex : 0;
+      const txt = seg.text != null ? String(seg.text).trim() : "";
+      sentences.push({ text: txt.length ? txt : "\u00A0", sceneIndex: si });
+      sceneForSentence.push(si);
+      pageForSentence.push(Math.floor(si / ESTROFAS_PER_PAGE));
+    });
+    log(
+      "buildSentencesAndPages: frases=" +
+        sentences.length +
+        " (segmentos MP3), páginas=" +
+        pages.length
+    );
+    return;
+  }
+
   story.escenas.forEach((escena, idxEscena) => {
-    const sceneSentences = splitSentences(escena.texto);
+    const texto = (escena && escena.texto) ? String(escena.texto) : "";
+    const sceneSentences = recorded
+      ? [texto.trim()].filter(function (t) {
+          return t.length > 0;
+        })
+      : splitSentences(texto);
     const pageIdx = Math.floor(idxEscena / ESTROFAS_PER_PAGE);
     sceneSentences.forEach((sentence) => {
       sentences.push({ text: sentence, sceneIndex: idxEscena });
@@ -220,7 +254,115 @@ function buildSentencesAndPages(story) {
     });
   });
 
-  log("buildSentencesAndPages: frases=" + sentences.length + ", páginas=" + pages.length);
+  log(
+    "buildSentencesAndPages: frases=" +
+      sentences.length +
+      ", páginas=" +
+      pages.length +
+      (recorded ? " (narración grabada)" : "")
+  );
+}
+
+/** Índice de frase (en `sentences`) según el tiempo del audio. */
+function getRecordedSentenceIndexForTime(t) {
+  if (!narracionSyncData) return 0;
+  const dur =
+    narracionAudioEl && narracionAudioEl.duration && !Number.isNaN(narracionAudioEl.duration)
+      ? narracionAudioEl.duration
+      : 999999;
+
+  if (narracionSyncData.segments && narracionSyncData.segments.length > 0) {
+    const segs = narracionSyncData.segments;
+    for (let i = 0; i < segs.length; i++) {
+      const start = typeof segs[i].startSec === "number" ? segs[i].startSec : 0;
+      let end;
+      if (i < segs.length - 1) {
+        end =
+          typeof segs[i + 1].startSec === "number"
+            ? segs[i + 1].startSec
+            : segs[i].endSec;
+      } else {
+        end = typeof segs[i].endSec === "number" ? segs[i].endSec : dur;
+        if (end == null || Number.isNaN(end) || end > dur) end = dur;
+      }
+      if (i === segs.length - 1) {
+        if (t >= start && t <= dur + 0.08) return i;
+      } else if (t >= start && t < end) {
+        return i;
+      }
+    }
+    return segs.length - 1;
+  }
+
+  const paras = narracionSyncData.paragraphs;
+  if (!paras || !paras.length) return 0;
+  for (let i = 0; i < paras.length; i++) {
+    const start = typeof paras[i].startSec === "number" ? paras[i].startSec : 0;
+    let end = paras[i].endSec;
+    if (end == null || Number.isNaN(end) || end > dur) {
+      end = dur;
+    }
+    const isLast = i === paras.length - 1;
+    if (isLast) {
+      if (t >= start) return i;
+    } else if (t >= start && t < end) {
+      return i;
+    }
+  }
+  return paras.length - 1;
+}
+
+function narracionStartSecForSentence(sentenceIdx) {
+  if (!narracionSyncData || sentenceIdx < 0) return 0;
+  if (narracionSyncData.segments && narracionSyncData.segments[sentenceIdx]) {
+    const s = narracionSyncData.segments[sentenceIdx].startSec;
+    return typeof s === "number" ? s : 0;
+  }
+  if (narracionSyncData.paragraphs && narracionSyncData.paragraphs[sentenceIdx]) {
+    const s = narracionSyncData.paragraphs[sentenceIdx].startSec;
+    return typeof s === "number" ? s : 0;
+  }
+  return 0;
+}
+
+function onNarracionTimeUpdate() {
+  if (!useRecordedNarration || !narracionAudioEl || !narracionSyncData || !isPlaying || isPaused) {
+    return;
+  }
+  const t = narracionAudioEl.currentTime;
+  const idx = getRecordedSentenceIndexForTime(t);
+  if (idx === currentIndex) return;
+  currentIndex = idx;
+  currentWordIndex = 0;
+  highlight(currentIndex);
+}
+
+function ensureNarracionListeners() {
+  if (!narracionAudioEl || narracionTimeUpdateAttached) return;
+  narracionTimeUpdateAttached = true;
+  narracionAudioEl.addEventListener("timeupdate", onNarracionTimeUpdate);
+  narracionAudioEl.addEventListener("playing", function () {
+    narrationStarted = true;
+    hideCountdownOverlay();
+    setReadingUIVisible(true);
+    hideStartButtons();
+    highlight(currentIndex);
+  });
+  narracionAudioEl.addEventListener("ended", function () {
+    if (!useRecordedNarration) return;
+    if (repeatOnEnd && sentences.length > 0) {
+      narracionAudioEl.currentTime = 0;
+      currentIndex = 0;
+      highlight(0);
+      narracionAudioEl.play().catch(function () {});
+      return;
+    }
+    isPlaying = false;
+    isPaused = false;
+    updateCenterPlayVisibility();
+    highlight(-1);
+    showEndPanel();
+  });
 }
 
 function getCurrentPageIndex() {
@@ -286,39 +428,85 @@ function renderCurrentPage(animate) {
         if (isCurrentScene) block.classList.add("current");
 
         const texto = (escena && escena.texto) ? escena.texto.trim() : "";
-        const sceneSentences = splitSentences(texto);
-        let localSentenceIndex = 0;
-        sceneSentences.forEach((s) => {
-          const globalIdx = sentenceIndicesOnPage[localSentenceIndex];
-          const isCurrentSentence = currentIndex === globalIdx;
-          const sentenceWrap = document.createElement("span");
-          sentenceWrap.className = "karaoke-sentence";
-          sentenceWrap.setAttribute("data-sentence-index", String(localSentenceIndex));
-          sentenceWrap.setAttribute("data-global-sentence-index", String(globalIdx));
-          if (isCurrentSentence) sentenceWrap.classList.add("current");
+        const useSegmentLayout =
+          useRecordedNarration &&
+          narracionSyncData &&
+          Array.isArray(narracionSyncData.segments) &&
+          narracionSyncData.segments.length > 0;
 
-          const parts = s.split(/(\s+)/);
-          let wordIdx = 0;
-          parts.forEach((w) => {
-            const span = document.createElement("span");
-            if (/^\s+$/.test(w)) {
-              span.className = "karaoke-space";
-              span.textContent = w;
-            } else {
-              span.className = "karaoke-word";
-              span.setAttribute("data-word-index", String(wordIdx));
-              span.textContent = w;
-              wordIdx++;
+        let localSentenceIndex = 0;
+        if (useSegmentLayout) {
+          const segs = narracionSyncData.segments;
+          const segsHereCount = segs.filter(function (x) {
+            return x.sceneIndex === escenaIdx;
+          }).length;
+          for (let globalIdx = 0; globalIdx < segs.length; globalIdx++) {
+            const seg = segs[globalIdx];
+            if (typeof seg.sceneIndex !== "number" || seg.sceneIndex !== escenaIdx) continue;
+            const s = seg.text != null ? String(seg.text).trim() : "";
+            const line = s.length ? s : "\u00A0";
+            const isCurrentSentence = currentIndex === globalIdx;
+            const sentenceWrap = document.createElement("span");
+            sentenceWrap.className = "karaoke-sentence";
+            sentenceWrap.setAttribute("data-sentence-index", String(localSentenceIndex));
+            sentenceWrap.setAttribute("data-global-sentence-index", String(globalIdx));
+            if (isCurrentSentence) sentenceWrap.classList.add("current");
+
+            const parts = line.split(/(\s+)/);
+            let wordIdx = 0;
+            parts.forEach((w) => {
+              const span = document.createElement("span");
+              if (/^\s+$/.test(w)) {
+                span.className = "karaoke-space";
+                span.textContent = w;
+              } else {
+                span.className = "karaoke-word";
+                span.setAttribute("data-word-index", String(wordIdx));
+                span.textContent = w;
+                wordIdx++;
+              }
+              sentenceWrap.appendChild(span);
+            });
+            block.appendChild(sentenceWrap);
+            if (localSentenceIndex < segsHereCount - 1) {
+              block.appendChild(document.createTextNode(" "));
             }
-            sentenceWrap.appendChild(span);
-          });
-          block.appendChild(sentenceWrap);
-          if (localSentenceIndex < sceneSentences.length - 1) {
-            const space = document.createTextNode(" ");
-            block.appendChild(space);
+            localSentenceIndex++;
           }
-          localSentenceIndex++;
-        });
+        } else {
+          const sceneSentences = splitSentences(texto);
+          sceneSentences.forEach((s) => {
+            const globalIdx = sentenceIndicesOnPage[localSentenceIndex];
+            const isCurrentSentence = currentIndex === globalIdx;
+            const sentenceWrap = document.createElement("span");
+            sentenceWrap.className = "karaoke-sentence";
+            sentenceWrap.setAttribute("data-sentence-index", String(localSentenceIndex));
+            sentenceWrap.setAttribute("data-global-sentence-index", String(globalIdx));
+            if (isCurrentSentence) sentenceWrap.classList.add("current");
+
+            const parts = s.split(/(\s+)/);
+            let wordIdx = 0;
+            parts.forEach((w) => {
+              const span = document.createElement("span");
+              if (/^\s+$/.test(w)) {
+                span.className = "karaoke-space";
+                span.textContent = w;
+              } else {
+                span.className = "karaoke-word";
+                span.setAttribute("data-word-index", String(wordIdx));
+                span.textContent = w;
+                wordIdx++;
+              }
+              sentenceWrap.appendChild(span);
+            });
+            block.appendChild(sentenceWrap);
+            if (localSentenceIndex < sceneSentences.length - 1) {
+              const space = document.createTextNode(" ");
+              block.appendChild(space);
+            }
+            localSentenceIndex++;
+          });
+        }
         container.appendChild(block);
       });
     }
@@ -565,6 +753,7 @@ function updateSceneImageForIndex(index) {
 }
 
 function speakCurrent() {
+  if (useRecordedNarration) return;
   if (!sentences.length || currentIndex < 0 || currentIndex >= sentences.length) return;
   if (!synth) return;
 
@@ -675,6 +864,48 @@ function play() {
     setPlayStatus("play(): no hay texto (sentences=0)");
     return;
   }
+  if (useRecordedNarration && narracionAudioEl) {
+    const rateEl = document.getElementById("rate-range");
+    const rate = parseFloat((rateEl && rateEl.value ? rateEl.value : "1") || "1");
+    narracionAudioEl.playbackRate = rate;
+    if (isPaused) {
+      narracionAudioEl
+        .play()
+        .then(function () {
+          isPaused = false;
+          isPlaying = true;
+          narrationStarted = true;
+          updateCenterPlayVisibility();
+          updateHighlightOnly();
+        })
+        .catch(function (err) {
+          setPlayStatus("audio.play: " + (err && err.message ? err.message : err));
+        });
+      return;
+    }
+    if (!isPlaying) {
+      if (currentIndex < 0 || currentIndex >= sentences.length) currentIndex = 0;
+      narracionAudioEl.currentTime = narracionStartSecForSentence(currentIndex);
+      isPlaying = true;
+      isPaused = false;
+      narracionAudioEl
+        .play()
+        .then(function () {
+          narrationStarted = true;
+          hideCountdownOverlay();
+          setReadingUIVisible(true);
+          hideStartButtons();
+          highlight(currentIndex);
+        })
+        .catch(function (err) {
+          isPlaying = false;
+          setPlayStatus("audio.play: " + (err && err.message ? err.message : err));
+        });
+      return;
+    }
+    narracionAudioEl.play().catch(function () {});
+    return;
+  }
   if (!synth) {
     setPlayStatus("play(): SpeechSynthesis no disponible en este navegador");
     return;
@@ -744,6 +975,19 @@ function play() {
 }
 
 function pause() {
+  if (useRecordedNarration && narracionAudioEl) {
+    try {
+      narracionAudioEl.pause();
+    } catch (e) {
+      // Ignorar
+    }
+    isPaused = true;
+    updateCenterPlayVisibility();
+    updateHighlightOnly();
+    setReadingUIVisible(true);
+    hideStartButtons();
+    return;
+  }
   if (synth) {
     try {
       if (synth.speaking) synth.pause();
@@ -762,7 +1006,14 @@ function pause() {
 function stop() {
   isPlaying = false;
   isPaused = false;
-  if (synth) synth.cancel();
+  if (useRecordedNarration && narracionAudioEl) {
+    try {
+      narracionAudioEl.pause();
+      narracionAudioEl.currentTime = 0;
+    } catch (e) {
+      // Ignorar
+    }
+  } else if (synth) synth.cancel();
   updateCenterPlayVisibility();
   highlight(-1);
   updateHighlightOnly();
@@ -771,7 +1022,13 @@ function stop() {
 function stopNarrationOnLeave() {
   isPlaying = false;
   isPaused = false;
-  if (synth) synth.cancel();
+  if (useRecordedNarration && narracionAudioEl) {
+    try {
+      narracionAudioEl.pause();
+    } catch (e) {
+      // Ignorar
+    }
+  } else if (synth) synth.cancel();
   log("Narración detenida (cambio de página o salida)");
 }
 
@@ -867,6 +1124,19 @@ function getFirstSentenceIndexForPage(pageIdx) {
 }
 
 function goPrev() {
+  if (useRecordedNarration && narracionSyncData && narracionAudioEl) {
+    const currentPage = getCurrentPageIndex();
+    const prevPage = Math.max(0, currentPage - 1);
+    const targetIdx = getFirstSentenceIndexForPage(prevPage);
+    narracionAudioEl.currentTime = narracionStartSecForSentence(targetIdx);
+    currentWordIndex = 0;
+    currentIndex = targetIdx;
+    highlight(targetIdx);
+    if (isPlaying && !isPaused) {
+      narracionAudioEl.play().catch(function () {});
+    }
+    return;
+  }
   const currentPage = getCurrentPageIndex();
   const prevPage = Math.max(0, currentPage - 1);
   const targetIndex = getFirstSentenceIndexForPage(prevPage);
@@ -879,6 +1149,31 @@ function goPrev() {
 }
 
 function goNext() {
+  if (useRecordedNarration && narracionSyncData && narracionAudioEl) {
+    const currentPage = getCurrentPageIndex();
+    const nextPage = currentPage + 1;
+    if (nextPage >= pages.length) {
+      isPlaying = false;
+      isPaused = false;
+      try {
+        narracionAudioEl.pause();
+      } catch (e) {
+        // Ignorar
+      }
+      highlight(-1);
+      showEndPanel();
+      return;
+    }
+    const targetIdx = getFirstSentenceIndexForPage(nextPage);
+    narracionAudioEl.currentTime = narracionStartSecForSentence(targetIdx);
+    currentWordIndex = 0;
+    currentIndex = targetIdx;
+    highlight(targetIdx);
+    if (isPlaying && !isPaused) {
+      narracionAudioEl.play().catch(function () {});
+    }
+    return;
+  }
   const currentPage = getCurrentPageIndex();
   const nextPage = currentPage + 1;
   if (nextPage >= pages.length) {
@@ -1293,6 +1588,17 @@ function restartStory() {
   updatePauseButtonLabels();
   if (isMobileOrTablet()) scrollToCuentoInicio();
   isPlaying = true;
+  isPaused = false;
+  if (useRecordedNarration && narracionAudioEl) {
+    try {
+      narracionAudioEl.pause();
+      narracionAudioEl.currentTime = 0;
+    } catch (e) {
+      // Ignorar
+    }
+    narracionAudioEl.play().catch(function () {});
+    return;
+  }
   speakCurrent();
 }
 
@@ -1350,6 +1656,18 @@ function handlePlayClick(e) {
 function handlePauseResumeClick() {
   log("handlePauseResumeClick. isPaused=" + isPaused);
   uiDebug("handlePauseResumeClick isPaused=" + isPaused);
+  if (useRecordedNarration && narracionAudioEl) {
+    const ap = narracionAudioEl.paused;
+    if (isPaused || ap) {
+      isPaused = false;
+      play();
+    } else {
+      pause();
+      isPaused = true;
+    }
+    updatePauseButtonLabels();
+    return;
+  }
   const synthPaused = synth && synth.paused;
   const shouldResume = isPaused || synthPaused;
 
@@ -1422,7 +1740,14 @@ function initControls() {
 
   function openConfigModal() {
     wasPlayingBeforeConfig = isPlaying && !isPaused;
-    if (wasPlayingBeforeConfig && synth && synth.speaking && !synth.paused) {
+    if (useRecordedNarration && narracionAudioEl && !narracionAudioEl.paused) {
+      try {
+        narracionAudioEl.pause();
+      } catch (e) {
+        // Ignorar
+      }
+      isPaused = true;
+    } else if (wasPlayingBeforeConfig && synth && synth.speaking && !synth.paused) {
       pause();
     }
     cfgPanel.classList.remove("hidden");
@@ -1430,10 +1755,16 @@ function initControls() {
 
   function closeConfigModal() {
     cfgPanel.classList.add("hidden");
-    if (wasPlayingBeforeConfig && synth && synth.speaking && synth.paused) {
-      synth.resume();
-      isPaused = false;
-      updateHighlightOnly();
+    if (wasPlayingBeforeConfig) {
+      if (useRecordedNarration && narracionAudioEl) {
+        isPaused = false;
+        narracionAudioEl.play().catch(function () {});
+        updateHighlightOnly();
+      } else if (synth && synth.speaking && synth.paused) {
+        synth.resume();
+        isPaused = false;
+        updateHighlightOnly();
+      }
     }
     wasPlayingBeforeConfig = false;
   }
@@ -1483,7 +1814,52 @@ async function initPage() {
     uiDebug("fetchStory OK titulo=" + (storyData && storyData.titulo ? storyData.titulo : ""));
     storyTitle = storyData && storyData.titulo ? storyData.titulo : "";
     populateHeader(storyData);
-    buildSentencesAndPages(storyData);
+
+    useRecordedNarration = false;
+    narracionSyncData = null;
+    narracionTimeUpdateAttached = false;
+    narracionAudioEl = document.getElementById("story-narration");
+    const na = storyData.narracion_audio && String(storyData.narracion_audio).trim();
+    const ns = storyData.narracion_sync && String(storyData.narracion_sync).trim();
+    if (na && ns && narracionAudioEl) {
+      try {
+        const syncUrl = normalizeMediaUrl(ns);
+        const syncRes = await fetch(syncUrl);
+        if (syncRes.ok) {
+          const syncJson = await syncRes.json();
+          const nEscenas = (storyData.escenas && storyData.escenas.length) || 0;
+          const segments = syncJson && syncJson.segments;
+          const paras = syncJson && syncJson.paragraphs;
+          let ok = false;
+          if (segments && Array.isArray(segments) && segments.length > 0 && nEscenas > 0) {
+            const maxScene = segments.reduce(function (m, s) {
+              const si = typeof s.sceneIndex === "number" ? s.sceneIndex : 0;
+              return Math.max(m, si);
+            }, 0);
+            ok = maxScene === nEscenas - 1;
+            if (!ok) {
+              log("narracion_sync: sceneIndex no coincide con escenas (max", maxScene, "vs", nEscenas - 1, ")");
+            }
+          } else if (paras && Array.isArray(paras) && paras.length === nEscenas && nEscenas > 0) {
+            ok = true;
+          }
+          if (ok) {
+            narracionSyncData = syncJson;
+            narracionAudioEl.src = normalizeMediaUrl(na);
+            narracionAudioEl.preload = "auto";
+            useRecordedNarration = true;
+            ensureNarracionListeners();
+            log("Narración grabada activa:", na, segments ? "(" + segments.length + " segmentos)" : "");
+          } else if (!segments || !segments.length) {
+            log("narracion_sync: sin segments válidos ni paragraphs=", nEscenas);
+          }
+        }
+      } catch (err) {
+        log("Error cargando narracion_sync:", err);
+      }
+    }
+
+    buildSentencesAndPages(storyData, useRecordedNarration);
     renderCurrentPage(false);
     updateSceneImageForIndex(0);
     scheduleCenterMobileStoryCover();

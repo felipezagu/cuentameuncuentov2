@@ -10,12 +10,15 @@ class Story(Base):
     id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
     titulo: Mapped[str] = mapped_column(String(200), nullable=False)
     descripcion: Mapped[str] = mapped_column(Text, nullable=True)
-    portada: Mapped[str] = mapped_column(String(300), nullable=True)
+    portada: Mapped[str | None] = mapped_column(Text, nullable=True)
     categoria: Mapped[str] = mapped_column(String(100), nullable=True)
     ambiente: Mapped[str] = mapped_column(String(100), nullable=True)
     destacado: Mapped[bool] = mapped_column(Boolean, default=False)
     preguntas: Mapped[str | None] = mapped_column(Text, nullable=True)
     luma_revisado: Mapped[bool] = mapped_column(Boolean, default=False)
+    # Narración pregrabada (p. ej. ElevenLabs): URL del MP3 y del JSON de sincronización por párrafo
+    narracion_audio: Mapped[str | None] = mapped_column(String(500), nullable=True)
+    narracion_sync: Mapped[str | None] = mapped_column(String(500), nullable=True)
 
     escenas: Mapped[list["Scene"]] = relationship(
         "Scene", back_populates="story", cascade="all, delete-orphan", order_by="Scene.orden"
@@ -31,7 +34,7 @@ class Scene(Base):
     )
     orden: Mapped[int] = mapped_column(Integer, nullable=False, default=1)
     texto: Mapped[str] = mapped_column(Text, nullable=False)
-    imagen: Mapped[str] = mapped_column(String(300), nullable=True)
+    imagen: Mapped[str | None] = mapped_column(Text, nullable=True)
 
     story: Mapped[Story] = relationship("Story", back_populates="escenas")
 

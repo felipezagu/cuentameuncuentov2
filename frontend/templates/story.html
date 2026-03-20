@@ -9,6 +9,7 @@
 {% endblock %}
 
 {% block content %}
+<audio id="story-narration" preload="none" playsinline class="hidden" aria-hidden="true"></audio>
 <section class="story-reading px-3 sm:px-6 md:px-8 py-4 sm:py-6 max-w-5xl mx-auto">
   <header class="story-reading-header flex items-center justify-between gap-2 mb-3 sm:mb-4">
     <div class="min-w-0 flex-1">
@@ -149,6 +150,6 @@
 <script>
   window.STORY_ID = {{ story_id }};
 </script>
-<script src="/static/js/story.js?v=26"></script>
+<script src="/static/js/story.js?v=28"></script>
 {% endblock %}
 

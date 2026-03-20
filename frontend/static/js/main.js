@@ -21,6 +21,16 @@ function shuffleInPlace(arr) {
   return arr;
 }
 
+function normalizeStoryMediaUrl(url) {
+  if (url == null || url === "") return "";
+  const s = String(url).trim();
+  if (!s) return "";
+  if (/^https?:\/\//i.test(s)) return s;
+  if (s.startsWith("/")) return s;
+  if (s.startsWith("data:")) return s;
+  return "/" + s.replace(/^\/+/, "");
+}
+
 function createStoryCard(story) {
   const card = document.createElement("div");
   card.className = "story-card";
@@ -29,8 +39,20 @@ function createStoryCard(story) {
 
   const cover = document.createElement("div");
   cover.className = "story-card-cover";
-  if (story.portada) {
-    cover.style.backgroundImage = `url('${story.portada}')`;
+  const portadaUrl = story.portada ? normalizeStoryMediaUrl(story.portada) : "";
+  if (portadaUrl) {
+    const img = document.createElement("img");
+    img.className = "story-card-cover-img";
+    img.alt = "";
+    img.loading = "lazy";
+    img.decoding = "async";
+    img.src = portadaUrl;
+    img.referrerPolicy = "no-referrer-when-downgrade";
+    img.addEventListener("error", function () {
+      img.removeAttribute("src");
+      cover.style.backgroundColor = "#CBD5E1";
+    });
+    cover.appendChild(img);
   }
 
   const info = document.createElement("div");
