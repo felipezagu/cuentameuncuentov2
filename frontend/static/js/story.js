@@ -21,7 +21,10 @@ let pageForSentence = [];
 let lastRenderedPageIndex = -1;
 let currentWordIndex = 0;
 let wasPlayingBeforeConfig = false;
-let lastPlayGestureTs = 0;
+function setPlayStatus(msg) {
+  const el = document.getElementById("play-status");
+  if (el) el.textContent = msg;
+}
 
 function hideStartButtons() {
   const cover = document.getElementById("btn-play-cover");
@@ -298,6 +301,7 @@ function speakCurrent() {
   }
 
   utter.onstart = () => {
+    setPlayStatus("onstart: idx=" + currentIndex);
     isPlaying = true;
     hideStartButtons();
     highlight(currentIndex);
@@ -311,6 +315,7 @@ function speakCurrent() {
   };
 
   utter.onend = () => {
+    setPlayStatus("onend: idx=" + currentIndex);
     isPaused = false;
     if (!isPlaying) return;
     let nextIndex = currentIndex + 1;
@@ -329,7 +334,13 @@ function speakCurrent() {
   };
 
   currentUtterance = utter;
-  synth.speak(utter);
+  try {
+    setPlayStatus("speak() rate=" + rate + " idx=" + currentIndex);
+    synth.speak(utter);
+  } catch (err) {
+    setPlayStatus("speak() ERROR: " + (err && err.message ? err.message : err));
+    throw err;
+  }
 }
 
 function play() {
@@ -844,12 +855,18 @@ function handlePlayClick(e) {
     e.stopPropagation();
   }
   log("handlePlayClick (botón central)");
-  if (!sentences.length) return;
+  setPlayStatus(
+    "Tap: type=" +
+      (e && e.type ? e.type : "click") +
+      " | sentences=" +
+      sentences.length
+  );
+  if (!sentences.length) {
+    setPlayStatus("No hay texto todavía (sentences=0)");
+    return;
+  }
   const btn = e && e.currentTarget ? e.currentTarget : null;
   if (btn && btn.disabled) return;
-  const now = Date.now();
-  if (now - lastPlayGestureTs < 400) return;
-  lastPlayGestureTs = now;
 
   if (isMobileOrTablet()) scrollToCuentoInicio();
   play();
@@ -885,9 +902,9 @@ function initControls() {
   function bindStartButtons(btn) {
     if (!btn) return;
     btn.addEventListener("click", handlePlayClick);
-    // En móviles, suele funcionar mejor `pointerdown` como "user gesture".
+    // En móvil, el `touchend` suele mantener mejor el "user gesture".
     btn.addEventListener(
-      "pointerdown",
+      "touchend",
       function (e) {
         handlePlayClick(e);
       },

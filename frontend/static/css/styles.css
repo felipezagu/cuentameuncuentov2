@@ -1089,6 +1089,15 @@ body.dark-mode .book-page-paper {
   align-self: center;
 }
 
+.play-status {
+  min-height: 1.2em;
+  text-align: center;
+}
+
+body.dark-mode .play-status {
+  color: #cbd5e1;
+}
+
 @media (min-width: 768px) {
   .book-illustration {
     min-height: 180px;
