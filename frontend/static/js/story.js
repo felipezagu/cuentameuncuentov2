@@ -832,6 +832,8 @@ function handlePlayClick(e) {
   }
   log("handlePlayClick (botón central)");
   if (!sentences.length) return;
+  const btn = document.getElementById("btn-play-center");
+  if (btn && btn.disabled) return;
   markCenterButtonUsed();
   if (isMobileOrTablet()) scrollToCuentoInicio();
   play();
@@ -944,6 +946,11 @@ function initControls() {
 async function initPage() {
   const storyId = typeof window.STORY_ID !== "undefined" ? window.STORY_ID : null;
   log("initPage: storyId=" + storyId);
+
+  // Evita clicks antes de que el cuento esté cargado (sentences.length=0).
+  const centerPlayBtn = document.getElementById("btn-play-center");
+  if (centerPlayBtn) centerPlayBtn.disabled = true;
+
   try {
     if (storyId == null) throw new Error("No hay STORY_ID en la página");
     storyData = await fetchStory(storyId);
@@ -953,6 +960,8 @@ async function initPage() {
     renderCurrentPage(false);
     updateSceneImageForIndex(0);
     log("initPage OK. Frases totales:", sentences.length);
+
+    if (centerPlayBtn) centerPlayBtn.disabled = false;
   } catch (e) {
     log("initPage ERROR:", e.message || e);
     const container = document.getElementById("karaoke-container");
