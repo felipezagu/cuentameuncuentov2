@@ -1,0 +1,117 @@
+{
+  "version": 3,
+  "audio": "elgatoconbotashombre.mp3",
+  "sources": {
+    "text": "elgatoconbotas.txt",
+    "timings": "elgatoconbotashombre.mp3.txt"
+  },
+  "method": "segments_from_stt_word_timestamps",
+  "note": "Generado automáticamente desde ElevenLabs Speech-to-Text (timestamps word).",
+  "segments": [
+    {
+      "index": 0,
+      "sceneIndex": 0,
+      "startSec": 0.099,
+      "text": "Un molinero dejó a sus tres hijos el molino, el asno y un gato.",
+      "endSec": 6.42
+    },
+    {
+      "index": 1,
+      "sceneIndex": 0,
+      "startSec": 6.42,
+      "text": "El hijo menor solo recibió el gato y estaba muy triste.",
+      "endSec": 11.119
+    },
+    {
+      "index": 2,
+      "sceneIndex": 0,
+      "startSec": 11.119,
+      "text": "El gato le pidió una bolsa y unas botas y le prometió que si confiaba en él, todo cambiaría.",
+      "endSec": 18.359
+    },
+    {
+      "index": 3,
+      "sceneIndex": 0,
+      "startSec": 18.359,
+      "text": "El gato cazó conejos y perdices y se los llevó al rey diciendo que eran regalos del marqués de Carabás.",
+      "endSec": 26.119
+    },
+    {
+      "index": 4,
+      "sceneIndex": 1,
+      "startSec": 26.119,
+      "text": "Así ganó la confianza del rey.",
+      "endSec": 29.319
+    },
+    {
+      "index": 5,
+      "sceneIndex": 1,
+      "startSec": 29.319,
+      "text": "Un día supo que el rey pasearía con su hija por la orilla del río.",
+      "endSec": 34.439
+    },
+    {
+      "index": 6,
+      "sceneIndex": 1,
+      "startSec": 34.439,
+      "text": "El gato hizo que su amo se bañara en el río y escondió su ropa.",
+      "endSec": 39.52
+    },
+    {
+      "index": 7,
+      "sceneIndex": 1,
+      "startSec": 39.52,
+      "text": "Cuando pasó la carroza del rey, el gato gritó que habían robado al marqués de Carabás.",
+      "endSec": 45.919
+    },
+    {
+      "index": 8,
+      "sceneIndex": 2,
+      "startSec": 45.919,
+      "text": "El rey le dio ropas elegantes al joven y lo invitó a subir con la princesa.",
+      "endSec": 51.52
+    },
+    {
+      "index": 9,
+      "sceneIndex": 2,
+      "startSec": 51.52,
+      "text": "El gato corrió por delante y ordenó a los campesinos que dijeran que todas las tierras eran del marqués de Carabás.",
+      "endSec": 60.739
+    },
+    {
+      "index": 10,
+      "sceneIndex": 2,
+      "startSec": 60.739,
+      "text": "Luego entró en el castillo de un ogro.",
+      "endSec": 64.08
+    },
+    {
+      "index": 11,
+      "sceneIndex": 3,
+      "startSec": 64.08,
+      "text": "El ogro se transformó en ratón para presumir y el gato lo atrapó.",
+      "endSec": 69.779
+    },
+    {
+      "index": 12,
+      "sceneIndex": 3,
+      "startSec": 69.779,
+      "text": "El rey llegó al castillo y creyó que todo era del marqués.",
+      "endSec": 73.879
+    },
+    {
+      "index": 13,
+      "sceneIndex": 3,
+      "startSec": 73.879,
+      "text": "El hijo del molinero se casó con la princesa y el gato vivió como un gran señor.",
+      "endSec": 80.68
+    },
+    {
+      "index": 14,
+      "sceneIndex": 3,
+      "startSec": 80.68,
+      "text": "La astucia y la lealtad habían cambiado su suerte.",
+      "endSec": 84.659
+    }
+  ]
+}

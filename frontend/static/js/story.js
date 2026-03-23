@@ -104,13 +104,18 @@ function openGoogleSearch(term) {
   window.open("https://www.google.com/search?q=" + q, "_blank", "noopener,noreferrer");
 }
 
-async function setupVoiceChoiceOverlay(story) {
+async function setupVoiceChoiceOverlay(story, recordedNarrationOk) {
   const wrap = document.getElementById("voice-choice-overlay");
   const btnMale = document.getElementById("btn-voice-male");
   const btnFemale = document.getElementById("btn-voice-female");
   if (!wrap || !btnMale || !btnFemale) return;
 
   if (!story || !story.titulo) return;
+  // Misma condición que useRecordedNarration: si no hay MP3 activo, no confundir con Hombre/Mujer.
+  if (!recordedNarrationOk) {
+    wrap.classList.add("hidden");
+    return;
+  }
   // Solo tiene sentido si existe narración pregrabada para ese cuento.
   if (!story.narracion_audio || !story.narracion_sync) {
     wrap.classList.add("hidden");
@@ -407,7 +412,7 @@ function buildSentencesAndPages(story, useRecording) {
     narracionSyncData.segments.length > 0
   ) {
     narracionSyncData.segments.forEach(function (seg) {
-      const si = typeof seg.sceneIndex === "number" ? seg.sceneIndex : 0;
+      const si = segmentSceneIndex(seg);
       const txt = seg.text != null ? String(seg.text).trim() : "";
       sentences.push({ text: txt.length ? txt : "\u00A0", sceneIndex: si });
       sceneForSentence.push(si);
@@ -621,11 +626,11 @@ function renderCurrentPage(animate) {
         if (useSegmentLayout) {
           const segs = narracionSyncData.segments;
           const segsHereCount = segs.filter(function (x) {
-            return x.sceneIndex === escenaIdx;
+            return segmentSceneIndex(x) === escenaIdx;
           }).length;
           for (let globalIdx = 0; globalIdx < segs.length; globalIdx++) {
             const seg = segs[globalIdx];
-            if (typeof seg.sceneIndex !== "number" || seg.sceneIndex !== escenaIdx) continue;
+            if (segmentSceneIndex(seg) !== escenaIdx) continue;
             const s = seg.text != null ? String(seg.text).trim() : "";
             const line = s.length ? s : "\u00A0";
             const isCurrentSentence = currentIndex === globalIdx;
@@ -823,6 +828,18 @@ function normalizeMediaUrl(url) {
   if (/^https?:\/\//i.test(s)) return s;
   if (s.startsWith("/")) return s;
   return "/" + s.replace(/^\/+/, "");
+}
+
+/** Índice de escena en segmentos del sync (número o string en JSON). */
+function segmentSceneIndex(seg) {
+  if (!seg || seg.sceneIndex == null) return 0;
+  const v = seg.sceneIndex;
+  if (typeof v === "number" && Number.isFinite(v)) return Math.max(0, Math.floor(v));
+  if (typeof v === "string" && v.trim() !== "") {
+    const n = parseInt(v, 10);
+    if (!Number.isNaN(n)) return Math.max(0, n);
+  }
+  return 0;
 }
 
 /** Tablet/escritorio: portada en la franja oscura (columna izquierda). */
@@ -2180,6 +2197,10 @@ async function initPage() {
       try {
         const syncUrl = normalizeMediaUrl(ns);
         const syncRes = await fetch(syncUrl);
+        if (!syncRes.ok) {
+          log("narracion_sync: HTTP", syncRes.status, syncUrl);
+          uiDebug("narracion_sync no cargó (" + syncRes.status + "): " + syncUrl);
+        }
         if (syncRes.ok) {
           const syncJson = await syncRes.json();
           const nEscenas = (storyData.escenas && storyData.escenas.length) || 0;
@@ -2188,12 +2209,18 @@ async function initPage() {
           let ok = false;
           if (segments && Array.isArray(segments) && segments.length > 0 && nEscenas > 0) {
             const maxScene = segments.reduce(function (m, s) {
-              const si = typeof s.sceneIndex === "number" ? s.sceneIndex : 0;
-              return Math.max(m, si);
+              return Math.max(m, segmentSceneIndex(s));
             }, 0);
             ok = maxScene === nEscenas - 1;
             if (!ok) {
               log("narracion_sync: sceneIndex no coincide con escenas (max", maxScene, "vs", nEscenas - 1, ")");
+              uiDebug(
+                "MP3 desactivado: sync tiene max escena " +
+                  maxScene +
+                  " pero el cuento tiene " +
+                  nEscenas +
+                  " escenas. Recarga cuentos en la BD o revisa el JSON."
+              );
             }
           } else if (paras && Array.isArray(paras) && paras.length === nEscenas && nEscenas > 0) {
             ok = true;
@@ -2205,6 +2232,7 @@ async function initPage() {
             useRecordedNarration = true;
             ensureNarracionListeners();
             log("Narración grabada activa:", na, segments ? "(" + segments.length + " segmentos)" : "");
+            uiDebug("Narración MP3 activa: " + na);
           } else if (!segments || !segments.length) {
             log("narracion_sync: sin segments válidos ni paragraphs=", nEscenas);
           }
@@ -2230,7 +2258,7 @@ async function initPage() {
     const overlayTitle = document.getElementById("overlay-story-title");
     if (overlayTitle) overlayTitle.textContent = storyData && storyData.titulo ? storyData.titulo : "";
     // Botones Hombre/Mujer (solo si el cuento tiene MP3 pregrabado correspondiente).
-    setupVoiceChoiceOverlay(storyData).catch(function () {});
+    setupVoiceChoiceOverlay(storyData, useRecordedNarration).catch(function () {});
     setupNarrationVoiceSelect(storyData, useRecordedNarration).catch(function () {});
     hideStartButtons();
   } catch (e) {

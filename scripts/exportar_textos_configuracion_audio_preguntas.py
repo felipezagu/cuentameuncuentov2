@@ -10,11 +10,12 @@ Output: c:/webpautas/py/cuentameuncuento/imagenes/configuracion/*.txt
 
 from __future__ import annotations
 
+import argparse
 import json
 import os
 import re
 import unicodedata
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Optional
 
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -71,7 +72,38 @@ def parse_preguntas(p: Any) -> List[Dict[str, Any]]:
     return []
 
 
+def _parse_args() -> argparse.Namespace:
+    p = argparse.ArgumentParser(
+        description="Exporta TXT para audios de panel final/cuestionario (ElevenLabs)."
+    )
+    p.add_argument(
+        "--solo",
+        metavar="TITULO_O_SLUG",
+        help='Solo un cuento: título (ej. "El Gato con Botas") o slug:elgatoconbotas. No borra otros TXT ni regenera los fijos.',
+    )
+    p.add_argument(
+        "--incluir-fijos",
+        action="store_true",
+        help="Con --solo: también escribe endpanel y quiz_done (por defecto no).",
+    )
+    return p.parse_args()
+
+
+def _solo_target_slug(solo_arg: str) -> str:
+    s = (solo_arg or "").strip()
+    if s.lower().startswith("slug:"):
+        return s.split(":", 1)[1].strip().lower()
+    return slugify_title_for_assets(s)
+
+
 def main() -> None:
+    args = _parse_args()
+    solo_slug: Optional[str] = None
+    if args.solo:
+        solo_slug = _solo_target_slug(args.solo)
+        if not solo_slug:
+            raise SystemExit("--solo vacío o inválido")
+
     with open(PATH_JSON, "r", encoding="utf-8") as f:
         data = json.load(f)
 
@@ -108,29 +140,38 @@ def main() -> None:
     endpanel_con_preguntas = "¡Has llegado al final del cuento! ¿Quieres responder algunas preguntas sobre la historia o prefieres escuchar otro cuento?"
     endpanel_sin_preguntas = "¡Has llegado al final del cuento! ¿Quieres escuchar otro cuento?"
 
-    # Limpiar salida anterior (solo txt de este módulo)
-    for fn in os.listdir(OUT_DIR):
-        if fn.startswith("config_") and fn.endswith(".txt"):
-            try:
-                os.remove(os.path.join(OUT_DIR, fn))
-            except Exception:
-                pass
+    if not solo_slug:
+        # Solo en exportación completa: limpiar TXT antiguos de este módulo.
+        for fn in os.listdir(OUT_DIR):
+            if fn.startswith("config_") and fn.endswith(".txt"):
+                try:
+                    os.remove(os.path.join(OUT_DIR, fn))
+                except Exception:
+                    pass
 
-    atomic_write(os.path.join(OUT_DIR, "config_endpanel_con_preguntas.txt"), endpanel_con_preguntas)
-    atomic_write(os.path.join(OUT_DIR, "config_endpanel_sin_preguntas.txt"), endpanel_sin_preguntas)
+        atomic_write(os.path.join(OUT_DIR, "config_endpanel_con_preguntas.txt"), endpanel_con_preguntas)
+        atomic_write(os.path.join(OUT_DIR, "config_endpanel_sin_preguntas.txt"), endpanel_sin_preguntas)
 
-    for i, msg in enumerate(quiz_done_messages, start=1):
-        atomic_write(os.path.join(OUT_DIR, f"config_quiz_done_{i:02d}.txt"), msg)
+        for i, msg in enumerate(quiz_done_messages, start=1):
+            atomic_write(os.path.join(OUT_DIR, f"config_quiz_done_{i:02d}.txt"), msg)
+    elif args.incluir_fijos:
+        atomic_write(os.path.join(OUT_DIR, "config_endpanel_con_preguntas.txt"), endpanel_con_preguntas)
+        atomic_write(os.path.join(OUT_DIR, "config_endpanel_sin_preguntas.txt"), endpanel_sin_preguntas)
+        for i, msg in enumerate(quiz_done_messages, start=1):
+            atomic_write(os.path.join(OUT_DIR, f"config_quiz_done_{i:02d}.txt"), msg)
 
     # Por cada entrada cuento (pueden existir versiones hombre/mujer con mismo titulo),
     # exportamos SOLO una vez por base slug.
     exported_question_keys = set()
+    written = 0
 
     for c in cuentos:
         if not isinstance(c, dict):
             continue
         titulo = c.get("titulo") or ""
         slug = slugify_title_for_assets(str(titulo))
+        if solo_slug and slug.lower() != solo_slug.lower():
+            continue
         preguntas = parse_preguntas(c.get("preguntas"))
         if not preguntas:
             continue
@@ -154,9 +195,19 @@ def main() -> None:
             exported_question_keys.add(key)
 
             atomic_write(os.path.join(OUT_DIR, f"config_{slug}__q{qidx:02d}.txt"), spoken_text)
+            written += 1
 
-    total_q = len([f for f in os.listdir(OUT_DIR) if f.startswith("config_") and f.endswith(".txt")])
-    print(f"Listo. Generados {total_q} TXT en {OUT_DIR}.")
+    if solo_slug and written == 0:
+        print(
+            f"ADVERTENCIA: no se escribió ningún TXT de preguntas para slug={solo_slug!r}. "
+            "¿Título correcto o preguntas vacías en cuentos.json?"
+        )
+
+    if solo_slug:
+        print(f"Listo (solo {solo_slug}). Archivos de preguntas escritos: {written}. Carpeta: {OUT_DIR}")
+    else:
+        total_q = len([f for f in os.listdir(OUT_DIR) if f.startswith("config_") and f.endswith(".txt")])
+        print(f"Listo. Generados {total_q} TXT en {OUT_DIR}.")
 
 
 if __name__ == "__main__":
