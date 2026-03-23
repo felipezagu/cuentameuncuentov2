@@ -112,6 +112,19 @@
     </button>
   </div>
 
+  <div id="story-player-dock" class="story-player-dock hidden">
+    <div class="story-player-dock__inner">
+      <span class="story-player-dock__label">Velocidad</span>
+      <div class="story-speed-row" role="group" aria-label="Velocidad de narración">
+        <button type="button" class="story-speed-btn" data-rate="0.75">0,75×</button>
+        <button type="button" class="story-speed-btn active" data-rate="1">1×</button>
+        <button type="button" class="story-speed-btn" data-rate="1.25">1,25×</button>
+      </div>
+      <input type="hidden" id="rate-range" value="1" />
+      <span id="rate-label" class="sr-only">1x</span>
+    </div>
+  </div>
+
   <div class="story-controls hidden">
     <button type="button" id="btn-prev" class="story-control-btn" title="Retroceder">
       <span class="story-control-btn-icon" aria-hidden="true">⏪</span>
@@ -167,6 +180,6 @@
 <script>
   window.STORY_ID = {{ story_id }};
 </script>
-<script src="/static/js/story.js?v=37"></script>
+<script src="/static/js/story.js?v=38"></script>
 {% endblock %}
 

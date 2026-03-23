@@ -365,11 +365,13 @@ function setReadingUIVisible(visible) {
   const container = document.getElementById("karaoke-container");
   const indicator = document.getElementById("page-indicator");
   const controls = document.querySelector(".story-controls");
+  const dock = document.getElementById("story-player-dock");
   const cfgToggle = document.getElementById("config-toggle");
 
   if (container) container.classList.toggle("hidden", !visible);
   if (indicator) indicator.classList.toggle("hidden", !visible);
   if (controls) controls.classList.toggle("hidden", !visible);
+  if (dock) dock.classList.toggle("hidden", !visible);
   if (cfgToggle) cfgToggle.classList.toggle("hidden", !visible);
 }
 
@@ -1291,12 +1293,29 @@ function initVoices() {
 function initRateControl() {
   const range = document.getElementById("rate-range");
   const label = document.getElementById("rate-label");
-  if (!range || !label) return;
-  const update = () => {
-    label.textContent = `${range.value}x`;
+  const applyRate = () => {
+    const v = parseFloat((range && range.value) || "1") || 1;
+    if (label) label.textContent = `${v}x`;
+    if (narracionAudioEl) {
+      try {
+        narracionAudioEl.playbackRate = v;
+      } catch (e) {
+        /* ignore */
+      }
+    }
   };
-  range.addEventListener("input", update);
-  update();
+  if (range) range.addEventListener("input", applyRate);
+  document.querySelectorAll(".story-speed-btn[data-rate]").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      const r = parseFloat(btn.getAttribute("data-rate"));
+      if (range && !Number.isNaN(r)) range.value = String(r);
+      document.querySelectorAll(".story-speed-btn[data-rate]").forEach(function (b) {
+        b.classList.toggle("active", b === btn);
+      });
+      applyRate();
+    });
+  });
+  applyRate();
 }
 
 function initAmbient() {

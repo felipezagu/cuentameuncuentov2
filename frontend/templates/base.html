@@ -3,47 +3,62 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Cuéntame un Cuento</title>
+  <meta name="description" content="Cuentos infantiles narrados con karaoke. Aprende a leer escuchando historias divertidas. Para niños y familias.">
+  <title>Cuéntame un Cuento — Cuentos con karaoke</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Baloo+2:wght@400;600;700;800&family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
   <link rel="icon" type="image/svg+xml" href="/static/img/favicon.svg">
   <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            fredoka: ['Fredoka', 'Nunito', 'sans-serif'],
+            nunito: ['Nunito', 'sans-serif'],
+          },
+        },
+      },
+    };
+  </script>
   <!-- Google AdSense (loader global). El mismo sirve para PC y móvil. -->
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3994777682000954"
           crossorigin="anonymous"></script>
-  <link rel="stylesheet" href="/static/css/styles.css?v=41">
+  <link rel="stylesheet" href="/static/css/styles.css?v=43">
 </head>
-<body class="min-h-screen font-nunito kid-body" id="body-bg">
+<body class="min-h-screen font-nunito kid-body app-body" id="body-bg">
   <div class="bg-magic" aria-hidden="true"></div>
   <div id="bg-layer" class="fixed inset-0 z-0 pointer-events-none" aria-hidden="true"></div>
   <div id="bubbles-layer" class="fixed inset-0 z-0 pointer-events-none" aria-hidden="true"></div>
   <div id="stars-layer" class="fixed inset-0 z-0 pointer-events-none" aria-hidden="true"></div>
   <div class="min-h-screen flex flex-col relative z-10">
-    <header class="kid-header px-4 sm:px-8 py-3 sm:py-4 flex items-center justify-between">
-      <a href="/" class="kid-home-link flex items-center gap-3">
+    <header class="kid-header app-header px-4 sm:px-8 py-3 sm:py-4 flex items-center justify-between gap-3">
+      <a href="/" class="kid-home-link flex items-center gap-3 min-w-0">
         <div class="kid-logo flex items-center justify-center overflow-hidden shrink-0">
           <img src="/static/img/favicon.svg" alt="" class="kid-logo-img" width="48" height="48" decoding="async">
         </div>
-        <div class="leading-tight">
-          <p class="font-extrabold text-lg sm:text-xl kid-title">Cuéntame un Cuento</p>
-          <p class="text-xs kid-tagline">Cuentos para escuchar y disfrutar</p>
+        <div class="leading-tight min-w-0">
+          <p class="font-fredoka font-bold text-lg sm:text-xl kid-title truncate">Cuéntame un Cuento</p>
+          <p class="text-xs kid-tagline hidden sm:block">Cuentos con karaoke para pequeños lectores</p>
         </div>
       </a>
-      <nav class="flex items-center gap-2">
-        <button id="toggle-theme" class="kid-btn-night px-3 py-2 rounded-xl shadow-sm transition text-xs sm:text-sm font-semibold">
+      <nav class="flex items-center gap-1 sm:gap-2 shrink-0" aria-label="Principal">
+        <a href="/#catalogo" class="app-nav-link">Catálogo</a>
+        <button id="toggle-theme" type="button" class="kid-btn-night px-3 py-2 rounded-xl shadow-sm transition text-xs sm:text-sm font-semibold" aria-label="Cambiar tema">
           🌙
         </button>
         {% block header_actions %}{% endblock %}
       </nav>
     </header>
 
-    <main class="flex-1">
+    <main class="flex-1 w-full">
       {% block content %}{% endblock %}
     </main>
 
-    <footer class="px-4 sm:px-8 py-4 text-xs text-center kid-footer">
-      Hecho con ♥ para pequeños grandes lectores
+    <footer class="app-footer px-4 sm:px-8 py-6 text-center text-xs sm:text-sm kid-footer">
+      <p class="font-semibold opacity-90">Hecho con ♥ para pequeños grandes lectores</p>
+      <p class="mt-1 opacity-75">cuentameuncuento.cl — cuentos infantiles interactivos</p>
     </footer>
   </div>
 
@@ -55,4 +70,3 @@
   {% block scripts %}{% endblock %}
 </body>
 </html>
-

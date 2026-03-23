@@ -1,3 +1,9 @@
+/**
+ * Home: carruseles tipo Netflix, filtros, favoritos e historial (localStorage).
+ */
+const LS_FAV = "cuc_favorites_v1";
+const LS_HIST = "cuc_history_v1";
+
 async function fetchStories() {
   const ctrl = new AbortController();
   const t = setTimeout(() => ctrl.abort(), 7000);
@@ -33,8 +39,6 @@ function normalizeStoryMediaUrl(url) {
 
 function parseV2VoiceTitle(titulo) {
   const t = String(titulo || "").trim();
-  // Tolerante al tipo de guion raro que puede aparecer en el título.
-  // Busca: "(v2 ... narrador <mujer|hombre>)" al final del texto.
   const m = t.match(/\(\s*v2[^)]*narrador\s*(mujer|hombre)\s*\)\s*$/i);
   if (!m) return null;
   return { base: t.replace(m[0], "").trim(), gender: String(m[1]).toLowerCase() };
@@ -43,7 +47,7 @@ function parseV2VoiceTitle(titulo) {
 function dedupeV2VoiceStoriesPreferHombre(stories) {
   const out = [];
   const outNonNarrated = [];
-  const groupedNarrated = new Map(); // baseTitle -> { hombre: story|null, mujer: story|null }
+  const groupedNarrated = new Map();
   const narratedBaseKeys = new Set();
 
   const detectGenderFromAudio = (s) => {
@@ -61,7 +65,6 @@ function dedupeV2VoiceStoriesPreferHombre(stories) {
       return;
     }
 
-    // Si todavía existe sufijo v2 en el título, lo quitamos; si ya no existe, devuelve el mismo título.
     const parsed = parseV2VoiceTitle(s && s.titulo ? s.titulo : "");
     const baseTitle = (parsed && parsed.base ? parsed.base : String(s && s.titulo ? s.titulo : "")).trim();
     if (!groupedNarrated.has(baseTitle)) groupedNarrated.set(baseTitle, { hombre: null, mujer: null });
@@ -72,7 +75,6 @@ function dedupeV2VoiceStoriesPreferHombre(stories) {
     if (gender === "hombre") g.hombre = s;
     else if (gender === "mujer") g.mujer = s;
     else {
-      // Si no se puede detectar, lo dejamos como "default" solo si no hay nada en el grupo.
       if (!g.hombre && !g.mujer) g.hombre = s;
     }
   });
@@ -82,7 +84,6 @@ function dedupeV2VoiceStoriesPreferHombre(stories) {
     else if (g.mujer) out.push(g.mujer);
   });
 
-  // Si hay versiones narradas, ocultamos las no-narradas del mismo título base.
   const narratedByBase = new Set(out.map((s) => (s && s.titulo ? String(s.titulo).trim() : "")));
   outNonNarrated.forEach((s) => {
     const baseTitle = String(s && s.titulo ? s.titulo : "").trim();
@@ -92,18 +93,135 @@ function dedupeV2VoiceStoriesPreferHombre(stories) {
   return out;
 }
 
-function createStoryCard(story) {
-  const card = document.createElement("div");
-  card.className = "story-card";
-  card.style.cursor = "pointer";
+/** Rango de edad sugerido por categoría (heurística). */
+function edadRangoForStory(story) {
+  const c = String(story.categoria || "").toLowerCase();
+  const t = String(story.titulo || "").toLowerCase();
+  if (/bebé|bebe|infantil|nursery/i.test(c + t)) return "3-5";
+  if (/princesa|hada|fantasía|fantasia|cuento de hadas/i.test(c)) return "3-5";
+  if (/animales|fabula|fábula/i.test(c)) return "3-5";
+  if (/clásico|clasico|leyenda|mito/i.test(c)) return "6-8";
+  if (/aventura/i.test(c)) return "6-8";
+  if (/épico|epico|historia/i.test(c)) return "9+";
+  return "6-8";
+}
+
+function duracionBucket(story) {
+  const n = typeof story.num_escenas === "number" ? story.num_escenas : 0;
+  if (n <= 0) return "medio";
+  if (n <= 3) return "corto";
+  if (n <= 6) return "medio";
+  return "largo";
+}
+
+function isSleepStory(s) {
+  const blob = ((s.titulo || "") + " " + (s.descripcion || "")).toLowerCase();
+  return /noche|luna|estrella|sueño|dormir|soñar|tranquilo|calma|dulce sueño|arrull|cantar bajito/i.test(blob);
+}
+
+function loadJsonArray(key) {
+  try {
+    const raw = localStorage.getItem(key);
+    if (!raw) return [];
+    const p = JSON.parse(raw);
+    return Array.isArray(p) ? p : [];
+  } catch (e) {
+    return [];
+  }
+}
+
+function saveJsonArray(key, arr) {
+  try {
+    localStorage.setItem(key, JSON.stringify(arr.slice(0, 30)));
+  } catch (e) {
+    /* ignore */
+  }
+}
+
+function getFavoriteIds() {
+  return loadJsonArray(LS_FAV).map(Number).filter((n) => !Number.isNaN(n));
+}
+
+function toggleFavorite(id, btn) {
+  let ids = getFavoriteIds();
+  const idx = ids.indexOf(id);
+  if (idx >= 0) {
+    ids.splice(idx, 1);
+    if (btn) btn.classList.remove("is-fav");
+  } else {
+    ids.unshift(id);
+    if (btn) btn.classList.add("is-fav");
+  }
+  saveJsonArray(LS_FAV, ids);
+}
+
+function isFavorite(id) {
+  return getFavoriteIds().indexOf(id) >= 0;
+}
+
+function pushHistory(id) {
+  let h = loadJsonArray(LS_HIST).map(Number).filter((n) => !Number.isNaN(n));
+  h = h.filter((x) => x !== id);
+  h.unshift(id);
+  saveJsonArray(LS_HIST, h.slice(0, 20));
+}
+
+function storiesByIds(all, ids) {
+  const map = new Map((all || []).map((s) => [s.id, s]));
+  return ids.map((id) => map.get(id)).filter(Boolean);
+}
+
+function recommendedFrom(all, historyIds) {
+  if (!all.length) return [];
+  const recent = storiesByIds(all, historyIds.slice(0, 3));
+  const cats = new Set(recent.map((s) => (s.categoria || "").trim()).filter(Boolean));
+  let pool = all.filter((s) => cats.has((s.categoria || "").trim()));
+  if (pool.length < 6) pool = all.slice();
+  shuffleInPlace(pool);
+  return pool.slice(0, 12);
+}
+
+let filterState = {
+  q: "",
+  categoria: "",
+};
+
+function storyMatchesFilters(story) {
+  const q = filterState.q.trim().toLowerCase();
+  if (q) {
+    const tit = String(story.titulo || "").toLowerCase();
+    const desc = String(story.descripcion || "").toLowerCase();
+    if (tit.indexOf(q) === -1 && desc.indexOf(q) === -1) return false;
+  }
+  if (filterState.categoria) {
+    if ((story.categoria || "").trim() !== filterState.categoria) return false;
+  }
+  return true;
+}
+
+function navigateToStory(story) {
+  if (!story || !story.id) return;
+  pushHistory(story.id);
+  const isMobile = window.innerWidth <= 1024 || /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
+  const url = isMobile ? `/cuento/${story.id}#cuento-inicio` : `/cuento/${story.id}`;
+  window.location.href = url;
+}
+
+function createStoryCard(story, opts) {
+  const opt = opts || {};
+  const card = document.createElement("article");
+  card.className = "story-card-v2";
   card.dataset.categoria = (story.categoria || "").trim();
+  card.setAttribute("role", "button");
+  card.tabIndex = 0;
+  card.setAttribute("aria-label", "Abrir cuento " + (story.titulo || ""));
 
   const cover = document.createElement("div");
-  cover.className = "story-card-cover";
+  cover.className = "story-card-v2__cover";
   const portadaUrl = story.portada ? normalizeStoryMediaUrl(story.portada) : "";
   if (portadaUrl) {
     const img = document.createElement("img");
-    img.className = "story-card-cover-img";
+    img.className = "story-card-v2__img";
     img.alt = "";
     img.loading = "lazy";
     img.decoding = "async";
@@ -111,32 +229,131 @@ function createStoryCard(story) {
     img.referrerPolicy = "no-referrer-when-downgrade";
     img.addEventListener("error", function () {
       img.removeAttribute("src");
-      cover.style.backgroundColor = "#CBD5E1";
+      cover.classList.add("story-card-v2__cover--empty");
     });
     cover.appendChild(img);
+  } else {
+    cover.classList.add("story-card-v2__cover--empty");
   }
 
-  const info = document.createElement("div");
-  info.className = "story-card-info";
-  const title = document.createElement("p");
-  title.className = "story-card-title";
-  title.textContent = story.titulo;
-  const label = document.createElement("p");
-  label.className = "story-card-label";
-  label.textContent = story.categoria || "Cuento";
-  info.appendChild(title);
-  info.appendChild(label);
+  const badges = document.createElement("div");
+  badges.className = "story-card-v2__badges";
+  if (story.destacado) {
+    const b = document.createElement("span");
+    b.className = "story-badge story-badge--popular";
+    b.textContent = "Popular";
+    badges.appendChild(b);
+  }
+  const edad = edadRangoForStory(story);
+  const e = document.createElement("span");
+  e.className = "story-badge story-badge--edad";
+  e.textContent = edad + " años";
+  badges.appendChild(e);
 
+  const favBtn = document.createElement("button");
+  favBtn.type = "button";
+  favBtn.className = "story-card-v2__fav" + (isFavorite(story.id) ? " is-fav" : "");
+  favBtn.setAttribute("aria-label", "Favorito");
+  favBtn.innerHTML = '<span aria-hidden="true">♥</span>';
+  favBtn.addEventListener("click", (ev) => {
+    ev.stopPropagation();
+    ev.preventDefault();
+    toggleFavorite(story.id, favBtn);
+  });
+
+  const info = document.createElement("div");
+  info.className = "story-card-v2__info";
+  const title = document.createElement("h3");
+  title.className = "story-card-v2__title";
+  title.textContent = story.titulo;
+  const meta = document.createElement("p");
+  meta.className = "story-card-v2__meta";
+  const n = typeof story.num_escenas === "number" ? story.num_escenas : "?";
+  meta.textContent = (story.categoria || "Cuento") + " · " + n + " partes";
+  info.appendChild(title);
+  info.appendChild(meta);
+
+  cover.appendChild(badges);
+  cover.appendChild(favBtn);
   card.appendChild(cover);
   card.appendChild(info);
 
-  card.addEventListener("click", () => {
-    const isMobile = window.innerWidth <= 1024 || /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
-    const url = isMobile ? `/cuento/${story.id}#cuento-inicio` : `/cuento/${story.id}`;
-    window.location.href = url;
+  const open = () => navigateToStory(story);
+  card.addEventListener("click", open);
+  card.addEventListener("keydown", (e) => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      open();
+    }
   });
 
   return card;
+}
+
+function createCarouselRow(title, stories, emptyHint) {
+  const section = document.createElement("section");
+  section.className = "home-row";
+  const h = document.createElement("h2");
+  h.className = "home-row__title";
+  h.textContent = title;
+  const trackWrap = document.createElement("div");
+  trackWrap.className = "home-carousel";
+  const track = document.createElement("div");
+  track.className = "home-carousel__track";
+  track.setAttribute("role", "list");
+
+  if (!stories || stories.length === 0) {
+    const p = document.createElement("p");
+    p.className = "home-row__empty";
+    p.textContent = emptyHint || "Pronto habrá más cuentos aquí.";
+    section.appendChild(h);
+    section.appendChild(p);
+    return section;
+  }
+
+  stories.forEach((s) => {
+    const wrap = document.createElement("div");
+    wrap.className = "home-carousel__item";
+    wrap.setAttribute("role", "listitem");
+    wrap.appendChild(createStoryCard(s));
+    track.appendChild(wrap);
+  });
+
+  trackWrap.appendChild(track);
+  section.appendChild(h);
+  section.appendChild(trackWrap);
+  return section;
+}
+
+function renderNetflixRows(container, allStories) {
+  if (!container) return;
+  container.innerHTML = "";
+
+  const histIds = loadJsonArray(LS_HIST).map(Number).filter((n) => !Number.isNaN(n));
+  const favIds = getFavoriteIds();
+
+  const favorites = storiesByIds(allStories, favIds);
+  const history = storiesByIds(allStories, histIds).filter((s) => favIds.indexOf(s.id) === -1);
+  const recommended = recommendedFrom(allStories, histIds);
+
+  const popular = shuffleInPlace(allStories.filter((s) => s.destacado)).slice(0, 14);
+  let sleep = allStories.filter(isSleepStory);
+  if (sleep.length < 6) {
+    sleep = shuffleInPlace(
+      allStories.filter((s) => /clásico|clasico|princesa|fantasía|fantasia/i.test(s.categoria || ""))
+    ).slice(0, 10);
+  } else {
+    sleep = shuffleInPlace(sleep).slice(0, 14);
+  }
+
+  const cortos = shuffleInPlace(allStories.filter((s) => duracionBucket(s) === "corto")).slice(0, 14);
+
+  if (favorites.length) container.appendChild(createCarouselRow("♥ Tus favoritos", favorites, ""));
+  if (history.length) container.appendChild(createCarouselRow("🕐 Vistos recientemente", history, ""));
+  if (recommended.length) container.appendChild(createCarouselRow("✨ Recomendados para ti", recommended, ""));
+  container.appendChild(createCarouselRow("🔥 Cuentos populares", popular, "Marca cuentos como destacados en el admin."));
+  container.appendChild(createCarouselRow("🌙 Para dormir", sleep, ""));
+  container.appendChild(createCarouselRow("⚡ Cuentos cortos", cortos, ""));
 }
 
 function renderFiltroCategorias(categorias) {
@@ -145,86 +362,105 @@ function renderFiltroCategorias(categorias) {
   cont.innerHTML = "";
   const btnTodos = document.createElement("button");
   btnTodos.type = "button";
-  btnTodos.className = "categoria-btn active";
+  btnTodos.className = "home-chip active";
   btnTodos.dataset.categoria = "";
-  btnTodos.textContent = "Todos";
+  btnTodos.textContent = "Todas";
   cont.appendChild(btnTodos);
   categorias.forEach((cat) => {
     const btn = document.createElement("button");
     btn.type = "button";
-    btn.className = "categoria-btn";
+    btn.className = "home-chip";
     btn.dataset.categoria = cat;
     btn.textContent = cat;
     cont.appendChild(btn);
   });
-  cont.querySelectorAll(".categoria-btn").forEach((btn) => {
+  cont.querySelectorAll(".home-chip").forEach((btn) => {
     btn.addEventListener("click", () => {
-      cont.querySelectorAll(".categoria-btn").forEach((b) => b.classList.remove("active"));
+      cont.querySelectorAll(".home-chip").forEach((b) => b.classList.remove("active"));
       btn.classList.add("active");
-      const cat = btn.dataset.categoria || "";
-      document.querySelectorAll(".story-category-block").forEach((block) => {
-        const show = !cat || block.dataset.categoria === cat;
-        block.style.display = show ? "block" : "none";
-      });
+      filterState.categoria = btn.dataset.categoria || "";
+      applyFiltersAndRender();
     });
   });
 }
 
-function renderPorCategoria(stories) {
+function renderCatalogGrid(stories) {
   const cont = document.getElementById("contenedor-por-categoria");
+  const emptyEl = document.getElementById("home-empty");
   if (!cont) return;
+
+  const filtered = (stories || []).filter(storyMatchesFilters);
   cont.innerHTML = "";
 
-  const categoriasRaw = stories.map(function(s) {
-    return (s.categoria || "Otros").trim();
-  });
-  const categoriasUnicas = [...new Set(categoriasRaw)].filter(Boolean).sort();
-  if (categoriasUnicas.length === 0) categoriasUnicas.push("Otros");
-  const categoriasParaFiltro = [...categoriasUnicas];
-  shuffleInPlace(categoriasParaFiltro);
-  renderFiltroCategorias(categoriasParaFiltro);
+  if (emptyEl) emptyEl.classList.toggle("hidden", filtered.length > 0);
 
-  const porCategoria = {};
-  stories.forEach((s) => {
+  if (filtered.length === 0) {
+    cont.innerHTML = "";
+    return;
+  }
+
+  const categoriasUnicas = [...new Set(filtered.map((s) => (s.categoria || "Otros").trim()))].sort();
+  const byCat = {};
+  filtered.forEach((s) => {
     const cat = (s.categoria || "Otros").trim();
-    if (!porCategoria[cat]) porCategoria[cat] = [];
-    porCategoria[cat].push(s);
+    if (!byCat[cat]) byCat[cat] = [];
+    byCat[cat].push(s);
   });
 
-  let ordenCats = categoriasUnicas.includes("Otros")
-    ? ["Otros", ...categoriasUnicas.filter((c) => c !== "Otros")]
-    : [...categoriasUnicas];
-  shuffleInPlace(ordenCats);
-  ordenCats.forEach((cat) => {
-    const list = (porCategoria[cat] || []).slice();
-    if (list.length === 0) return;
-    shuffleInPlace(list);
+  categoriasUnicas.forEach((cat) => {
+    const list = byCat[cat] || [];
+    if (!list.length) return;
     const block = document.createElement("div");
-    block.className = "story-category-block";
+    block.className = "home-cat-block";
     block.dataset.categoria = cat;
     const h3 = document.createElement("h3");
+    h3.className = "home-cat-block__title";
     h3.textContent = cat;
-    const listEl = document.createElement("div");
-    listEl.className = "story-list";
-    list.forEach((story) => listEl.appendChild(createStoryCard(story)));
+    const gridInner = document.createElement("div");
+    gridInner.className = "home-grid";
+    shuffleInPlace(list);
+    list.forEach((story) => {
+      gridInner.appendChild(createStoryCard(story));
+    });
     block.appendChild(h3);
-    block.appendChild(listEl);
+    block.appendChild(gridInner);
     cont.appendChild(block);
   });
 }
 
+function applyFiltersAndRender() {
+  renderCatalogGrid(window.__CUC_STORIES__ || []);
+}
+
+function wireFilters() {
+  const search = document.getElementById("home-search-input");
+  if (search) {
+    let t;
+    search.addEventListener("input", () => {
+      clearTimeout(t);
+      t = setTimeout(() => {
+        filterState.q = search.value;
+        applyFiltersAndRender();
+      }, 200);
+    });
+  }
+
+}
+
 async function init() {
   let stories = await fetchStories();
-  // Si existen dos versiones (mujer/hombre) del mismo cuento v2,
-  // en portada mostramos solo una: por defecto la voz "Hombre".
   stories = dedupeV2VoiceStoriesPreferHombre(stories);
   shuffleInPlace(stories);
+  window.__CUC_STORIES__ = stories;
+
   const btnRandom = document.getElementById("btn-random-story");
   const contenedor = document.getElementById("contenedor-por-categoria");
+  const rowsEl = document.getElementById("home-rows");
 
   if (!stories.length) {
     if (contenedor) {
-      contenedor.innerHTML = "<p class=\"text-purple-700 dark:text-purple-300\">Aún no hay cuentos. Entra al panel admin para crear algunos.</p>";
+      contenedor.innerHTML =
+        '<p class="home-empty">Aún no hay cuentos. Carga cuentos desde el panel admin.</p>';
     }
     return;
   }
@@ -232,12 +468,18 @@ async function init() {
   if (btnRandom) {
     btnRandom.addEventListener("click", () => {
       const pick = stories[Math.floor(Math.random() * stories.length)];
-      if (pick && pick.id) window.location.href = `/cuento/${pick.id}`;
+      if (pick && pick.id) navigateToStory(pick);
     });
   }
 
-  renderPorCategoria(stories);
+  const categoriasRaw = stories.map((s) => (s.categoria || "Otros").trim());
+  const categoriasUnicas = [...new Set(categoriasRaw)].filter(Boolean).sort();
+  const categoriasParaFiltro = shuffleInPlace([...categoriasUnicas]);
+  renderFiltroCategorias(categoriasParaFiltro);
+
+  renderNetflixRows(rowsEl, stories);
+  renderCatalogGrid(stories);
+  wireFilters();
 }
 
 document.addEventListener("DOMContentLoaded", init);
-

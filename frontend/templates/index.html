@@ -1,25 +1,65 @@
 {% extends "base.html" %}
 
 {% block content %}
-<section class="hero">
-  <div class="hero-inner">
-    <button id="btn-random-story" class="btn-cta">
-      <span class="btn-cta-icon">▶</span>
-      ¡Cuéntame uno al azar!
-    </button>
-  </div>
-</section>
+<div class="app-home">
+  <!-- Hero principal -->
+  <section class="home-hero" aria-label="Presentación">
+    <div class="home-hero__bg" aria-hidden="true"></div>
+    <div class="home-hero__inner">
+      <div class="home-hero__copy">
+        <p class="home-hero__badge">✨ Karaoke de lectura</p>
+        <h1 class="home-hero__title">Cuentos infantiles narrados con karaoke</h1>
+        <p class="home-hero__subtitle">Aprende a leer escuchando cuentos divertidos</p>
+        <div class="home-hero__actions">
+          <button type="button" id="btn-random-story" class="home-cta home-cta--primary">
+            <span class="home-cta__icon" aria-hidden="true">▶</span>
+            Escuchar un cuento
+          </button>
+          <a href="#catalogo" class="home-cta home-cta--ghost">Ver catálogo</a>
+        </div>
+      </div>
+      <div class="home-hero__art" aria-hidden="true">
+        <div class="home-hero__blob home-hero__blob--1"></div>
+        <div class="home-hero__blob home-hero__blob--2"></div>
+        <div class="home-hero__blob home-hero__blob--3"></div>
+        <div class="home-hero__stars">★ ✦ ★</div>
+      </div>
+    </div>
+  </section>
 
-<section id="lista-cuentos" class="section-wrap">
-  <div id="filtro-categorias">
-    <button type="button" class="categoria-btn active" data-categoria="">Todos</button>
+  <!-- Barra de búsqueda y filtros -->
+  <section class="home-toolbar" id="catalogo">
+    <div class="home-toolbar__row">
+      <label class="home-search">
+        <span class="home-search__icon" aria-hidden="true">🔍</span>
+        <input type="search" id="home-search-input" class="home-search__input" placeholder="Buscar cuentos…" autocomplete="off" />
+      </label>
+    </div>
+    <div class="home-toolbar__row home-toolbar__filters">
+      <div class="home-filter-group home-filter-group--grow">
+        <span class="home-filter-label">Categoría</span>
+        <div class="home-chips home-chips--wrap" id="filtro-categorias">
+          <button type="button" class="home-chip active" data-categoria="">Todas</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Filas tipo Netflix (rellenas por JS) -->
+  <div id="home-rows" class="home-rows">
+    <!-- rows inyectadas -->
   </div>
 
-  <div id="contenedor-por-categoria"></div>
-</section>
+  <!-- Grid catálogo completo (filtrado) -->
+  <section id="lista-cuentos" class="home-catalog section-wrap">
+    <h2 class="home-row__title">Catálogo completo</h2>
+    <div id="contenedor-por-categoria"></div>
+  </section>
+
+  <p id="home-empty" class="home-empty hidden">No hay cuentos con estos filtros. Prueba otra búsqueda.</p>
+</div>
 {% endblock %}
 
 {% block scripts %}
-<script src="/static/js/main.js?v=6"></script>
+<script src="/static/js/main.js?v=8"></script>
 {% endblock %}
-

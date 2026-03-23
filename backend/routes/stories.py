@@ -4,10 +4,10 @@ from typing import Any, List
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
 from sqlalchemy.exc import OperationalError
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 
 from ..database import get_db
-from ..models import Story, Scene
+from ..models import Story
 
 
 router = APIRouter(prefix="/api/stories", tags=["stories"])
@@ -34,6 +34,7 @@ class StoryOut(BaseModel):
     destacado: bool
     narracion_audio: str | None = None
     narracion_sync: str | None = None
+    num_escenas: int = 0
 
     class Config:
         from_attributes = True
@@ -47,8 +48,28 @@ class StoryDetailOut(StoryOut):
 @router.get("/", response_model=List[StoryOut])
 def list_stories(db: Session = Depends(get_db)):
     try:
-        stories = db.query(Story).order_by(Story.id).all()
-        return stories
+        stories = (
+            db.query(Story)
+            .options(joinedload(Story.escenas))
+            .order_by(Story.id)
+            .all()
+        )
+        return [
+            StoryOut(
+                id=s.id,
+                titulo=s.titulo,
+                descripcion=s.descripcion,
+                portada=s.portada,
+                categoria=s.categoria,
+                autor=getattr(s, "autor", None),
+                ambiente=s.ambiente,
+                destacado=s.destacado,
+                narracion_audio=getattr(s, "narracion_audio", None),
+                narracion_sync=getattr(s, "narracion_sync", None),
+                num_escenas=len(s.escenas or []),
+            )
+            for s in stories
+        ]
     except OperationalError:
         # Si SQLite está bloqueado, devolvemos rápido para que la UI no quede colgada.
         return []
@@ -76,6 +97,7 @@ def get_story(story_id: int, db: Session = Depends(get_db)):
         destacado=story.destacado,
         narracion_audio=getattr(story, "narracion_audio", None),
         narracion_sync=getattr(story, "narracion_sync", None),
+        num_escenas=len(story.escenas or []),
         escenas=story.escenas,
         preguntas=preguntas,
     )
