@@ -141,8 +141,12 @@ def on_startup():
     Por defecto NO hacemos init/seed en startup. Para habilitarlo explícitamente:
     - AUTO_INIT_DB=1
     - AUTO_SEED_DEMO=1
+
+    En Railway (y similares) la carpeta `data/` no viene en el repo: sin tablas la app
+    falla o queda vacía. Si existe RAILWAY_ENVIRONMENT, creamos tablas al arrancar.
     """
-    if os.getenv("AUTO_INIT_DB") == "1":
+    auto_init = os.getenv("AUTO_INIT_DB") == "1" or bool(os.getenv("RAILWAY_ENVIRONMENT"))
+    if auto_init:
         init_db()
 
     if os.getenv("AUTO_SEED_DEMO") == "1":
