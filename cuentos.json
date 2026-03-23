@@ -2389,15 +2389,46 @@
         },
         {
           "orden": 4,
-          "texto": "El gato corrió por delante y ordenó a los campesinos que dijeran que todas las tierras eran del Marqués de Carabás. Luego entró en el castillo de un ogro. El ogro se transformó en ratón para presumir y el gato lo atrapó.",
-          "imagen": "/imagenes/elgatoconbotas/04.png"
-        },
-        {
-          "orden": 5,
-          "texto": "El rey llegó al castillo y creyó que todo era del Marqués. El hijo del molinero se casó con la princesa y el gato vivió como un gran señor. La astucia y la lealtad habían cambiado su suerte.",
+          "texto": "El gato corrió por delante y ordenó a los campesinos que dijeran que todas las tierras eran del Marqués de Carabás. Luego entró en el castillo de un ogro. El ogro se transformó en ratón para presumir y el gato lo atrapó. El rey llegó al castillo y creyó que todo era del Marqués. El hijo del molinero se casó con la princesa y el gato vivió como un gran señor. La astucia y la lealtad habían cambiado su suerte.",
           "imagen": "/imagenes/elgatoconbotas/05.png"
         }
       ],
+      "narracion_audio": "/imagenes/elgatoconbotas/elgatoconbotashombre.mp3",
+      "narracion_sync": "/imagenes/elgatoconbotas/elgatoconbotashombre.sync.json",
+      "autor": "Charles Perrault"
+    },
+    {
+      "titulo": "El Gato con Botas",
+      "descripcion": "Un gato astuto convierte la herencia de su dueño en fortuna y amor. Cuento de Charles Perrault.",
+      "portada": "/imagenes/portadas/elgatoconbotas.jpg",
+      "categoria": "Clásicos",
+      "ambiente": "",
+      "destacado": true,
+      "preguntas": "[{\"p\": \"¿Qué heredó el hijo menor del molinero?\", \"opciones\": [\"El molino\", \"El asno\", \"El gato\", \"Nada\"], \"correcta\": 2}, {\"p\": \"¿Cómo se hacía llamar el joven ante el rey?\", \"opciones\": [\"El molinero\", \"Marqués de Carabás\", \"El cazador\", \"El ogro\"], \"correcta\": 1}, {\"p\": \"¿Qué hizo el gato con el ogro?\", \"opciones\": [\"Lo encerró\", \"Se hizo amigo\", \"Lo venció cuando se transformó en ratón\", \"Lo presentó al rey\"], \"correcta\": 2}]",
+      "escenas": [
+        {
+          "orden": 1,
+          "texto": "Un molinero dejó a sus tres hijos el molino, el asno y un gato. El hijo menor solo recibió el gato y estaba muy triste. El gato le pidió una bolsa y unas botas, y le prometió que si confiaba en él, todo cambiaría.",
+          "imagen": "/imagenes/elgatoconbotas/01.png"
+        },
+        {
+          "orden": 2,
+          "texto": "El gato cazó conejos y perdices y se los llevó al rey diciendo que eran regalos del Marqués de Carabás. Así ganó la confianza del rey. Un día supo que el rey pasearía con su hija por la orilla del río.",
+          "imagen": "/imagenes/elgatoconbotas/02.png"
+        },
+        {
+          "orden": 3,
+          "texto": "El gato hizo que su amo se bañara en el río y escondió su ropa. Cuando pasó la carroza del rey, el gato gritó que habían robado al Marqués de Carabás. El rey le dio ropas elegantes al joven y lo invitó a subir con la princesa.",
+          "imagen": "/imagenes/elgatoconbotas/03.png"
+        },
+        {
+          "orden": 4,
+          "texto": "El gato corrió por delante y ordenó a los campesinos que dijeran que todas las tierras eran del Marqués de Carabás. Luego entró en el castillo de un ogro. El ogro se transformó en ratón para presumir y el gato lo atrapó. El rey llegó al castillo y creyó que todo era del Marqués. El hijo del molinero se casó con la princesa y el gato vivió como un gran señor. La astucia y la lealtad habían cambiado su suerte.",
+          "imagen": "/imagenes/elgatoconbotas/05.png"
+        }
+      ],
+      "narracion_audio": "/imagenes/elgatoconbotas/elgatoconbotasmujer.mp3",
+      "narracion_sync": "/imagenes/elgatoconbotas/elgatoconbotasmujer.sync.json",
       "autor": "Charles Perrault"
     },
     {
