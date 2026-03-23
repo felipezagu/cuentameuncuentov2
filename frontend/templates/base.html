@@ -8,7 +8,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
-  <link rel="icon" type="image/svg+xml" href="/static/img/favicon.svg">
+  <link rel="icon" type="image/png" href="/static/img/logo.png">
+  <link rel="apple-touch-icon" href="/static/img/logo.png">
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -25,7 +26,7 @@
   <!-- Google AdSense (loader global). El mismo sirve para PC y móvil. -->
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3994777682000954"
           crossorigin="anonymous"></script>
-  <link rel="stylesheet" href="/static/css/styles.css?v=43">
+  <link rel="stylesheet" href="/static/css/styles.css?v=44">
 </head>
 <body class="min-h-screen font-nunito kid-body app-body" id="body-bg">
   <div class="bg-magic" aria-hidden="true"></div>
@@ -35,8 +36,15 @@
   <div class="min-h-screen flex flex-col relative z-10">
     <header class="kid-header app-header px-4 sm:px-8 py-3 sm:py-4 flex items-center justify-between gap-3">
       <a href="/" class="kid-home-link flex items-center gap-3 min-w-0">
-        <div class="kid-logo flex items-center justify-center overflow-hidden shrink-0">
-          <img src="/static/img/favicon.svg" alt="" class="kid-logo-img" width="48" height="48" decoding="async">
+        <div class="kid-logo kid-logo--brand flex items-center justify-center overflow-hidden shrink-0">
+          <img
+            src="/static/img/logo.png"
+            alt=""
+            class="kid-logo-img"
+            width="240"
+            height="64"
+            decoding="async"
+          />
         </div>
         <div class="leading-tight min-w-0">
           <p class="font-fredoka font-bold text-lg sm:text-xl kid-title truncate">Cuéntame un Cuento</p>

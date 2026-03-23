@@ -49,6 +49,30 @@ body {
   border-radius: inherit;
 }
 
+/* Logo marca (PNG horizontal / wordmark) */
+.kid-logo--brand {
+  width: auto;
+  max-width: min(260px, 70vw);
+  height: auto;
+  min-width: 0;
+  border-radius: 0.75rem;
+  box-shadow: 0 2px 14px rgba(37, 99, 235, 0.22);
+}
+.kid-logo--brand .kid-logo-img {
+  width: auto;
+  max-width: 100%;
+  height: auto;
+  max-height: 46px;
+  object-fit: contain;
+  object-position: left center;
+  border-radius: 0.5rem;
+}
+@media (min-width: 640px) {
+  .kid-logo--brand .kid-logo-img {
+    max-height: 52px;
+  }
+}
+
 .kid-title {
   color: #111827;
 }
@@ -282,6 +306,9 @@ body.dark-mode .kid-header {
 body.dark-mode .kid-logo {
   background: transparent;
   box-shadow: 0 2px 12px rgba(37, 99, 235, 0.45);
+}
+body.dark-mode .kid-logo--brand {
+  box-shadow: 0 2px 16px rgba(96, 165, 250, 0.25);
 }
 
 body.dark-mode header a,
