@@ -1,5 +1,6 @@
 import json
 import io
+import ipaddress
 import os
 import time
 import re
@@ -164,14 +165,30 @@ def _request_host(request: Request) -> str:
     return host
 
 
-def is_localhost_request(request: Request) -> bool:
+def is_admin_tools_request_allowed(request: Request) -> bool:
+    """
+    Admin y /tools solo en entorno local:
+    - localhost / 127.0.0.1 / ::1
+    - IP privada (p. ej. abres la app como http://192.168.x.x:8000 desde la misma red)
+    - o ALLOW_ADMIN_TOOLS=1 en .env (solo si sabes lo que haces; no en producción pública)
+    """
+    if (os.getenv("ALLOW_ADMIN_TOOLS") or "").strip().lower() in ("1", "true", "yes", "on"):
+        return True
     host = _request_host(request)
-    return host in {"localhost", "127.0.0.1", "::1"}
+    if host.startswith("[") and host.endswith("]"):
+        host = host[1:-1]
+    if host in {"localhost", "127.0.0.1", "::1"}:
+        return True
+    try:
+        ip = ipaddress.ip_address(host)
+        return bool(ip.is_loopback or ip.is_private)
+    except ValueError:
+        return False
 
 
 def ensure_localhost_only(request: Request):
-    # En producción (GitHub/deploy), ocultamos completamente admin/tools.
-    if not is_localhost_request(request):
+    # En producción pública (dominio normal) ocultamos admin/tools.
+    if not is_admin_tools_request_allowed(request):
         raise HTTPException(status_code=404, detail="Not Found")
 
 

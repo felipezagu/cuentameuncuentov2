@@ -30,7 +30,8 @@ python run.py
 Luego:
 - En la PC: `http://localhost:8000/`
 - En el celular: `http://192.168.100.76:8000/` (usa la IP de tu PC en la red; si cambia, revisa con `ipconfig` en Windows).
-- Panel admin: `/admin`
+- Panel admin: `http://localhost:8000/admin` (también funciona si abres la app por IP de tu red, p. ej. `http://192.168.x.x:8000/admin`).
+- Herramientas TTS/sync: `/tools/tts-upload` (mismas reglas que el admin; en producción pública están ocultas).
 
 ## Exportar cuentos a TXT (un archivo por cuento, 5 párrafos)
 
