@@ -1,0 +1,131 @@
+{
+  "version": 3,
+  "audio": "lossietecabritilloshombre.mp3",
+  "sources": {
+    "text": "lossietecabritillos.txt",
+    "timings": "lossietecabritilloshombre.mp3.txt"
+  },
+  "method": "segments_from_stt_word_timestamps",
+  "note": "Generado automáticamente desde ElevenLabs Speech-to-Text (timestamps word).",
+  "segments": [
+    {
+      "index": 0,
+      "sceneIndex": 0,
+      "startSec": 0.079,
+      "text": "Una cabra tenía siete cabritillos a los que quería mucho.",
+      "endSec": 4.259
+    },
+    {
+      "index": 1,
+      "sceneIndex": 0,
+      "startSec": 4.259,
+      "text": "Antes de ir al bosque a buscar comida, les dijo: \"No abráis a nadie.",
+      "endSec": 9.599
+    },
+    {
+      "index": 2,
+      "sceneIndex": 0,
+      "startSec": 9.599,
+      "text": "Si es el lobo, mostrará sus patas negras y su voz ronca.",
+      "endSec": 14.399
+    },
+    {
+      "index": 3,
+      "sceneIndex": 0,
+      "startSec": 14.399,
+      "text": "Solo abrid a mi voz suave y mis patas blancas\".",
+      "endSec": 18.819
+    },
+    {
+      "index": 4,
+      "sceneIndex": 0,
+      "startSec": 18.819,
+      "text": "El lobo fue a la casita y llamó con voz ronca.",
+      "endSec": 22.739
+    },
+    {
+      "index": 5,
+      "sceneIndex": 0,
+      "startSec": 22.739,
+      "text": "Los cabritillos dijeron: \"Tú eres el lobo\".",
+      "endSec": 26.34
+    },
+    {
+      "index": 6,
+      "sceneIndex": 1,
+      "startSec": 26.34,
+      "text": "El lobo fue a una tienda, se puso harina en la pata y volvió.",
+      "endSec": 31.039
+    },
+    {
+      "index": 7,
+      "sceneIndex": 1,
+      "startSec": 31.039,
+      "text": "Engañó a los pequeños y entró.",
+      "endSec": 33.479
+    },
+    {
+      "index": 8,
+      "sceneIndex": 1,
+      "startSec": 33.479,
+      "text": "Los cabritillos corrieron a esconderse.",
+      "endSec": 36.319
+    },
+    {
+      "index": 9,
+      "sceneIndex": 1,
+      "startSec": 36.319,
+      "text": "El lobo los encontró uno a uno y se los tragó.",
+      "endSec": 40.419
+    },
+    {
+      "index": 10,
+      "sceneIndex": 1,
+      "startSec": 40.419,
+      "text": "Solo el más pequeño se escondió en el reloj de pared y el lobo no lo vio.",
+      "endSec": 46.119
+    },
+    {
+      "index": 11,
+      "sceneIndex": 2,
+      "startSec": 46.119,
+      "text": "La madre volvió y el cabritillo le contó todo.",
+      "endSec": 50.599
+    },
+    {
+      "index": 12,
+      "sceneIndex": 2,
+      "startSec": 50.599,
+      "text": "Encontraron al lobo dormido bajo un árbol con la barriga llena.",
+      "endSec": 55.86
+    },
+    {
+      "index": 13,
+      "sceneIndex": 2,
+      "startSec": 55.86,
+      "text": "La cabra abrió la barriga con unas tijeras y sacó a los seis cabritillos vivos.",
+      "endSec": 62.279
+    },
+    {
+      "index": 14,
+      "sceneIndex": 2,
+      "startSec": 62.279,
+      "text": "Llenaron la barriga del lobo de piedras y la cerraron.",
+      "endSec": 66.919
+    },
+    {
+      "index": 15,
+      "sceneIndex": 3,
+      "startSec": 66.919,
+      "text": "Cuando el lobo despertó y fue a beber al río, el peso lo hizo caer y se ahogó.",
+      "endSec": 74.019
+    },
+    {
+      "index": 16,
+      "sceneIndex": 3,
+      "startSec": 74.019,
+      "text": "Los siete cabritillos y su madre vivieron felices",
+      "endSec": 77.899
+    }
+  ]
+}

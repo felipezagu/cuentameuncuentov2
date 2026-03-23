@@ -1,0 +1,110 @@
+{
+  "version": 3,
+  "audio": "lalecherahombre.mp3",
+  "sources": {
+    "text": "lalechera.txt",
+    "timings": "lalecherahombre.mp3.txt"
+  },
+  "method": "segments_from_stt_word_timestamps",
+  "note": "Generado automáticamente desde ElevenLabs Speech-to-Text (timestamps word).",
+  "segments": [
+    {
+      "index": 0,
+      "sceneIndex": 0,
+      "startSec": 0.179,
+      "text": "Una muchacha llevaba un cántaro de leche en la cabeza para venderlo en el mercado.",
+      "endSec": 5.98
+    },
+    {
+      "index": 1,
+      "sceneIndex": 0,
+      "startSec": 5.98,
+      "text": "Por el camino empezó a hacer cuentas: \"Con el dinero de la leche compraré huevos, nacerán pollos y los venderé.",
+      "endSec": 15.519
+    },
+    {
+      "index": 2,
+      "sceneIndex": 0,
+      "startSec": 15.519,
+      "text": "Con lo que gane compraré un vestido nuevo y iré a la fiesta.",
+      "endSec": 20.699
+    },
+    {
+      "index": 3,
+      "sceneIndex": 0,
+      "startSec": 20.699,
+      "text": "Todos me mirarán y el hijo del granjero me pedirá que sea su novia\".",
+      "endSec": 25.159
+    },
+    {
+      "index": 4,
+      "sceneIndex": 1,
+      "startSec": 25.159,
+      "text": "Y siguió soñando sin mirar el camino.",
+      "endSec": 27.719
+    },
+    {
+      "index": 5,
+      "sceneIndex": 1,
+      "startSec": 27.719,
+      "text": "Pensó: \"Le diré que no de entrada, así me buscará más\".",
+      "endSec": 32.459
+    },
+    {
+      "index": 6,
+      "sceneIndex": 1,
+      "startSec": 32.459,
+      "text": "Y con el gesto de negar, movió la cabeza.",
+      "endSec": 35.739
+    },
+    {
+      "index": 7,
+      "sceneIndex": 1,
+      "startSec": 35.739,
+      "text": "El cántaro se balanceó y cayó al suelo.",
+      "endSec": 39.419
+    },
+    {
+      "index": 8,
+      "sceneIndex": 1,
+      "startSec": 39.419,
+      "text": "La leche se derramó por el camino.",
+      "endSec": 42.02
+    },
+    {
+      "index": 9,
+      "sceneIndex": 1,
+      "startSec": 42.02,
+      "text": "No había leche, ni huevos, ni pollos, ni vestido, ni fiesta.",
+      "endSec": 46.639
+    },
+    {
+      "index": 10,
+      "sceneIndex": 2,
+      "startSec": 46.639,
+      "text": "La lechera se sentó y lloró.",
+      "endSec": 49.399
+    },
+    {
+      "index": 11,
+      "sceneIndex": 2,
+      "startSec": 49.399,
+      "text": "No hay que contar los pollos antes de que nazcan.",
+      "endSec": 52.639
+    },
+    {
+      "index": 12,
+      "sceneIndex": 2,
+      "startSec": 52.639,
+      "text": "Soñar está bien, pero sin olvidar lo que tenemos entre manos.",
+      "endSec": 57.199
+    },
+    {
+      "index": 13,
+      "sceneIndex": 2,
+      "startSec": 57.199,
+      "text": "La realidad es lo que pisamos ahora.",
+      "endSec": 60.059
+    }
+  ]
+}

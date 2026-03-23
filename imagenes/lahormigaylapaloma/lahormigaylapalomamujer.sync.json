@@ -1,0 +1,103 @@
+{
+  "version": 3,
+  "audio": "lahormigaylapalomamujer.mp3",
+  "sources": {
+    "text": "lahormigaylapaloma.txt",
+    "timings": "lahormigaylapalomamujer.mp3.txt"
+  },
+  "method": "segments_from_stt_word_timestamps",
+  "note": "Generado automáticamente desde ElevenLabs Speech-to-Text (timestamps word).",
+  "segments": [
+    {
+      "index": 0,
+      "sceneIndex": 0,
+      "startSec": 0.079,
+      "text": "Una hormiga fue a beber al río y la corriente la arrastró.",
+      "endSec": 5.4
+    },
+    {
+      "index": 1,
+      "sceneIndex": 0,
+      "startSec": 5.4,
+      "text": "Iba a ahogarse cuando una paloma que estaba en una rama vio el peligro, arrancó una hoja y la dejó caer al",
+      "endSec": 13.539
+    },
+    {
+      "index": 2,
+      "sceneIndex": 0,
+      "startSec": 13.539,
+      "text": "agua.",
+      "endSec": 14.219
+    },
+    {
+      "index": 3,
+      "sceneIndex": 0,
+      "startSec": 14.219,
+      "text": "La hormiga subió a la hoja y llegó a la orilla.",
+      "endSec": 17.699
+    },
+    {
+      "index": 4,
+      "sceneIndex": 0,
+      "startSec": 17.699,
+      "text": "Estaba muy agradecida y le dijo a la paloma: \"Algún día te devolveré el favor\".",
+      "endSec": 24.139
+    },
+    {
+      "index": 5,
+      "sceneIndex": 1,
+      "startSec": 24.139,
+      "text": "La paloma sonrió y siguió su camino.",
+      "endSec": 27.26
+    },
+    {
+      "index": 6,
+      "sceneIndex": 1,
+      "startSec": 27.26,
+      "text": "Días después, un cazador apuntó con su escopeta a la paloma.",
+      "endSec": 31.679
+    },
+    {
+      "index": 7,
+      "sceneIndex": 1,
+      "startSec": 31.679,
+      "text": "La hormiga lo vio, subió por la pierna del cazador y le dio un fuerte mordisco.",
+      "endSec": 37.84
+    },
+    {
+      "index": 8,
+      "sceneIndex": 1,
+      "startSec": 37.84,
+      "text": "El cazador gritó y falló el tiro.",
+      "endSec": 40.779
+    },
+    {
+      "index": 9,
+      "sceneIndex": 1,
+      "startSec": 40.779,
+      "text": "La paloma escapó volando.",
+      "endSec": 42.979
+    },
+    {
+      "index": 10,
+      "sceneIndex": 1,
+      "startSec": 42.979,
+      "text": "La hormiga había cumplido su promesa.",
+      "endSec": 46.079
+    },
+    {
+      "index": 11,
+      "sceneIndex": 2,
+      "startSec": 46.079,
+      "text": "Un favor, por pequeño que sea, puede devolverse de la manera más inesperada.",
+      "endSec": 52.259
+    },
+    {
+      "index": 12,
+      "sceneIndex": 2,
+      "startSec": 52.259,
+      "text": "La bondad se multiplica cuando la recordamos y la devolvemos",
+      "endSec": 57.039
+    }
+  ]
+}

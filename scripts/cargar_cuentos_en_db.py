@@ -29,6 +29,7 @@ def main():
     with open(PATH_JSON, "r", encoding="utf-8") as f:
         data = json.load(f)
     cuentos = data.get("cuentos") or []
+    loaded_count = 0
 
     db = SessionLocal()
     try:
@@ -41,6 +42,7 @@ def main():
             descripcion = c.get("descripcion") or ""
             portada = c.get("portada") or None
             categoria = c.get("categoria") or None
+            autor = c.get("autor") or None
             ambiente = c.get("ambiente") or None
             destacado = bool(c.get("destacado", False))
             preguntas = c.get("preguntas")
@@ -54,6 +56,7 @@ def main():
                 descripcion=descripcion,
                 portada=portada,
                 categoria=categoria,
+                autor=autor,
                 ambiente=ambiente,
                 destacado=destacado,
                 preguntas=preguntas,
@@ -62,6 +65,7 @@ def main():
             )
             db.add(story)
             db.flush()
+            loaded_count += 1
             for e in escenas_data:
                 scene = Scene(
                     story_id=story.id,
@@ -71,7 +75,7 @@ def main():
                 )
                 db.add(scene)
         db.commit()
-        print(f"Listo. Se cargaron {len(cuentos)} cuentos en la base de datos. Recarga la página de la app para ver solo estos.")
+        print(f"Listo. Se cargaron {loaded_count} cuentos en la base de datos. Recarga la página de la app para ver solo estos.")
     finally:
         db.close()
 

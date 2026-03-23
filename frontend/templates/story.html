@@ -22,6 +22,29 @@
   <div id="countdown-overlay"
        class="fixed inset-0 z-50 flex items-center justify-center bg-black/70 text-white">
     <div class="text-center px-6">
+      <div id="voice-choice-overlay" class="mb-3 hidden">
+        <div class="text-xs sm:text-sm font-extrabold">
+          Elige la voz del narrador:
+        </div>
+        <div class="mt-2 flex items-center justify-center gap-3">
+          <button
+            type="button"
+            id="btn-voice-male"
+            class="voice-choice-btn voice-choice-btn--male"
+            disabled
+          >
+            Hombre
+          </button>
+          <button
+            type="button"
+            id="btn-voice-female"
+            class="voice-choice-btn voice-choice-btn--female"
+            disabled
+          >
+            Mujer
+          </button>
+        </div>
+      </div>
       <div class="text-lg sm:text-2xl font-extrabold mb-2">
         Te leeré el cuento <span id="overlay-story-title"></span>
       </div>
@@ -119,20 +142,14 @@
         <h2 class="text-sm sm:text-base font-extrabold kid-text-main">Configuración</h2>
       </div>
 
-      <div class="grid gap-3 sm:grid-cols-2">
+      <div class="grid gap-3">
         <div>
-          <label class="block mb-1 kid-label">Tipo de voz</label>
-          <select id="voice-select" class="kid-input w-full rounded-xl border-2 px-3 py-1.5 text-xs sm:text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#2563EB] focus:border-[#2563EB]">
-            <option value="">Automática</option>
+          <label class="block mb-1 kid-label">Voz de narracion del cuento</label>
+          <select id="narration-voice-select"
+                  class="kid-input w-full rounded-xl border-2 px-3 py-1.5 text-xs sm:text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#2563EB] focus:border-[#2563EB]">
+            <option value="hombre">Hombre</option>
+            <option value="mujer">Mujer</option>
           </select>
-        </div>
-        <div>
-          <label class="block mb-1 kid-label">Velocidad</label>
-          <div class="flex items-center gap-2">
-            <input id="rate-range" type="range" min="0.5" max="1.5" step="0.25" value="0.75"
-                   class="w-full kid-accent">
-            <span id="rate-label" class="w-10 text-right kid-text-muted text-xs sm:text-sm">0.75x</span>
-          </div>
         </div>
       </div>
 
@@ -150,6 +167,6 @@
 <script>
   window.STORY_ID = {{ story_id }};
 </script>
-<script src="/static/js/story.js?v=28"></script>
+<script src="/static/js/story.js?v=37"></script>
 {% endblock %}
 

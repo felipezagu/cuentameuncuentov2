@@ -1,0 +1,145 @@
+{
+  "version": 3,
+  "audio": "lasirenitahombre.mp3",
+  "sources": {
+    "text": "lasirenita.txt",
+    "timings": "lasirenitahombre.mp3.txt"
+  },
+  "method": "segments_from_stt_word_timestamps",
+  "note": "Generado automáticamente desde ElevenLabs Speech-to-Text (timestamps word).",
+  "segments": [
+    {
+      "index": 0,
+      "sceneIndex": 0,
+      "startSec": 0.079,
+      "text": "En el fondo del mar vivía el rey Tritón con sus hijas.",
+      "endSec": 4.98
+    },
+    {
+      "index": 1,
+      "sceneIndex": 0,
+      "startSec": 4.98,
+      "text": "La más joven, Ariel, soñaba con el mundo de los humanos y coleccionaba objetos de los naufragios.",
+      "endSec": 13.039
+    },
+    {
+      "index": 2,
+      "sceneIndex": 0,
+      "startSec": 13.039,
+      "text": "Su padre le pedía que no subiera a la superficie, pero ella lo hacía a escondidas con su amigo Flounder.",
+      "endSec": 21.1
+    },
+    {
+      "index": 3,
+      "sceneIndex": 0,
+      "startSec": 21.1,
+      "text": "Una noche, Ariel vio un barco con un joven príncipe.",
+      "endSec": 24.479
+    },
+    {
+      "index": 4,
+      "sceneIndex": 1,
+      "startSec": 24.479,
+      "text": "Hubo una tormenta y el príncipe cayó al agua.",
+      "endSec": 28.559
+    },
+    {
+      "index": 5,
+      "sceneIndex": 1,
+      "startSec": 28.559,
+      "text": "Ariel lo salvó y lo llevó a la orilla cantando.",
+      "endSec": 33.319
+    },
+    {
+      "index": 6,
+      "sceneIndex": 1,
+      "startSec": 33.319,
+      "text": "Cuando empezó a despertar, ella tuvo que irse.",
+      "endSec": 37.119
+    },
+    {
+      "index": 7,
+      "sceneIndex": 1,
+      "startSec": 37.119,
+      "text": "Él solo vio una joven que se alejaba.",
+      "endSec": 40.7
+    },
+    {
+      "index": 8,
+      "sceneIndex": 1,
+      "startSec": 40.7,
+      "text": "Ariel quería estar con el príncipe.",
+      "endSec": 43.439
+    },
+    {
+      "index": 9,
+      "sceneIndex": 1,
+      "startSec": 43.439,
+      "text": "La bruja del mar le ofreció piernas a cambio de su voz.",
+      "endSec": 47.119
+    },
+    {
+      "index": 10,
+      "sceneIndex": 2,
+      "startSec": 47.119,
+      "text": "Si en tres días el príncipe no la besaba por amor, volvería al mar.",
+      "endSec": 52.639
+    },
+    {
+      "index": 11,
+      "sceneIndex": 2,
+      "startSec": 52.639,
+      "text": "Ariel aceptó.",
+      "endSec": 54.52
+    },
+    {
+      "index": 12,
+      "sceneIndex": 2,
+      "startSec": 54.52,
+      "text": "Llegó a la playa con piernas y el príncipe la llevó al castillo.",
+      "endSec": 59.299
+    },
+    {
+      "index": 13,
+      "sceneIndex": 2,
+      "startSec": 59.299,
+      "text": "Úrsula intentó engañar al príncipe con la voz de Ariel.",
+      "endSec": 63.439
+    },
+    {
+      "index": 14,
+      "sceneIndex": 3,
+      "startSec": 63.439,
+      "text": "El rey Tritón y el príncipe lo descubrieron y la detuvieron.",
+      "endSec": 68.54
+    },
+    {
+      "index": 15,
+      "sceneIndex": 3,
+      "startSec": 68.54,
+      "text": "Recuperaron la voz de Ariel.",
+      "endSec": 71.199
+    },
+    {
+      "index": 16,
+      "sceneIndex": 3,
+      "startSec": 71.199,
+      "text": "El rey Tritón, contento con el amor de su hija, le dio permiso para ser humana.",
+      "endSec": 78.139
+    },
+    {
+      "index": 17,
+      "sceneIndex": 3,
+      "startSec": 78.139,
+      "text": "Ariel y el príncipe se casaron y vivieron junto al mar.",
+      "endSec": 82.839
+    },
+    {
+      "index": 18,
+      "sceneIndex": 3,
+      "startSec": 82.839,
+      "text": "Ella visitaba a su familia bajo las olas cuando quería.",
+      "endSec": 86.739
+    }
+  ]
+}

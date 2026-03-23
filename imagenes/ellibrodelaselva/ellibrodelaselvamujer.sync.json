@@ -1,0 +1,131 @@
+{
+  "version": 3,
+  "audio": "ellibrodelaselvamujer.mp3",
+  "sources": {
+    "text": "ellibrodelaselva.txt",
+    "timings": "ellibrodelaselvamujer.mp3.txt"
+  },
+  "method": "segments_from_stt_word_timestamps",
+  "note": "Generado automáticamente desde ElevenLabs Speech-to-Text (timestamps word).",
+  "segments": [
+    {
+      "index": 0,
+      "sceneIndex": 0,
+      "startSec": 0.079,
+      "text": "Un niño pequeño apareció en la cueva de unos lobos.",
+      "endSec": 3.659
+    },
+    {
+      "index": 1,
+      "sceneIndex": 0,
+      "startSec": 3.659,
+      "text": "La pantera Baguera lo encontró y los lobos lo acogieron.",
+      "endSec": 8.479
+    },
+    {
+      "index": 2,
+      "sceneIndex": 0,
+      "startSec": 8.479,
+      "text": "Lo llamaron Mowgli.",
+      "endSec": 10.42
+    },
+    {
+      "index": 3,
+      "sceneIndex": 0,
+      "startSec": 10.42,
+      "text": "Shere Khan, el tigre, quería cazarlo, pero la manada no se lo permitió.",
+      "endSec": 16.399
+    },
+    {
+      "index": 4,
+      "sceneIndex": 0,
+      "startSec": 16.399,
+      "text": "Mowgli creció aprendiendo la ley de la selva.",
+      "endSec": 20.1
+    },
+    {
+      "index": 5,
+      "sceneIndex": 0,
+      "startSec": 20.1,
+      "text": "El oso Baloo le enseñó a hablar con los animales y a sobrevivir.",
+      "endSec": 25.299
+    },
+    {
+      "index": 6,
+      "sceneIndex": 1,
+      "startSec": 25.299,
+      "text": "Baguera lo cuidaba y lo advertía del peligro de Shere Khan.",
+      "endSec": 30.26
+    },
+    {
+      "index": 7,
+      "sceneIndex": 1,
+      "startSec": 30.26,
+      "text": "Los monos se llevaron a Mowgli a las ruinas.",
+      "endSec": 33.819
+    },
+    {
+      "index": 8,
+      "sceneIndex": 1,
+      "startSec": 33.819,
+      "text": "Baloo y Baguera lo rescataron con ayuda de la serpiente Kaa.",
+      "endSec": 39.0
+    },
+    {
+      "index": 9,
+      "sceneIndex": 1,
+      "startSec": 39.0,
+      "text": "Mowgli fue a la aldea de los hombres y vivió un tiempo con ellos.",
+      "endSec": 43.7
+    },
+    {
+      "index": 10,
+      "sceneIndex": 1,
+      "startSec": 43.7,
+      "text": "Shere Khan quiso atacar a Mowgli.",
+      "endSec": 46.379
+    },
+    {
+      "index": 11,
+      "sceneIndex": 2,
+      "startSec": 46.379,
+      "text": "Mowgli reunió a los búfalos y lo llevó hacia una trampa.",
+      "endSec": 50.7
+    },
+    {
+      "index": 12,
+      "sceneIndex": 2,
+      "startSec": 50.7,
+      "text": "El tigre murió.",
+      "endSec": 52.279
+    },
+    {
+      "index": 13,
+      "sceneIndex": 2,
+      "startSec": 52.279,
+      "text": "Los hombres de la aldea no lo aceptaron y Mowgli volvió a la selva.",
+      "endSec": 58.039
+    },
+    {
+      "index": 14,
+      "sceneIndex": 2,
+      "startSec": 58.039,
+      "text": "Mowgli entendió que era de la selva, pero también de los hombres.",
+      "endSec": 62.84
+    },
+    {
+      "index": 15,
+      "sceneIndex": 2,
+      "startSec": 62.84,
+      "text": "Con sus amigos Baloo y Baguera, siguió viviendo entre dos mundos.",
+      "endSec": 67.939
+    },
+    {
+      "index": 16,
+      "sceneIndex": 3,
+      "startSec": 67.939,
+      "text": "La naturaleza y el respeto son la verdadera ley.",
+      "endSec": 71.619
+    }
+  ]
+}

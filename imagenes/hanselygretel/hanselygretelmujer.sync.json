@@ -1,0 +1,159 @@
+{
+  "version": 3,
+  "audio": "hanselygretelmujer.mp3",
+  "sources": {
+    "text": "hanselygretel.txt",
+    "timings": "hanselygretelmujer.mp3.txt"
+  },
+  "method": "segments_from_stt_word_timestamps",
+  "note": "Generado automáticamente desde ElevenLabs Speech-to-Text (timestamps word).",
+  "segments": [
+    {
+      "index": 0,
+      "sceneIndex": 0,
+      "startSec": 0.079,
+      "text": "Hansel y Gretel vivían con su padre y su madrastra en una cabaña.",
+      "endSec": 6.119
+    },
+    {
+      "index": 1,
+      "sceneIndex": 0,
+      "startSec": 6.119,
+      "text": "Pasaban mucha necesidad.",
+      "endSec": 8.579
+    },
+    {
+      "index": 2,
+      "sceneIndex": 0,
+      "startSec": 8.579,
+      "text": "La madrastra convenció al padre de llevar a los niños al bosque para que encontraran bayas.",
+      "endSec": 14.619
+    },
+    {
+      "index": 3,
+      "sceneIndex": 0,
+      "startSec": 14.619,
+      "text": "Hansel oyó la conversación y recogió piedrecitas blancas.",
+      "endSec": 19.68
+    },
+    {
+      "index": 4,
+      "sceneIndex": 0,
+      "startSec": 19.68,
+      "text": "Al día siguiente los llevaron al bosque.",
+      "endSec": 22.659
+    },
+    {
+      "index": 5,
+      "sceneIndex": 0,
+      "startSec": 22.659,
+      "text": "Hansel fue dejando piedrecitas.",
+      "endSec": 25.519
+    },
+    {
+      "index": 6,
+      "sceneIndex": 1,
+      "startSec": 25.519,
+      "text": "Cuando anocheció, la luna iluminó las piedras y encontraron el camino a casa.",
+      "endSec": 31.559
+    },
+    {
+      "index": 7,
+      "sceneIndex": 1,
+      "startSec": 31.559,
+      "text": "A la semana siguiente, Hansel solo pudo usar migas.",
+      "endSec": 36.18
+    },
+    {
+      "index": 8,
+      "sceneIndex": 1,
+      "startSec": 36.18,
+      "text": "Los pájaros se las comieron y se perdieron.",
+      "endSec": 39.559
+    },
+    {
+      "index": 9,
+      "sceneIndex": 1,
+      "startSec": 39.559,
+      "text": "Caminaron hasta ver una casita de dulces y pastel.",
+      "endSec": 43.419
+    },
+    {
+      "index": 10,
+      "sceneIndex": 1,
+      "startSec": 43.419,
+      "text": "Una anciana los invitó a entrar y les dio de comer.",
+      "endSec": 47.68
+    },
+    {
+      "index": 11,
+      "sceneIndex": 2,
+      "startSec": 47.68,
+      "text": "En realidad, era una bruja que quería tenerlos trabajando para ella.",
+      "endSec": 53.259
+    },
+    {
+      "index": 12,
+      "sceneIndex": 2,
+      "startSec": 53.259,
+      "text": "Los encerró y les pidió que ayudaran en la cocina.",
+      "endSec": 57.319
+    },
+    {
+      "index": 13,
+      "sceneIndex": 2,
+      "startSec": 57.319,
+      "text": "La bruja quería que Hansel engordara.",
+      "endSec": 60.459
+    },
+    {
+      "index": 14,
+      "sceneIndex": 2,
+      "startSec": 60.459,
+      "text": "Él sacaba un palo por la reja y la bruja, que veía poco, creía que seguía flaco.",
+      "endSec": 67.639
+    },
+    {
+      "index": 15,
+      "sceneIndex": 3,
+      "startSec": 67.639,
+      "text": "Un día, Gretel la convenció de asomarse al horno para ver si estaba listo.",
+      "endSec": 73.4
+    },
+    {
+      "index": 16,
+      "sceneIndex": 3,
+      "startSec": 73.4,
+      "text": "Gretel cerró la puerta del horno con cuidado y la bruja quedó atrapada un rato.",
+      "endSec": 79.959
+    },
+    {
+      "index": 17,
+      "sceneIndex": 3,
+      "startSec": 79.959,
+      "text": "Los niños salieron y encontraron un cofre con monedas.",
+      "endSec": 84.54
+    },
+    {
+      "index": 18,
+      "sceneIndex": 4,
+      "startSec": 84.54,
+      "text": "Volvieron a casa.",
+      "endSec": 86.239
+    },
+    {
+      "index": 19,
+      "sceneIndex": 4,
+      "startSec": 86.239,
+      "text": "Su padre estaba solo y los abrazó.",
+      "endSec": 89.959
+    },
+    {
+      "index": 20,
+      "sceneIndex": 4,
+      "startSec": 89.959,
+      "text": "Nunca más pasaron hambre.",
+      "endSec": 91.819
+    }
+  ]
+}

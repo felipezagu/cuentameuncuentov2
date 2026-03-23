@@ -1,0 +1,159 @@
+{
+  "version": 3,
+  "audio": "blancanievesmujer.mp3",
+  "sources": {
+    "text": "blancanieves.txt",
+    "timings": "blancanievesmujer.mp3.txt"
+  },
+  "method": "segments_from_stt_word_timestamps",
+  "note": "Generado automáticamente desde ElevenLabs Speech-to-Text (timestamps word).",
+  "segments": [
+    {
+      "index": 0,
+      "sceneIndex": 0,
+      "startSec": 0.079,
+      "text": "En un reino vivía la princesa Blancanieves, de piel muy blanca y pelo negro.",
+      "endSec": 6.579
+    },
+    {
+      "index": 1,
+      "sceneIndex": 0,
+      "startSec": 6.579,
+      "text": "Su madrastra preguntaba cada día al espejo quién era la más bella.",
+      "endSec": 11.92
+    },
+    {
+      "index": 2,
+      "sceneIndex": 0,
+      "startSec": 11.92,
+      "text": "Un día el espejo dijo que Blancanieves era la más bella.",
+      "endSec": 16.639
+    },
+    {
+      "index": 3,
+      "sceneIndex": 0,
+      "startSec": 16.639,
+      "text": "La reina se puso muy celosa.",
+      "endSec": 19.319
+    },
+    {
+      "index": 4,
+      "sceneIndex": 0,
+      "startSec": 19.319,
+      "text": "La reina pidió a un cazador que llevara a Blancanieves al bosque y la dejara perdida.",
+      "endSec": 25.26
+    },
+    {
+      "index": 5,
+      "sceneIndex": 1,
+      "startSec": 25.26,
+      "text": "El cazador la llevó, pero no pudo hacerle daño.",
+      "endSec": 28.799
+    },
+    {
+      "index": 6,
+      "sceneIndex": 1,
+      "startSec": 28.799,
+      "text": "Le dijo que huyera y que no volviera.",
+      "endSec": 32.119
+    },
+    {
+      "index": 7,
+      "sceneIndex": 1,
+      "startSec": 32.119,
+      "text": "Blancanieves corrió por el bosque hasta encontrar una casita pequeña.",
+      "endSec": 37.659
+    },
+    {
+      "index": 8,
+      "sceneIndex": 1,
+      "startSec": 37.659,
+      "text": "La casita era de siete enanitos.",
+      "endSec": 41.02
+    },
+    {
+      "index": 9,
+      "sceneIndex": 1,
+      "startSec": 41.02,
+      "text": "Blancanieves entró, probó un poco de cada plato y se quedó dormida en una camita.",
+      "endSec": 47.639
+    },
+    {
+      "index": 10,
+      "sceneIndex": 2,
+      "startSec": 47.639,
+      "text": "Los enanitos la encontraron y la acogieron.",
+      "endSec": 50.959
+    },
+    {
+      "index": 11,
+      "sceneIndex": 2,
+      "startSec": 50.959,
+      "text": "Ella se quedó a vivir con ellos, cocinando y limpiando.",
+      "endSec": 55.579
+    },
+    {
+      "index": 12,
+      "sceneIndex": 2,
+      "startSec": 55.579,
+      "text": "La reina descubrió que Blancanieves seguía viva.",
+      "endSec": 58.779
+    },
+    {
+      "index": 13,
+      "sceneIndex": 2,
+      "startSec": 58.779,
+      "text": "Disfrazada de anciana, le ofreció una manzana.",
+      "endSec": 62.979
+    },
+    {
+      "index": 14,
+      "sceneIndex": 2,
+      "startSec": 62.979,
+      "text": "Blancanieves mordió y cayó en un sueño muy profundo.",
+      "endSec": 67.699
+    },
+    {
+      "index": 15,
+      "sceneIndex": 3,
+      "startSec": 67.699,
+      "text": "Los enanitos la pusieron en una cama de cristal en el jardín porque era muy bonita.",
+      "endSec": 73.639
+    },
+    {
+      "index": 16,
+      "sceneIndex": 3,
+      "startSec": 73.639,
+      "text": "Un príncipe que pasaba la vio y se enamoró.",
+      "endSec": 78.139
+    },
+    {
+      "index": 17,
+      "sceneIndex": 3,
+      "startSec": 78.139,
+      "text": "Al acercarse para despedirse, la besó en la frente.",
+      "endSec": 82.9
+    },
+    {
+      "index": 18,
+      "sceneIndex": 3,
+      "startSec": 82.9,
+      "text": "Blancanieves despertó.",
+      "endSec": 85.479
+    },
+    {
+      "index": 19,
+      "sceneIndex": 4,
+      "startSec": 85.479,
+      "text": "La reina se fue del reino y no volvió.",
+      "endSec": 90.379
+    },
+    {
+      "index": 20,
+      "sceneIndex": 4,
+      "startSec": 90.379,
+      "text": "Blancanieves y el príncipe se casaron y vivieron felices.",
+      "endSec": 95.159
+    }
+  ]
+}

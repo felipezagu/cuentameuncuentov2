@@ -1,0 +1,117 @@
+{
+  "version": 3,
+  "audio": "aliciaenelpaisdelasmaravillashombre.mp3",
+  "sources": {
+    "text": "aliciaenelpaisdelasmaravillas.txt",
+    "timings": "aliciaenelpaisdelasmaravillashombre.mp3.txt"
+  },
+  "method": "segments_from_stt_word_timestamps",
+  "note": "Generado automáticamente desde ElevenLabs Speech-to-Text (timestamps word).",
+  "segments": [
+    {
+      "index": 0,
+      "sceneIndex": 0,
+      "startSec": 0.099,
+      "text": "Alicia estaba aburrida junto al río cuando vio un conejo blanco con reloj que decía: \"Llego tarde\".",
+      "endSec": 8.039
+    },
+    {
+      "index": 1,
+      "sceneIndex": 0,
+      "startSec": 8.039,
+      "text": "Lo siguió y cayó por una madriguera muy profunda.",
+      "endSec": 12.079
+    },
+    {
+      "index": 2,
+      "sceneIndex": 0,
+      "startSec": 12.079,
+      "text": "Llegó a una sala con muchas puertas y una botella que decía: \"Bébeme\".",
+      "endSec": 16.659
+    },
+    {
+      "index": 3,
+      "sceneIndex": 0,
+      "startSec": 16.659,
+      "text": "Se encogió, comió un pastel que decía: \"Cómeme\", y creció tanto que no cabía.",
+      "endSec": 23.439
+    },
+    {
+      "index": 4,
+      "sceneIndex": 0,
+      "startSec": 23.439,
+      "text": "Lloró y formó un charco de lágrimas.",
+      "endSec": 26.279
+    },
+    {
+      "index": 5,
+      "sceneIndex": 1,
+      "startSec": 26.279,
+      "text": "Después se hizo pequeña otra vez y nadó hasta la orilla donde había animales extraños.",
+      "endSec": 32.5
+    },
+    {
+      "index": 6,
+      "sceneIndex": 1,
+      "startSec": 32.5,
+      "text": "Conoció al Gato de Cheshire, que desaparece y deja solo la sonrisa, a la Liebre de Marzo y al Sombrerero en un",
+      "endSec": 40.479
+    },
+    {
+      "index": 7,
+      "sceneIndex": 1,
+      "startSec": 40.479,
+      "text": "té sin fin, y a la Reina de Corazones, que quería cortar cabezas por nada.",
+      "endSec": 46.619
+    },
+    {
+      "index": 8,
+      "sceneIndex": 2,
+      "startSec": 46.619,
+      "text": "Jugó al croquet con flamencos y erizos.",
+      "endSec": 49.779
+    },
+    {
+      "index": 9,
+      "sceneIndex": 2,
+      "startSec": 49.779,
+      "text": "La Reina la acusó y todo acabó en un juicio absurdo.",
+      "endSec": 54.059
+    },
+    {
+      "index": 10,
+      "sceneIndex": 2,
+      "startSec": 54.059,
+      "text": "Alicia dijo: \"Soy solo un montón de naipes\".",
+      "endSec": 58.859
+    },
+    {
+      "index": 11,
+      "sceneIndex": 2,
+      "startSec": 58.859,
+      "text": "Y empezó a despertar.",
+      "endSec": 61.439
+    },
+    {
+      "index": 12,
+      "sceneIndex": 2,
+      "startSec": 61.439,
+      "text": "Alicia despertó con la cabeza en el regazo de su hermana.",
+      "endSec": 66.379
+    },
+    {
+      "index": 13,
+      "sceneIndex": 3,
+      "startSec": 66.379,
+      "text": "Le contó el sueño.",
+      "endSec": 68.639
+    },
+    {
+      "index": 14,
+      "sceneIndex": 3,
+      "startSec": 68.639,
+      "text": "Los sueños pueden ser tan locos y tan vivos que a veces no sabemos si hemos estado en otro mundo",
+      "endSec": 76.18
+    }
+  ]
+}

@@ -1,0 +1,138 @@
+{
+  "version": 3,
+  "audio": "laratitapresumidamujer.mp3",
+  "sources": {
+    "text": "laratitapresumida.txt",
+    "timings": "laratitapresumidamujer.mp3.txt"
+  },
+  "method": "segments_from_stt_word_timestamps",
+  "note": "Generado automáticamente desde ElevenLabs Speech-to-Text (timestamps word).",
+  "segments": [
+    {
+      "index": 0,
+      "sceneIndex": 0,
+      "startSec": 0.079,
+      "text": "Había una vez una ratita muy presumida que vivía en una casita limpia.",
+      "endSec": 5.819
+    },
+    {
+      "index": 1,
+      "sceneIndex": 0,
+      "startSec": 5.819,
+      "text": "Un día, barriendo, encontró una moneda de oro.",
+      "endSec": 9.439
+    },
+    {
+      "index": 2,
+      "sceneIndex": 0,
+      "startSec": 9.439,
+      "text": "Decidió guardarla y pensó: \"Me voy a comprar un lazo y buscaré un novio\".",
+      "endSec": 15.259
+    },
+    {
+      "index": 3,
+      "sceneIndex": 0,
+      "startSec": 15.259,
+      "text": "Pasó el gallo y le preguntó si quería casarse con él.",
+      "endSec": 19.6
+    },
+    {
+      "index": 4,
+      "sceneIndex": 0,
+      "startSec": 19.6,
+      "text": "Ella le preguntó qué haría por la noche.",
+      "endSec": 22.76
+    },
+    {
+      "index": 5,
+      "sceneIndex": 0,
+      "startSec": 22.76,
+      "text": "El gallo dijo que cantaría quiquiriquí.",
+      "endSec": 25.559
+    },
+    {
+      "index": 6,
+      "sceneIndex": 1,
+      "startSec": 25.559,
+      "text": "La ratita dijo que no, que la despertaría.",
+      "endSec": 29.119
+    },
+    {
+      "index": 7,
+      "sceneIndex": 1,
+      "startSec": 29.119,
+      "text": "Lo mismo pasó con el perro y con el cerdo.",
+      "endSec": 32.239
+    },
+    {
+      "index": 8,
+      "sceneIndex": 1,
+      "startSec": 32.239,
+      "text": "Llegó el gato, muy elegante, y le preguntó a la ratita si quería casarse con él.",
+      "endSec": 38.5
+    },
+    {
+      "index": 9,
+      "sceneIndex": 1,
+      "startSec": 38.5,
+      "text": "La ratita le preguntó qué haría por la noche.",
+      "endSec": 41.419
+    },
+    {
+      "index": 10,
+      "sceneIndex": 1,
+      "startSec": 41.419,
+      "text": "El gato dijo con suavidad: \"Miau, miau, ronroneando a tu lado\".",
+      "endSec": 46.659
+    },
+    {
+      "index": 11,
+      "sceneIndex": 2,
+      "startSec": 46.659,
+      "text": "La ratita se enamoró de su voz.",
+      "endSec": 49.259
+    },
+    {
+      "index": 12,
+      "sceneIndex": 2,
+      "startSec": 49.259,
+      "text": "La ratita aceptó y se casó con el gato.",
+      "endSec": 52.68
+    },
+    {
+      "index": 13,
+      "sceneIndex": 2,
+      "startSec": 52.68,
+      "text": "Prepararon una fiesta y la ratita estaba muy contenta.",
+      "endSec": 57.34
+    },
+    {
+      "index": 14,
+      "sceneIndex": 2,
+      "startSec": 57.34,
+      "text": "Por la noche se fueron a dormir a la casita.",
+      "endSec": 60.659
+    },
+    {
+      "index": 15,
+      "sceneIndex": 2,
+      "startSec": 60.659,
+      "text": "En algunas versiones, el gato era bueno y vivieron felices.",
+      "endSec": 65.68
+    },
+    {
+      "index": 16,
+      "sceneIndex": 3,
+      "startSec": 65.68,
+      "text": "En otras, la ratita aprendió a no fiarse solo de las palabras.",
+      "endSec": 71.119
+    },
+    {
+      "index": 17,
+      "sceneIndex": 3,
+      "startSec": 71.119,
+      "text": "Lo importante es elegir bien y ser amable con todos",
+      "endSec": 75.76
+    }
+  ]
+}

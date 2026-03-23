@@ -31,6 +31,67 @@ function normalizeStoryMediaUrl(url) {
   return "/" + s.replace(/^\/+/, "");
 }
 
+function parseV2VoiceTitle(titulo) {
+  const t = String(titulo || "").trim();
+  // Tolerante al tipo de guion raro que puede aparecer en el título.
+  // Busca: "(v2 ... narrador <mujer|hombre>)" al final del texto.
+  const m = t.match(/\(\s*v2[^)]*narrador\s*(mujer|hombre)\s*\)\s*$/i);
+  if (!m) return null;
+  return { base: t.replace(m[0], "").trim(), gender: String(m[1]).toLowerCase() };
+}
+
+function dedupeV2VoiceStoriesPreferHombre(stories) {
+  const out = [];
+  const outNonNarrated = [];
+  const groupedNarrated = new Map(); // baseTitle -> { hombre: story|null, mujer: story|null }
+  const narratedBaseKeys = new Set();
+
+  const detectGenderFromAudio = (s) => {
+    const a = (s && s.narracion_audio ? String(s.narracion_audio) : "").toLowerCase();
+    if (!a) return null;
+    if (a.includes("mujer") || a.endsWith("mujer.mp3")) return "mujer";
+    if (a.includes("hombre") || a.endsWith("hombre.mp3")) return "hombre";
+    return null;
+  };
+
+  (stories || []).forEach((s) => {
+    const hasNarration = !!(s && s.narracion_audio && s.narracion_sync);
+    if (!hasNarration) {
+      outNonNarrated.push(s);
+      return;
+    }
+
+    // Si todavía existe sufijo v2 en el título, lo quitamos; si ya no existe, devuelve el mismo título.
+    const parsed = parseV2VoiceTitle(s && s.titulo ? s.titulo : "");
+    const baseTitle = (parsed && parsed.base ? parsed.base : String(s && s.titulo ? s.titulo : "")).trim();
+    if (!groupedNarrated.has(baseTitle)) groupedNarrated.set(baseTitle, { hombre: null, mujer: null });
+    const g = groupedNarrated.get(baseTitle);
+    narratedBaseKeys.add(baseTitle);
+
+    const gender = detectGenderFromAudio(s);
+    if (gender === "hombre") g.hombre = s;
+    else if (gender === "mujer") g.mujer = s;
+    else {
+      // Si no se puede detectar, lo dejamos como "default" solo si no hay nada en el grupo.
+      if (!g.hombre && !g.mujer) g.hombre = s;
+    }
+  });
+
+  groupedNarrated.forEach((g) => {
+    if (g.hombre) out.push(g.hombre);
+    else if (g.mujer) out.push(g.mujer);
+  });
+
+  // Si hay versiones narradas, ocultamos las no-narradas del mismo título base.
+  const narratedByBase = new Set(out.map((s) => (s && s.titulo ? String(s.titulo).trim() : "")));
+  outNonNarrated.forEach((s) => {
+    const baseTitle = String(s && s.titulo ? s.titulo : "").trim();
+    if (!narratedByBase.has(baseTitle)) out.push(s);
+  });
+
+  return out;
+}
+
 function createStoryCard(story) {
   const card = document.createElement("div");
   card.className = "story-card";
@@ -154,6 +215,9 @@ function renderPorCategoria(stories) {
 
 async function init() {
   let stories = await fetchStories();
+  // Si existen dos versiones (mujer/hombre) del mismo cuento v2,
+  // en portada mostramos solo una: por defecto la voz "Hombre".
+  stories = dedupeV2VoiceStoriesPreferHombre(stories);
   shuffleInPlace(stories);
   const btnRandom = document.getElementById("btn-random-story");
   const contenedor = document.getElementById("contenedor-por-categoria");

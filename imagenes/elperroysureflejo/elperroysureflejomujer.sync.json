@@ -1,0 +1,103 @@
+{
+  "version": 3,
+  "audio": "elperroysureflejomujer.mp3",
+  "sources": {
+    "text": "elperroysureflejo.txt",
+    "timings": "elperroysureflejomujer.mp3.txt"
+  },
+  "method": "segments_from_stt_word_timestamps",
+  "note": "Generado automáticamente desde ElevenLabs Speech-to-Text (timestamps word).",
+  "segments": [
+    {
+      "index": 0,
+      "sceneIndex": 0,
+      "startSec": 0.079,
+      "text": "Un perro encontró un hueso jugoso y lo cogió en la boca para llevarlo a un lugar tranquilo.",
+      "endSec": 7.159
+    },
+    {
+      "index": 1,
+      "sceneIndex": 0,
+      "startSec": 7.159,
+      "text": "Cruzaba un puente sobre un río cuando miró hacia abajo.",
+      "endSec": 11.219
+    },
+    {
+      "index": 2,
+      "sceneIndex": 0,
+      "startSec": 11.219,
+      "text": "En el agua vio el reflejo de otro perro con otro hueso en la boca.",
+      "endSec": 16.779
+    },
+    {
+      "index": 3,
+      "sceneIndex": 0,
+      "startSec": 16.779,
+      "text": "No entendió que era su propia imagen.",
+      "endSec": 19.619
+    },
+    {
+      "index": 4,
+      "sceneIndex": 0,
+      "startSec": 19.619,
+      "text": "Pensó: \"Ese hueso es más grande que el mío\".",
+      "endSec": 23.619
+    },
+    {
+      "index": 5,
+      "sceneIndex": 0,
+      "startSec": 23.619,
+      "text": "Quiso gruñir para asustar al otro perro y quedarse con su hueso.",
+      "endSec": 27.819
+    },
+    {
+      "index": 6,
+      "sceneIndex": 1,
+      "startSec": 27.819,
+      "text": "Abrió la boca para ladrar.",
+      "endSec": 29.819
+    },
+    {
+      "index": 7,
+      "sceneIndex": 1,
+      "startSec": 29.819,
+      "text": "En ese instante, su hueso se cayó al río y se lo llevó la corriente.",
+      "endSec": 35.119
+    },
+    {
+      "index": 8,
+      "sceneIndex": 1,
+      "startSec": 35.119,
+      "text": "El reflejo desapareció.",
+      "endSec": 37.399
+    },
+    {
+      "index": 9,
+      "sceneIndex": 1,
+      "startSec": 37.399,
+      "text": "El perro se quedó sin hueso y con hambre.",
+      "endSec": 41.159
+    },
+    {
+      "index": 10,
+      "sceneIndex": 1,
+      "startSec": 41.159,
+      "text": "Había perdido lo que tenía por querer lo que creía que tenía el otro.",
+      "endSec": 45.979
+    },
+    {
+      "index": 11,
+      "sceneIndex": 2,
+      "startSec": 45.979,
+      "text": "La codicia y la envidia nos hacen perder lo que ya tenemos.",
+      "endSec": 51.239
+    },
+    {
+      "index": 12,
+      "sceneIndex": 2,
+      "startSec": 51.239,
+      "text": "Es mejor valorar lo nuestro y no arriesgarlo por lo que vemos en los demás",
+      "endSec": 57.639
+    }
+  ]
+}

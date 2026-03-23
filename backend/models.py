@@ -12,6 +12,7 @@ class Story(Base):
     descripcion: Mapped[str] = mapped_column(Text, nullable=True)
     portada: Mapped[str | None] = mapped_column(Text, nullable=True)
     categoria: Mapped[str] = mapped_column(String(100), nullable=True)
+    autor: Mapped[str | None] = mapped_column(String(200), nullable=True)
     ambiente: Mapped[str] = mapped_column(String(100), nullable=True)
     destacado: Mapped[bool] = mapped_column(Boolean, default=False)
     preguntas: Mapped[str | None] = mapped_column(Text, nullable=True)

@@ -1,0 +1,117 @@
+{
+  "version": 3,
+  "audio": "eltrajenuevodelemperadormujer.mp3",
+  "sources": {
+    "text": "eltrajenuevodelemperador.txt",
+    "timings": "eltrajenuevodelemperadormujer.mp3.txt"
+  },
+  "method": "segments_from_stt_word_timestamps",
+  "note": "Generado automáticamente desde ElevenLabs Speech-to-Text (timestamps word).",
+  "segments": [
+    {
+      "index": 0,
+      "sceneIndex": 0,
+      "startSec": 0.179,
+      "text": "Había un emperador que solo pensaba en estrenar trajes nuevos.",
+      "endSec": 4.96
+    },
+    {
+      "index": 1,
+      "sceneIndex": 0,
+      "startSec": 4.96,
+      "text": "Dos estafadores llegaron diciendo que tejían una tela maravillosa, invisible para quien fuera tonto o no sirviera para su cargo.",
+      "endSec": 14.42
+    },
+    {
+      "index": 2,
+      "sceneIndex": 0,
+      "startSec": 14.42,
+      "text": "El emperador les dio oro e hilo.",
+      "endSec": 18.039
+    },
+    {
+      "index": 3,
+      "sceneIndex": 0,
+      "startSec": 18.039,
+      "text": "Los pillos no tejían nada, fingían trabajar en telares vacíos.",
+      "endSec": 23.479
+    },
+    {
+      "index": 4,
+      "sceneIndex": 0,
+      "startSec": 23.479,
+      "text": "El emperador envió a sus ministros a ver el traje.",
+      "endSec": 27.039
+    },
+    {
+      "index": 5,
+      "sceneIndex": 1,
+      "startSec": 27.039,
+      "text": "Ninguno veía nada, pero todos decían que era precioso para no parecer tontos.",
+      "endSec": 33.799
+    },
+    {
+      "index": 6,
+      "sceneIndex": 1,
+      "startSec": 33.799,
+      "text": "El día del desfile, los estafadores fingieron vestir al emperador con el traje invisible.",
+      "endSec": 40.719
+    },
+    {
+      "index": 7,
+      "sceneIndex": 1,
+      "startSec": 40.719,
+      "text": "El emperador salió desnudo a la calle y todo el pueblo aplaudía porque nadie quería ser el único que no viera la",
+      "endSec": 48.86
+    },
+    {
+      "index": 8,
+      "sceneIndex": 2,
+      "startSec": 48.86,
+      "text": "tela.",
+      "endSec": 49.599
+    },
+    {
+      "index": 9,
+      "sceneIndex": 2,
+      "startSec": 49.599,
+      "text": "Un niño pequeño gritó: \"¡Pero si va en cueros!\".",
+      "endSec": 53.399
+    },
+    {
+      "index": 10,
+      "sceneIndex": 2,
+      "startSec": 53.399,
+      "text": "La gente empezó a susurrar y a reír.",
+      "endSec": 56.639
+    },
+    {
+      "index": 11,
+      "sceneIndex": 2,
+      "startSec": 56.639,
+      "text": "El emperador lo oyó y se ruborizó, pero siguió el desfile más digno que pudo.",
+      "endSec": 63.299
+    },
+    {
+      "index": 12,
+      "sceneIndex": 3,
+      "startSec": 63.299,
+      "text": "La mentira se había extendido por miedo a parecer tonto.",
+      "endSec": 67.439
+    },
+    {
+      "index": 13,
+      "sceneIndex": 3,
+      "startSec": 67.439,
+      "text": "La valentía del niño que dijo la verdad nos enseña que hay que tener valor para decir lo que vemos, aunque los",
+      "endSec": 75.0
+    },
+    {
+      "index": 14,
+      "sceneIndex": 3,
+      "startSec": 75.0,
+      "text": "demás callen.",
+      "endSec": 76.019
+    }
+  ]
+}

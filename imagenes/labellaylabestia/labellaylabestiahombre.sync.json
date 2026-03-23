@@ -1,0 +1,131 @@
+{
+  "version": 3,
+  "audio": "labellaylabestiahombre.mp3",
+  "sources": {
+    "text": "labellaylabestia.txt",
+    "timings": "labellaylabestiahombre.mp3.txt"
+  },
+  "method": "segments_from_stt_word_timestamps",
+  "note": "Generado automáticamente desde ElevenLabs Speech-to-Text (timestamps word).",
+  "segments": [
+    {
+      "index": 0,
+      "sceneIndex": 0,
+      "startSec": 0.079,
+      "text": "Un mercader rico perdió su fortuna.",
+      "endSec": 3.659
+    },
+    {
+      "index": 1,
+      "sceneIndex": 0,
+      "startSec": 3.659,
+      "text": "Una noche se refugió en un castillo encantado y cogió una rosa del jardín para su hija Bella.",
+      "endSec": 10.719
+    },
+    {
+      "index": 2,
+      "sceneIndex": 0,
+      "startSec": 10.719,
+      "text": "Apareció la Bestia, un ser terrible que le dijo que debía morir o enviar a una de sus hijas.",
+      "endSec": 18.159
+    },
+    {
+      "index": 3,
+      "sceneIndex": 0,
+      "startSec": 18.159,
+      "text": "Bella fue al castillo para salvar a su padre.",
+      "endSec": 22.219
+    },
+    {
+      "index": 4,
+      "sceneIndex": 0,
+      "startSec": 22.219,
+      "text": "La Bestia la trató con amabilidad, le dio habitaciones bonitas y la invitaba a cenar.",
+      "endSec": 28.979
+    },
+    {
+      "index": 5,
+      "sceneIndex": 1,
+      "startSec": 28.979,
+      "text": "Bella tenía miedo al principio, pero poco a poco lo fue conociendo.",
+      "endSec": 33.919
+    },
+    {
+      "index": 6,
+      "sceneIndex": 1,
+      "startSec": 33.919,
+      "text": "Bella echaba de menos a su padre.",
+      "endSec": 36.979
+    },
+    {
+      "index": 7,
+      "sceneIndex": 1,
+      "startSec": 36.979,
+      "text": "La Bestia le dejó ir a verlo con un espejo mágico.",
+      "endSec": 40.619
+    },
+    {
+      "index": 8,
+      "sceneIndex": 1,
+      "startSec": 40.619,
+      "text": "Bella se demoró y al mirar el espejo vio que la Bestia estaba muy enferma.",
+      "endSec": 46.68
+    },
+    {
+      "index": 9,
+      "sceneIndex": 2,
+      "startSec": 46.68,
+      "text": "Volvió corriendo al castillo.",
+      "endSec": 48.739
+    },
+    {
+      "index": 10,
+      "sceneIndex": 2,
+      "startSec": 48.739,
+      "text": "Encontró a la Bestia débil y triste.",
+      "endSec": 52.099
+    },
+    {
+      "index": 11,
+      "sceneIndex": 2,
+      "startSec": 52.099,
+      "text": "Bella le dijo que lo quería y que no quería que muriera.",
+      "endSec": 56.02
+    },
+    {
+      "index": 12,
+      "sceneIndex": 2,
+      "startSec": 56.02,
+      "text": "En ese momento brilló una luz y la Bestia se transformó en un príncipe.",
+      "endSec": 61.34
+    },
+    {
+      "index": 13,
+      "sceneIndex": 2,
+      "startSec": 61.34,
+      "text": "Un hada lo había hechizado por ser egoísta.",
+      "endSec": 65.519
+    },
+    {
+      "index": 14,
+      "sceneIndex": 3,
+      "startSec": 65.519,
+      "text": "Solo el amor verdadero podía romper el hechizo.",
+      "endSec": 69.959
+    },
+    {
+      "index": 15,
+      "sceneIndex": 3,
+      "startSec": 69.959,
+      "text": "Bella había visto la bondad bajo su aspecto de bestia.",
+      "endSec": 74.099
+    },
+    {
+      "index": 16,
+      "sceneIndex": 3,
+      "startSec": 74.099,
+      "text": "Se casaron y vivieron felices en el castillo.",
+      "endSec": 77.199
+    }
+  ]
+}

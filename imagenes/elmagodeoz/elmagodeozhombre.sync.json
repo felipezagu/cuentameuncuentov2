@@ -1,0 +1,131 @@
+{
+  "version": 3,
+  "audio": "elmagodeozhombre.mp3",
+  "sources": {
+    "text": "elmagodeoz.txt",
+    "timings": "elmagodeozhombre.mp3.txt"
+  },
+  "method": "segments_from_stt_word_timestamps",
+  "note": "Generado automáticamente desde ElevenLabs Speech-to-Text (timestamps word).",
+  "segments": [
+    {
+      "index": 0,
+      "sceneIndex": 0,
+      "startSec": 0.079,
+      "text": "Dorothy vivía en Kansas con sus tíos y su perro Toto.",
+      "endSec": 4.679
+    },
+    {
+      "index": 1,
+      "sceneIndex": 0,
+      "startSec": 4.679,
+      "text": "Un tornado levantó la casa y la llevó hasta el País de Oz.",
+      "endSec": 10.059
+    },
+    {
+      "index": 2,
+      "sceneIndex": 0,
+      "startSec": 10.059,
+      "text": "La casa cayó sobre la Malvada Bruja del Este.",
+      "endSec": 13.96
+    },
+    {
+      "index": 3,
+      "sceneIndex": 0,
+      "startSec": 13.96,
+      "text": "Los Munchkins le dieron las zapatillas de plata y le dijeron que fuera a la Ciudad Esmeralda a ver al Mago.",
+      "endSec": 21.659
+    },
+    {
+      "index": 4,
+      "sceneIndex": 0,
+      "startSec": 21.659,
+      "text": "Por el camino conoció al Espantapájaros, que quería un cerebro; al Hombre de Hojalata, que quería un corazón; y al León Cobarde,",
+      "endSec": 31.639
+    },
+    {
+      "index": 5,
+      "sceneIndex": 1,
+      "startSec": 31.639,
+      "text": "que quería valor.",
+      "endSec": 33.739
+    },
+    {
+      "index": 6,
+      "sceneIndex": 1,
+      "startSec": 33.739,
+      "text": "Los cuatro fueron juntos a ver al Mago.",
+      "endSec": 37.02
+    },
+    {
+      "index": 7,
+      "sceneIndex": 1,
+      "startSec": 37.02,
+      "text": "En la Ciudad Esmeralda, el Mago les dijo que debían derrotar a la Bruja del Oeste.",
+      "endSec": 42.5
+    },
+    {
+      "index": 8,
+      "sceneIndex": 1,
+      "startSec": 42.5,
+      "text": "La Bruja envió monos y soldados.",
+      "endSec": 45.159
+    },
+    {
+      "index": 9,
+      "sceneIndex": 2,
+      "startSec": 45.159,
+      "text": "Dorothy tiró agua sobre la Bruja y esta se derritió.",
+      "endSec": 49.959
+    },
+    {
+      "index": 10,
+      "sceneIndex": 2,
+      "startSec": 49.959,
+      "text": "Volvieron al Mago.",
+      "endSec": 52.139
+    },
+    {
+      "index": 11,
+      "sceneIndex": 2,
+      "startSec": 52.139,
+      "text": "Resultó ser un hombre normal que había llegado en globo.",
+      "endSec": 56.199
+    },
+    {
+      "index": 12,
+      "sceneIndex": 2,
+      "startSec": 56.199,
+      "text": "No tenía magia real, pero les dio a cada uno lo que creían necesitar: ya lo tenían dentro.",
+      "endSec": 63.739
+    },
+    {
+      "index": 13,
+      "sceneIndex": 3,
+      "startSec": 63.739,
+      "text": "A Dorothy le dijo que las zapatillas podían llevarla a casa.",
+      "endSec": 68.519
+    },
+    {
+      "index": 14,
+      "sceneIndex": 3,
+      "startSec": 68.519,
+      "text": "Dorothy dio tres golpes con los talones y dijo: \"No hay lugar como mi casa\".",
+      "endSec": 74.699
+    },
+    {
+      "index": 15,
+      "sceneIndex": 3,
+      "startSec": 74.699,
+      "text": "Despertó en Kansas con su familia.",
+      "endSec": 78.019
+    },
+    {
+      "index": 16,
+      "sceneIndex": 3,
+      "startSec": 78.019,
+      "text": "A veces, lo que buscamos está en nosotros o en el camino de vuelta a casa.",
+      "endSec": 83.899
+    }
+  ]
+}

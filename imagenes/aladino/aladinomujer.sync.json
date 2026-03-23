@@ -1,0 +1,124 @@
+{
+  "version": 3,
+  "audio": "aladinomujer.mp3",
+  "sources": {
+    "text": "aladino.txt",
+    "timings": "aladinomujer.mp3.txt"
+  },
+  "method": "segments_from_stt_word_timestamps",
+  "note": "Generado automáticamente desde ElevenLabs Speech-to-Text (timestamps word).",
+  "segments": [
+    {
+      "index": 0,
+      "sceneIndex": 0,
+      "startSec": 0.079,
+      "text": "Aladino era un joven pobre.",
+      "endSec": 3.099
+    },
+    {
+      "index": 1,
+      "sceneIndex": 0,
+      "startSec": 3.099,
+      "text": "Un mago lo engañó para que entrara en una cueva y buscara una lámpara.",
+      "endSec": 8.8
+    },
+    {
+      "index": 2,
+      "sceneIndex": 0,
+      "startSec": 8.8,
+      "text": "Dentro había tesoros.",
+      "endSec": 11.239
+    },
+    {
+      "index": 3,
+      "sceneIndex": 0,
+      "startSec": 11.239,
+      "text": "El mago quiso encerrarlo, pero Aladino se quedó con la lámpara y un anillo mágico.",
+      "endSec": 17.559
+    },
+    {
+      "index": 4,
+      "sceneIndex": 0,
+      "startSec": 17.559,
+      "text": "Al frotar la lámpara, apareció un genio que cumplía deseos.",
+      "endSec": 22.5
+    },
+    {
+      "index": 5,
+      "sceneIndex": 0,
+      "startSec": 22.5,
+      "text": "Aladino pidió salir de la cueva y después riquezas para él y su madre.",
+      "endSec": 28.859
+    },
+    {
+      "index": 6,
+      "sceneIndex": 1,
+      "startSec": 28.859,
+      "text": "Se enamoró de la princesa y el genio lo ayudó a casarse con ella.",
+      "endSec": 34.459
+    },
+    {
+      "index": 7,
+      "sceneIndex": 1,
+      "startSec": 34.459,
+      "text": "El mago volvió y engañó a la esposa de Aladino, cambiando una lámpara vieja por la mágica.",
+      "endSec": 42.5
+    },
+    {
+      "index": 8,
+      "sceneIndex": 1,
+      "startSec": 42.5,
+      "text": "El genio y el palacio se fueron al país del mago.",
+      "endSec": 47.539
+    },
+    {
+      "index": 9,
+      "sceneIndex": 2,
+      "startSec": 47.539,
+      "text": "Aladino usó el anillo y un genio menor lo llevó hasta allí.",
+      "endSec": 53.879
+    },
+    {
+      "index": 10,
+      "sceneIndex": 2,
+      "startSec": 53.879,
+      "text": "Aladino recuperó la lámpara con la ayuda de su esposa.",
+      "endSec": 58.539
+    },
+    {
+      "index": 11,
+      "sceneIndex": 2,
+      "startSec": 58.539,
+      "text": "El genio volvió a obedecerle y trajo el palacio de vuelta.",
+      "endSec": 64.199
+    },
+    {
+      "index": 12,
+      "sceneIndex": 3,
+      "startSec": 64.199,
+      "text": "El mago fue vencido.",
+      "endSec": 66.58
+    },
+    {
+      "index": 13,
+      "sceneIndex": 3,
+      "startSec": 66.58,
+      "text": "Aladino y la princesa vivieron felices.",
+      "endSec": 70.339
+    },
+    {
+      "index": 14,
+      "sceneIndex": 3,
+      "startSec": 70.339,
+      "text": "La verdadera riqueza no está en los deseos mágicos, sino en ser bueno y valiente.",
+      "endSec": 77.479
+    },
+    {
+      "index": 15,
+      "sceneIndex": 3,
+      "startSec": 77.479,
+      "text": "Y la lámpara quedó guardada para usarla con sabiduría.",
+      "endSec": 81.839
+    }
+  ]
+}

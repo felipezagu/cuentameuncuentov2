@@ -1,0 +1,117 @@
+{
+  "version": 3,
+  "audio": "ricitosdeoromujer.mp3",
+  "sources": {
+    "text": "ricitosdeoro.txt",
+    "timings": "ricitosdeoromujer.mp3.txt"
+  },
+  "method": "segments_from_stt_word_timestamps",
+  "note": "Generado automáticamente desde ElevenLabs Speech-to-Text (timestamps word).",
+  "segments": [
+    {
+      "index": 0,
+      "sceneIndex": 0,
+      "startSec": 0.099,
+      "text": "Tres osos vivían en el bosque: papá oso, mamá osa y osito.",
+      "endSec": 5.579
+    },
+    {
+      "index": 1,
+      "sceneIndex": 0,
+      "startSec": 5.579,
+      "text": "Una mañana prepararon tres tazones de sopa y salieron a pasear mientras se enfriaba.",
+      "endSec": 11.559
+    },
+    {
+      "index": 2,
+      "sceneIndex": 0,
+      "startSec": 11.559,
+      "text": "Cerca vivía Ricitos de Oro, que ese día se alejó y encontró la casita.",
+      "endSec": 16.579
+    },
+    {
+      "index": 3,
+      "sceneIndex": 0,
+      "startSec": 16.579,
+      "text": "Ricitos llamó y al no responder, entró.",
+      "endSec": 19.939
+    },
+    {
+      "index": 4,
+      "sceneIndex": 0,
+      "startSec": 19.939,
+      "text": "Vio tres tazones.",
+      "endSec": 21.659
+    },
+    {
+      "index": 5,
+      "sceneIndex": 0,
+      "startSec": 21.659,
+      "text": "Probó el grande, muy caliente; el mediano, muy frío; y el pequeño, perfecto, y se lo comió.",
+      "endSec": 29.359
+    },
+    {
+      "index": 6,
+      "sceneIndex": 1,
+      "startSec": 29.359,
+      "text": "Subió y vio tres camas.",
+      "endSec": 31.799
+    },
+    {
+      "index": 7,
+      "sceneIndex": 1,
+      "startSec": 31.799,
+      "text": "Probó la cama grande, muy dura; la mediana, muy blanda; y la pequeña, tan cómoda que se quedó dormida.",
+      "endSec": 40.059
+    },
+    {
+      "index": 8,
+      "sceneIndex": 1,
+      "startSec": 40.059,
+      "text": "Los osos volvieron y vieron los tazones y las camas revueltos.",
+      "endSec": 44.959
+    },
+    {
+      "index": 9,
+      "sceneIndex": 2,
+      "startSec": 44.959,
+      "text": "El osito dijo: \"Alguien ha estado en mi cama y aquí está\".",
+      "endSec": 49.619
+    },
+    {
+      "index": 10,
+      "sceneIndex": 2,
+      "startSec": 49.619,
+      "text": "Ricitos se despertó y vio a los tres osos.",
+      "endSec": 53.319
+    },
+    {
+      "index": 11,
+      "sceneIndex": 2,
+      "startSec": 53.319,
+      "text": "Se asustó un poco, pero los osos sonrieron.",
+      "endSec": 56.979
+    },
+    {
+      "index": 12,
+      "sceneIndex": 2,
+      "startSec": 56.979,
+      "text": "Ricitos pidió perdón y salió por la ventana hacia el jardín.",
+      "endSec": 62.139
+    },
+    {
+      "index": 13,
+      "sceneIndex": 2,
+      "startSec": 62.139,
+      "text": "Los osos la despidieron con un adiós.",
+      "endSec": 65.54
+    },
+    {
+      "index": 14,
+      "sceneIndex": 3,
+      "startSec": 65.54,
+      "text": "Desde entonces, no entró en casas ajenas sin permiso.",
+      "endSec": 69.739
+    }
+  ]
+}

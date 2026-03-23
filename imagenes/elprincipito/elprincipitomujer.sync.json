@@ -1,0 +1,124 @@
+{
+  "version": 3,
+  "audio": "elprincipitomujer.mp3",
+  "sources": {
+    "text": "elprincipito.txt",
+    "timings": "elprincipitomujer.mp3.txt"
+  },
+  "method": "segments_from_stt_word_timestamps",
+  "note": "Generado automáticamente desde ElevenLabs Speech-to-Text (timestamps word).",
+  "segments": [
+    {
+      "index": 0,
+      "sceneIndex": 0,
+      "startSec": 0.099,
+      "text": "Un piloto tuvo una avería en el desierto del Sáhara.",
+      "endSec": 4.099
+    },
+    {
+      "index": 1,
+      "sceneIndex": 0,
+      "startSec": 4.099,
+      "text": "Al despertar, vio a un niño pequeño que le pidió: \"Dibújame un cordero\".",
+      "endSec": 9.639
+    },
+    {
+      "index": 2,
+      "sceneIndex": 0,
+      "startSec": 9.639,
+      "text": "Era el Principito, que venía de un asteroide muy pequeño donde tenía una rosa y tres volcanes.",
+      "endSec": 17.479
+    },
+    {
+      "index": 3,
+      "sceneIndex": 0,
+      "startSec": 17.479,
+      "text": "El Principito contó que había visitado otros asteroides: un rey sin súbditos, un vanidoso, un borracho, un hombre de negocios que contaba",
+      "endSec": 27.739
+    },
+    {
+      "index": 4,
+      "sceneIndex": 1,
+      "startSec": 27.739,
+      "text": "estrellas, un farolero y un geógrafo.",
+      "endSec": 31.439
+    },
+    {
+      "index": 5,
+      "sceneIndex": 1,
+      "startSec": 31.439,
+      "text": "Ninguno le había gustado tanto como su rosa.",
+      "endSec": 34.719
+    },
+    {
+      "index": 6,
+      "sceneIndex": 1,
+      "startSec": 34.719,
+      "text": "En la Tierra conoció a una serpiente, a una flor y a un zorro.",
+      "endSec": 39.899
+    },
+    {
+      "index": 7,
+      "sceneIndex": 1,
+      "startSec": 39.899,
+      "text": "El zorro le dijo: \"Solo se ve bien con el corazón.",
+      "endSec": 43.84
+    },
+    {
+      "index": 8,
+      "sceneIndex": 1,
+      "startSec": 43.84,
+      "text": "Lo esencial es invisible a los ojos.",
+      "endSec": 46.84
+    },
+    {
+      "index": 9,
+      "sceneIndex": 2,
+      "startSec": 46.84,
+      "text": "Si me domesticas, seré único para ti\".",
+      "endSec": 49.779
+    },
+    {
+      "index": 10,
+      "sceneIndex": 2,
+      "startSec": 49.779,
+      "text": "El Principito entendió que su rosa era única porque era él quien la había cuidado.",
+      "endSec": 55.759
+    },
+    {
+      "index": 11,
+      "sceneIndex": 2,
+      "startSec": 55.759,
+      "text": "El piloto y él buscaron un pozo en el desierto y encontraron uno.",
+      "endSec": 61.159
+    },
+    {
+      "index": 12,
+      "sceneIndex": 2,
+      "startSec": 61.159,
+      "text": "El agua era como un regalo.",
+      "endSec": 63.779
+    },
+    {
+      "index": 13,
+      "sceneIndex": 3,
+      "startSec": 63.779,
+      "text": "La serpiente ayudó al Principito a volver a su planeta.",
+      "endSec": 67.86
+    },
+    {
+      "index": 14,
+      "sceneIndex": 3,
+      "startSec": 67.86,
+      "text": "El piloto miró las estrellas y supo que en una de ellas estaba el Principito riendo.",
+      "endSec": 74.919
+    },
+    {
+      "index": 15,
+      "sceneIndex": 3,
+      "startSec": 74.919,
+      "text": "Cuando mires el cielo, recuerda: lo esencial es invisible a los ojos.",
+      "endSec": 81.279
+    }
+  ]
+}

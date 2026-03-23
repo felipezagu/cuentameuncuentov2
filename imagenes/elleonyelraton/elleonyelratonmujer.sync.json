@@ -1,0 +1,124 @@
+{
+  "version": 3,
+  "audio": "elleonyelratonmujer.mp3",
+  "sources": {
+    "text": "elleonyelraton.txt",
+    "timings": "elleonyelratonmujer.mp3.txt"
+  },
+  "method": "segments_from_stt_word_timestamps",
+  "note": "Generado automáticamente desde ElevenLabs Speech-to-Text (timestamps word).",
+  "segments": [
+    {
+      "index": 0,
+      "sceneIndex": 0,
+      "startSec": 0.079,
+      "text": "Un león dormía bajo un árbol.",
+      "endSec": 2.779
+    },
+    {
+      "index": 1,
+      "sceneIndex": 0,
+      "startSec": 2.779,
+      "text": "Un ratoncillo pasó por ahí y sin querer lo despertó.",
+      "endSec": 7.899
+    },
+    {
+      "index": 2,
+      "sceneIndex": 0,
+      "startSec": 7.899,
+      "text": "El león lo atrapó con su zarpa y estaba a punto de comérselo.",
+      "endSec": 12.159
+    },
+    {
+      "index": 3,
+      "sceneIndex": 0,
+      "startSec": 12.159,
+      "text": "El ratón le suplicó que lo soltara y le dijo: \"Algún día te devolveré el favor\".",
+      "endSec": 18.159
+    },
+    {
+      "index": 4,
+      "sceneIndex": 0,
+      "startSec": 18.159,
+      "text": "El león se rió.",
+      "endSec": 19.479
+    },
+    {
+      "index": 5,
+      "sceneIndex": 0,
+      "startSec": 19.479,
+      "text": "\"¿Tú, tan pequeño, ayudarme a mí?\" Pero le dio pena y lo dejó ir.",
+      "endSec": 24.319
+    },
+    {
+      "index": 6,
+      "sceneIndex": 1,
+      "startSec": 24.319,
+      "text": "El ratón corrió agradecido y el león siguió su vida.",
+      "endSec": 28.979
+    },
+    {
+      "index": 7,
+      "sceneIndex": 1,
+      "startSec": 28.979,
+      "text": "Días después, unos cazadores tendieron una red en el bosque y el león cayó en la trampa.",
+      "endSec": 35.36
+    },
+    {
+      "index": 8,
+      "sceneIndex": 1,
+      "startSec": 35.36,
+      "text": "No podía salir por más que forcejeaba.",
+      "endSec": 38.319
+    },
+    {
+      "index": 9,
+      "sceneIndex": 1,
+      "startSec": 38.319,
+      "text": "Rugió con rabia y con miedo.",
+      "endSec": 40.719
+    },
+    {
+      "index": 10,
+      "sceneIndex": 1,
+      "startSec": 40.719,
+      "text": "El ratón oyó los rugidos y reconoció la voz del león.",
+      "endSec": 45.279
+    },
+    {
+      "index": 11,
+      "sceneIndex": 2,
+      "startSec": 45.279,
+      "text": "Fue hasta la red y con sus dientecillos empezó a roer las cuerdas.",
+      "endSec": 50.2
+    },
+    {
+      "index": 12,
+      "sceneIndex": 2,
+      "startSec": 50.2,
+      "text": "Trabajó sin parar hasta que abrió un agujero.",
+      "endSec": 53.399
+    },
+    {
+      "index": 13,
+      "sceneIndex": 2,
+      "startSec": 53.399,
+      "text": "El león salió libre.",
+      "endSec": 55.619
+    },
+    {
+      "index": 14,
+      "sceneIndex": 2,
+      "startSec": 55.619,
+      "text": "Nunca más dudó de que un favor, por pequeño que sea, puede devolverse cuando menos lo esperas.",
+      "endSec": 63.979
+    },
+    {
+      "index": 15,
+      "sceneIndex": 3,
+      "startSec": 63.979,
+      "text": "Los dos se despidieron como amigos.",
+      "endSec": 66.76
+    }
+  ]
+}

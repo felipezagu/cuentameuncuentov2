@@ -1,0 +1,159 @@
+{
+  "version": 3,
+  "audio": "caperucitarojamujer.mp3",
+  "sources": {
+    "text": "caperucitaroja.txt",
+    "timings": "caperucitarojamujer.mp3.txt"
+  },
+  "method": "segments_from_stt_word_timestamps",
+  "note": "Generado automáticamente desde ElevenLabs Speech-to-Text (timestamps word).",
+  "segments": [
+    {
+      "index": 0,
+      "sceneIndex": 0,
+      "startSec": 0.059,
+      "text": "Érase una vez una niña a la que todos llamaban Caperucita Roja porque llevaba una capa roja.",
+      "endSec": 8.38
+    },
+    {
+      "index": 1,
+      "sceneIndex": 0,
+      "startSec": 8.38,
+      "text": "Vivía con su madre en una casita al borde del bosque.",
+      "endSec": 12.539
+    },
+    {
+      "index": 2,
+      "sceneIndex": 0,
+      "startSec": 12.539,
+      "text": "Un día, su madre le preparó una cesta con pan y miel para su abuelita, que estaba enferma.",
+      "endSec": 19.279
+    },
+    {
+      "index": 3,
+      "sceneIndex": 0,
+      "startSec": 19.279,
+      "text": "Le dijo que no se entretuviera ni hablara con desconocidos.",
+      "endSec": 23.6
+    },
+    {
+      "index": 4,
+      "sceneIndex": 0,
+      "startSec": 23.6,
+      "text": "Caperucita cogió la cesta y fue por el sendero del bosque.",
+      "endSec": 28.42
+    },
+    {
+      "index": 5,
+      "sceneIndex": 1,
+      "startSec": 28.42,
+      "text": "Recogió flores para su abuela.",
+      "endSec": 30.859
+    },
+    {
+      "index": 6,
+      "sceneIndex": 1,
+      "startSec": 30.859,
+      "text": "Apareció un lobo astuto que le preguntó a dónde iba.",
+      "endSec": 35.399
+    },
+    {
+      "index": 7,
+      "sceneIndex": 1,
+      "startSec": 35.399,
+      "text": "Ella le contó que iba a casa de su abuelita.",
+      "endSec": 38.779
+    },
+    {
+      "index": 8,
+      "sceneIndex": 1,
+      "startSec": 38.779,
+      "text": "El lobo le sugirió que recogiera más flores y tomó un atajo.",
+      "endSec": 43.36
+    },
+    {
+      "index": 9,
+      "sceneIndex": 1,
+      "startSec": 43.36,
+      "text": "El lobo llegó antes a casa de la abuela.",
+      "endSec": 46.719
+    },
+    {
+      "index": 10,
+      "sceneIndex": 2,
+      "startSec": 46.719,
+      "text": "La abuelita se escondió en el armario y el lobo se puso su gorro y su camisón y se metió en la",
+      "endSec": 54.259
+    },
+    {
+      "index": 11,
+      "sceneIndex": 2,
+      "startSec": 54.259,
+      "text": "cama.",
+      "endSec": 55.0
+    },
+    {
+      "index": 12,
+      "sceneIndex": 2,
+      "startSec": 55.0,
+      "text": "Cuando Caperucita llegó, entró y se acercó a la cama extrañada de ver a su abuela con tan extraño aspecto.",
+      "endSec": 63.139
+    },
+    {
+      "index": 13,
+      "sceneIndex": 3,
+      "startSec": 63.139,
+      "text": "Caperucita dijo: \"Abuelita, qué orejas tan grandes tienes para oírte mejor y qué ojos tan grandes para verte mejor.",
+      "endSec": 72.779
+    },
+    {
+      "index": 14,
+      "sceneIndex": 3,
+      "startSec": 72.779,
+      "text": "¡Y qué boca tan grande!",
+      "endSec": 74.879
+    },
+    {
+      "index": 15,
+      "sceneIndex": 3,
+      "startSec": 74.879,
+      "text": "Para darte un abrazo mejor\".",
+      "endSec": 76.959
+    },
+    {
+      "index": 16,
+      "sceneIndex": 3,
+      "startSec": 76.959,
+      "text": "El lobo se abalanzó, pero en ese momento entró un leñador que había oído voces.",
+      "endSec": 82.739
+    },
+    {
+      "index": 17,
+      "sceneIndex": 3,
+      "startSec": 82.739,
+      "text": "El leñador asustó al lobo y este salió corriendo del bosque.",
+      "endSec": 88.08
+    },
+    {
+      "index": 18,
+      "sceneIndex": 4,
+      "startSec": 88.08,
+      "text": "Abrieron el armario y sacaron a la abuelita, que estaba bien.",
+      "endSec": 92.5
+    },
+    {
+      "index": 19,
+      "sceneIndex": 4,
+      "startSec": 92.5,
+      "text": "Caperucita aprendió a no hablar con desconocidos y a no apartarse del camino.",
+      "endSec": 98.68
+    },
+    {
+      "index": 20,
+      "sceneIndex": 4,
+      "startSec": 98.68,
+      "text": "Las tres se sentaron a merendar juntas.",
+      "endSec": 101.679
+    }
+  ]
+}

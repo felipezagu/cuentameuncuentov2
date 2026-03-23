@@ -1,0 +1,131 @@
+{
+  "version": 3,
+  "audio": "elsastrecillovalientemujer.mp3",
+  "sources": {
+    "text": "elsastrecillovaliente.txt",
+    "timings": "elsastrecillovalientemujer.mp3.txt"
+  },
+  "method": "segments_from_stt_word_timestamps",
+  "note": "Generado automáticamente desde ElevenLabs Speech-to-Text (timestamps word).",
+  "segments": [
+    {
+      "index": 0,
+      "sceneIndex": 0,
+      "startSec": 0.099,
+      "text": "Un sastre mató siete moscas de un golpe y se cosió un cinturón que decía: \"Siete de un golpe\".",
+      "endSec": 7.98
+    },
+    {
+      "index": 1,
+      "sceneIndex": 0,
+      "startSec": 7.98,
+      "text": "Creyendo que era un gran héroe, salió al mundo.",
+      "endSec": 11.399
+    },
+    {
+      "index": 2,
+      "sceneIndex": 0,
+      "startSec": 11.399,
+      "text": "Un gigante lo desafió a aplastar una piedra.",
+      "endSec": 14.619
+    },
+    {
+      "index": 3,
+      "sceneIndex": 0,
+      "startSec": 14.619,
+      "text": "El sastre sacó un queso y lo apretó como si fuera piedra.",
+      "endSec": 19.1
+    },
+    {
+      "index": 4,
+      "sceneIndex": 0,
+      "startSec": 19.1,
+      "text": "El gigante se asustó.",
+      "endSec": 21.02
+    },
+    {
+      "index": 5,
+      "sceneIndex": 0,
+      "startSec": 21.02,
+      "text": "El gigante lo llevó a su cueva con otros gigantes.",
+      "endSec": 24.519
+    },
+    {
+      "index": 6,
+      "sceneIndex": 1,
+      "startSec": 24.519,
+      "text": "Por la noche, el sastre se sentó donde no le cayera una roca que los gigantes soltaban.",
+      "endSec": 30.76
+    },
+    {
+      "index": 7,
+      "sceneIndex": 1,
+      "startSec": 30.76,
+      "text": "Por la mañana, los gigantes lo creyeron invencible.",
+      "endSec": 35.319
+    },
+    {
+      "index": 8,
+      "sceneIndex": 1,
+      "startSec": 35.319,
+      "text": "El rey lo mandó a capturar a dos gigantes que asolaban el reino.",
+      "endSec": 40.7
+    },
+    {
+      "index": 9,
+      "sceneIndex": 1,
+      "startSec": 40.7,
+      "text": "El sastre subió a un árbol y les tiró piedras.",
+      "endSec": 44.759
+    },
+    {
+      "index": 10,
+      "sceneIndex": 2,
+      "startSec": 44.759,
+      "text": "Los gigantes se pelearon entre sí y se mataron.",
+      "endSec": 48.599
+    },
+    {
+      "index": 11,
+      "sceneIndex": 2,
+      "startSec": 48.599,
+      "text": "Luego, debía capturar un unicornio.",
+      "endSec": 51.819
+    },
+    {
+      "index": 12,
+      "sceneIndex": 2,
+      "startSec": 51.819,
+      "text": "Se escondió detrás de un árbol y cuando el unicornio embistió, lo enganchó en el tronco.",
+      "endSec": 58.039
+    },
+    {
+      "index": 13,
+      "sceneIndex": 2,
+      "startSec": 58.039,
+      "text": "El rey le puso una última prueba: cazar un jabalí feroz.",
+      "endSec": 63.059
+    },
+    {
+      "index": 14,
+      "sceneIndex": 3,
+      "startSec": 63.059,
+      "text": "El sastre encerró al jabalí en una capilla y el rey tuvo que darle a su hija y la mitad del reino.",
+      "endSec": 70.959
+    },
+    {
+      "index": 15,
+      "sceneIndex": 3,
+      "startSec": 70.959,
+      "text": "La valentía y la astucia pueden más que la fuerza.",
+      "endSec": 74.76
+    },
+    {
+      "index": 16,
+      "sceneIndex": 3,
+      "startSec": 74.76,
+      "text": "Y el sastrecillo vivió como rey",
+      "endSec": 77.619
+    }
+  ]
+}

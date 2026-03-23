@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TTS desde TXT - Cuéntame un Cuento</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 0; background: #f5f7fb; color: #1f2937; }
+    .wrap { max-width: 760px; margin: 32px auto; padding: 0 16px; }
+    .card { background: #fff; border: 1px solid #e5e7eb; border-radius: 12px; padding: 20px; }
+    h1 { margin-top: 0; font-size: 1.4rem; }
+    p { line-height: 1.45; }
+    label { display: block; margin: 14px 0 6px; font-weight: 600; }
+    input[type="text"], select, input[type="file"] {
+      width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 8px; box-sizing: border-box;
+    }
+    button {
+      margin-top: 16px; background: #2563eb; color: #fff; border: 0; border-radius: 8px;
+      padding: 10px 14px; font-weight: 600; cursor: pointer;
+    }
+    button:hover { background: #1d4ed8; }
+    .error { background: #fee2e2; color: #991b1b; border: 1px solid #fecaca; padding: 10px; border-radius: 8px; }
+    .hint { color: #4b5563; font-size: 0.95rem; }
+    code { background: #eef2ff; padding: 2px 5px; border-radius: 4px; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card">
+      <h1>Generar audio ElevenLabs desde archivo TXT</h1>
+      <p class="hint">
+        Sube un <code>.txt</code>, el backend pondrá su contenido en <code>text=</code> y devolverá un
+        <code>.mp3</code> para descarga.
+      </p>
+
+      {% if error %}
+      <p class="error">{{ error }}</p>
+      {% endif %}
+      {% if ok %}
+      <p style="background:#dcfce7;color:#166534;border:1px solid #bbf7d0;padding:10px;border-radius:8px;">
+        Audio generado y guardado en <code>{{ saved_path }}</code>.
+      </p>
+      <p class="hint">
+        MP3: <a href="{{ mp3_url }}" target="_blank" rel="noopener">{{ mp3_url }}</a><br />
+        Voice usada: <code>{{ used_voice_id }}</code> ({{ used_version }})<br />
+        {% if char_cost %}Caracteres facturados: <code>{{ char_cost }}</code><br />{% endif %}
+        {% if request_id %}Request ID: <code>{{ request_id }}</code><br />{% endif %}
+        Siguiente paso: en ElevenLabs Speech-to-Text genera tiempos y guarda el TXT como
+        <code>{{ timings_hint }}</code>.
+      </p>
+      {% endif %}
+      {% if ok_stt %}
+      <p style="background:#dcfce7;color:#166534;border:1px solid #bbf7d0;padding:10px;border-radius:8px;">
+        STT + sync completado.
+      </p>
+      <p class="hint">
+        MP3: <code>{{ saved_mp3 }}</code><br />
+        Tiempos: <a href="{{ timings_url }}" target="_blank" rel="noopener"><code>{{ saved_timings }}</code></a><br />
+        Sync: <a href="{{ sync_url }}" target="_blank" rel="noopener"><code>{{ saved_sync }}</code></a><br />
+        Segmentos generados: <code>{{ segment_count }}</code>
+      </p>
+      {% endif %}
+
+      {% if ok_full %}
+      <p style="background:#dcfce7;color:#166534;border:1px solid #bbf7d0;padding:10px;border-radius:8px;">
+        Flujo completo generado (TTS + STT) para <code>mujer</code> y <code>hombre</code>.
+      </p>
+      <p class="hint">
+        <b>mujer</b>: MP3 <a href="{{ results['mujer'].mp3_url }}" target="_blank" rel="noopener"><code>{{ results['mujer'].mp3_url }}</code></a><br />
+        <b>mujer</b>: Tiempos <a href="{{ results['mujer'].timings_url }}" target="_blank" rel="noopener"><code>{{ results['mujer'].timings_url }}</code></a><br />
+        <b>mujer</b>: Sync <a href="{{ results['mujer'].sync_url }}" target="_blank" rel="noopener"><code>{{ results['mujer'].sync_url }}</code></a><br />
+        <b>mujer</b>: Segmentos <code>{{ results['mujer'].segment_count }}</code><br />
+        <br />
+        <b>hombre</b>: MP3 <a href="{{ results['hombre'].mp3_url }}" target="_blank" rel="noopener"><code>{{ results['hombre'].mp3_url }}</code></a><br />
+        <b>hombre</b>: Tiempos <a href="{{ results['hombre'].timings_url }}" target="_blank" rel="noopener"><code>{{ results['hombre'].timings_url }}</code></a><br />
+        <b>hombre</b>: Sync <a href="{{ results['hombre'].sync_url }}" target="_blank" rel="noopener"><code>{{ results['hombre'].sync_url }}</code></a><br />
+        <b>hombre</b>: Segmentos <code>{{ results['hombre'].segment_count }}</code>
+      </p>
+      {% endif %}
+
+      {% if ok_bulk %}
+      <p style="background:#dcfce7;color:#166534;border:1px solid #bbf7d0;padding:10px;border-radius:8px;">
+        Carga masiva completada. Audios guardados en <code>{{ bulk_target_dir }}</code>.
+      </p>
+      {% if bulk_warning %}
+      <p style="background:#fef3c7;color:#92400e;border:1px solid #fde68a;padding:10px;border-radius:8px;">
+        {{ bulk_warning }}
+      </p>
+      {% endif %}
+      <p class="hint">
+        Se generó voz <code>mujer</code> y <code>hombre</code> para cada TXT.
+      </p>
+      <div class="hint" style="max-height: 280px; overflow: auto; border:1px solid #e5e7eb; border-radius:8px; padding:10px;">
+        {% for r in results_bulk %}
+          <div style="margin-bottom:8px;">
+            <b>{{ r.txt }}</b><br />
+            {% for s in r.saved %}
+              <a href="{{ s }}" target="_blank" rel="noopener"><code>{{ s }}</code></a><br />
+            {% endfor %}
+          </div>
+        {% endfor %}
+      </div>
+      {% if failed_bulk %}
+      <p class="hint" style="margin-top:10px;"><b>Archivos/versiones con error:</b></p>
+      <div class="hint" style="max-height: 220px; overflow: auto; border:1px solid #fecaca; background:#fff1f2; border-radius:8px; padding:10px;">
+        {% for f in failed_bulk %}
+          <div style="margin-bottom:8px;">
+            <b>{{ f.txt }}</b> ({{ f.version }}): {{ f.error }}
+          </div>
+        {% endfor %}
+      </div>
+      {% endif %}
+      {% endif %}
+
+      <form method="post" action="/tools/tts-upload" enctype="multipart/form-data">
+        <label for="txt_file">Archivo TXT</label>
+        <input id="txt_file" name="txt_file" type="file" accept=".txt,text/plain" required />
+
+        <label for="cuento_nombre">Nombre del cuento (para carpeta y archivo)</label>
+        <input id="cuento_nombre" name="cuento_nombre" type="text" placeholder="Ej: Caperucita Roja" required />
+
+        <label>Versión de voz</label>
+        <div class="hint">
+          <label style="font-weight:normal;display:inline-block;margin-right:14px;">
+            <input type="radio" name="version" value="mujer" checked /> mujer ({{ default_voice_female }})
+          </label>
+          <label style="font-weight:normal;display:inline-block;">
+            <input type="radio" name="version" value="hombre" /> hombre ({{ default_voice_male }})
+          </label>
+        </div>
+
+        <label for="voice_id_override">Voice ID override (opcional)</label>
+        <input id="voice_id_override" name="voice_id_override" type="text" placeholder="Si lo llenas, reemplaza el ID de mujer/hombre" />
+
+        <label for="model_id">Modelo</label>
+        <input id="model_id" name="model_id" type="text" value="eleven_multilingual_v2" />
+
+        <label for="output_format">Formato de salida</label>
+        <select id="output_format" name="output_format">
+          <option value="mp3_44100_128" selected>mp3_44100_128</option>
+          <option value="mp3_44100_64">mp3_44100_64</option>
+          <option value="mp3_22050_32">mp3_22050_32</option>
+        </select>
+
+        <button type="submit">Generar y descargar MP3</button>
+      </form>
+
+      <hr style="margin:20px 0;border:none;border-top:1px solid #e5e7eb;" />
+      <h2 style="font-size:1.1rem;margin:0 0 8px;">Nuevo: Carga masiva TXT (configuración)</h2>
+      <p class="hint">
+        Sube muchos <code>.txt</code> de una vez y se generarán automáticamente dos audios por archivo:
+        <code>...mujer.mp3</code> y <code>...hombre.mp3</code> en <code>imagenes/configuracion/</code>.
+      </p>
+      <form method="post" action="/tools/tts-upload-bulk-config" enctype="multipart/form-data">
+        <label for="txt_files_bulk">Archivos TXT (múltiples)</label>
+        <input id="txt_files_bulk" name="txt_files" type="file" accept=".txt,text/plain" multiple required />
+
+        <label for="model_id_bulk">Modelo</label>
+        <input id="model_id_bulk" name="model_id" type="text" value="eleven_multilingual_v2" />
+
+        <label for="output_format_bulk">Formato de salida</label>
+        <select id="output_format_bulk" name="output_format">
+          <option value="mp3_44100_128" selected>mp3_44100_128</option>
+          <option value="mp3_44100_64">mp3_44100_64</option>
+          <option value="mp3_22050_32">mp3_22050_32</option>
+        </select>
+
+        <label for="voice_id_female_override_bulk">Voice ID mujer override (opcional)</label>
+        <input id="voice_id_female_override_bulk" name="voice_id_female_override" type="text" placeholder="Si lo llenas, reemplaza ELEVENLABS_VOICE_ID_FEMALE" />
+
+        <label for="voice_id_male_override_bulk">Voice ID hombre override (opcional)</label>
+        <input id="voice_id_male_override_bulk" name="voice_id_male_override" type="text" placeholder="Si lo llenas, reemplaza ELEVENLABS_VOICE_ID_MALE" />
+
+        <button type="submit">Generar masivo (mujer + hombre)</button>
+      </form>
+
+      <hr style="margin:20px 0;border:none;border-top:1px solid #e5e7eb;" />
+      <h2 style="font-size:1.1rem;margin:0 0 8px;">Opción extra: Flujo completo (ambos)</h2>
+      <p class="hint">
+        Subes el TXT una vez, indicas el nombre de la carpeta y genera <code>mujer</code> y <code>hombre</code>:
+        MP3, <code>.mp3.txt</code> con tiempos y <code>.sync.json</code>.
+      </p>
+      <form method="post" action="/tools/complete-flow-both" enctype="multipart/form-data">
+        <label for="txt_file_full">Archivo TXT</label>
+        <input id="txt_file_full" name="txt_file" type="file" accept=".txt,text/plain" required />
+
+        <label for="cuento_nombre_full">Nombre del cuento (carpeta)</label>
+        <input id="cuento_nombre_full" name="cuento_nombre" type="text" placeholder="Ej: Caperucita Roja" required />
+
+        <label for="scene_boundaries_full">Cortes de escena (segundos, coma)</label>
+        <input id="scene_boundaries_full" name="scene_boundaries" type="text" value="24,44,63,83" />
+
+        <label for="language_code_full">Idioma (ISO-639-3)</label>
+        <input id="language_code_full" name="language_code" type="text" value="spa" />
+
+        <label for="stt_model_id_full">Modelo STT</label>
+        <input id="stt_model_id_full" name="stt_model_id" type="text" value="scribe_v2" />
+
+        <label for="text_source_name_full">sources.text en sync.json (opcional)</label>
+        <input id="text_source_name_full" name="text_source_name" type="text" placeholder="Ej: caperucitaroja.txt" />
+
+        <button type="submit">Generar ambos (MP3 + TXT + SYNC)</button>
+      </form>
+
+      <hr style="margin:20px 0;border:none;border-top:1px solid #e5e7eb;" />
+      <h2 style="font-size:1.1rem;margin:0 0 8px;">Paso 2: MP3 a TXT+SYNC (Speech-to-Text)</h2>
+      <p class="hint">
+        Usa el MP3 ya guardado por el paso anterior y genera automáticamente:
+        <code>.mp3.txt</code> (con tiempos) y <code>.sync.json</code>.
+      </p>
+      <form method="post" action="/tools/stt-to-sync" enctype="multipart/form-data">
+        <label for="cuento_nombre_stt">Nombre del cuento</label>
+        <input id="cuento_nombre_stt" name="cuento_nombre" type="text" value="{{ cuento_slug or '' }}" placeholder="Ej: Caperucita Roja" required />
+
+        <label>Versión de voz</label>
+        <div class="hint">
+          <label style="font-weight:normal;display:inline-block;margin-right:14px;">
+            <input type="radio" name="version" value="mujer" checked /> mujer
+          </label>
+          <label style="font-weight:normal;display:inline-block;">
+            <input type="radio" name="version" value="hombre" /> hombre
+          </label>
+        </div>
+
+        <label for="scene_boundaries">Cortes de escena (segundos, coma)</label>
+        <input id="scene_boundaries" name="scene_boundaries" type="text" value="24,44,63,83" />
+
+        <label for="language_code">Idioma (ISO-639-3)</label>
+        <input id="language_code" name="language_code" type="text" value="spa" />
+
+        <label for="stt_model_id">Modelo STT</label>
+        <input id="stt_model_id" name="model_id" type="text" value="scribe_v2" />
+
+        <label for="text_source_name">sources.text en sync.json (opcional)</label>
+        <input id="text_source_name" name="text_source_name" type="text" placeholder="Ej: caperucitaroja.txt" />
+
+        <label for="mp3_file">MP3 (opcional)</label>
+        <input id="mp3_file" name="mp3_file" type="file" accept=".mp3,audio/mpeg" />
+        <p class="hint">
+          Si subes MP3 aquí, se guarda como <code>&lt;cuento_slug&gt;&lt;version&gt;.mp3</code> y luego se ejecuta STT.
+          Si lo dejas vacío, se usará el MP3 ya existente en <code>imagenes/&lt;cuento_slug&gt;/</code>.
+        </p>
+
+        <button type="submit">Generar .mp3.txt y .sync.json</button>
+      </form>
+
+      <p class="hint">
+        Configuración recomendada en <code>.env.local</code>:<br />
+        <code>ELEVENLABS_API_KEY=...</code><br />
+        <code>ELEVENLABS_VOICE_ID_FEMALE=rrErIO88ehxTnspOjKvf</code><br />
+        <code>ELEVENLABS_VOICE_ID_MALE=HNSF1CTQmub252yhXROX</code>
+      </p>
+    </div>
+  </div>
+</body>
+</html>

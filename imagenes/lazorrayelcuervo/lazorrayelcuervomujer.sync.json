@@ -1,0 +1,110 @@
+{
+  "version": 3,
+  "audio": "lazorrayelcuervomujer.mp3",
+  "sources": {
+    "text": "lazorrayelcuervo.txt",
+    "timings": "lazorrayelcuervomujer.mp3.txt"
+  },
+  "method": "segments_from_stt_word_timestamps",
+  "note": "Generado automáticamente desde ElevenLabs Speech-to-Text (timestamps word).",
+  "segments": [
+    {
+      "index": 0,
+      "sceneIndex": 0,
+      "startSec": 0.079,
+      "text": "Un cuervo había encontrado un trozo de queso y se subió a una rama para comérselo tranquilo.",
+      "endSec": 6.559
+    },
+    {
+      "index": 1,
+      "sceneIndex": 0,
+      "startSec": 6.559,
+      "text": "Una zorra pasaba por ahí y el olor del queso la atrajo.",
+      "endSec": 11.719
+    },
+    {
+      "index": 2,
+      "sceneIndex": 0,
+      "startSec": 11.719,
+      "text": "La zorra no podía alcanzar al cuervo.",
+      "endSec": 14.979
+    },
+    {
+      "index": 3,
+      "sceneIndex": 0,
+      "startSec": 14.979,
+      "text": "Entonces dijo: «¡Qué plumas tan bonitas tienes y qué voz tan clara debes de tener!",
+      "endSec": 21.539
+    },
+    {
+      "index": 4,
+      "sceneIndex": 0,
+      "startSec": 21.539,
+      "text": "¿Cantarías para mí?» El cuervo se hinchó de orgullo.",
+      "endSec": 25.199
+    },
+    {
+      "index": 5,
+      "sceneIndex": 1,
+      "startSec": 25.199,
+      "text": "El cuervo quiso demostrar su voz.",
+      "endSec": 28.139
+    },
+    {
+      "index": 6,
+      "sceneIndex": 1,
+      "startSec": 28.139,
+      "text": "Abrió el pico para cantar y el queso se cayó al suelo.",
+      "endSec": 32.659
+    },
+    {
+      "index": 7,
+      "sceneIndex": 1,
+      "startSec": 32.659,
+      "text": "La zorra lo cogió al vuelo y dijo: «Con tu voz no te hace falta el queso».",
+      "endSec": 38.68
+    },
+    {
+      "index": 8,
+      "sceneIndex": 1,
+      "startSec": 38.68,
+      "text": "Y se marchó.",
+      "endSec": 39.899
+    },
+    {
+      "index": 9,
+      "sceneIndex": 1,
+      "startSec": 39.899,
+      "text": "El cuervo se quedó sin queso y muy avergonzado.",
+      "endSec": 43.68
+    },
+    {
+      "index": 10,
+      "sceneIndex": 1,
+      "startSec": 43.68,
+      "text": "Había creído los halagos y había sido engañado.",
+      "endSec": 47.419
+    },
+    {
+      "index": 11,
+      "sceneIndex": 2,
+      "startSec": 47.419,
+      "text": "No hay que creer todo lo que nos dicen por halagos.",
+      "endSec": 51.02
+    },
+    {
+      "index": 12,
+      "sceneIndex": 2,
+      "startSec": 51.02,
+      "text": "A veces nos adulan para sacarnos algo.",
+      "endSec": 54.379
+    },
+    {
+      "index": 13,
+      "sceneIndex": 2,
+      "startSec": 54.379,
+      "text": "La prudencia vale más que el orgullo.",
+      "endSec": 57.099
+    }
+  ]
+}

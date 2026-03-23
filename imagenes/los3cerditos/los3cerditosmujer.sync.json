@@ -1,0 +1,117 @@
+{
+  "version": 3,
+  "audio": "los3cerditosmujer.mp3",
+  "sources": {
+    "text": "los3cerditos.txt",
+    "timings": "los3cerditosmujer.mp3.txt"
+  },
+  "method": "segments_from_stt_word_timestamps",
+  "note": "Generado automáticamente desde ElevenLabs Speech-to-Text (timestamps word).",
+  "segments": [
+    {
+      "index": 0,
+      "sceneIndex": 0,
+      "startSec": 0.079,
+      "text": "Había una vez tres cerditos que decidieron construir cada uno su casa.",
+      "endSec": 5.579
+    },
+    {
+      "index": 1,
+      "sceneIndex": 0,
+      "startSec": 5.579,
+      "text": "El primero hizo la suya de paja muy rápido y se puso a tocar la flauta.",
+      "endSec": 11.479
+    },
+    {
+      "index": 2,
+      "sceneIndex": 0,
+      "startSec": 11.479,
+      "text": "El segundo la hizo de madera y fue a jugar.",
+      "endSec": 15.279
+    },
+    {
+      "index": 3,
+      "sceneIndex": 0,
+      "startSec": 15.279,
+      "text": "El tercero trabajó mucho y la hizo de ladrillos, con chimenea y puerta fuerte.",
+      "endSec": 21.879
+    },
+    {
+      "index": 4,
+      "sceneIndex": 0,
+      "startSec": 21.879,
+      "text": "Un lobo apareció por la zona, fue a la casa de paja, llamó y como no abrieron, sopló con fuerza y la",
+      "endSec": 29.559
+    },
+    {
+      "index": 5,
+      "sceneIndex": 1,
+      "startSec": 29.559,
+      "text": "casa se vino abajo.",
+      "endSec": 31.619
+    },
+    {
+      "index": 6,
+      "sceneIndex": 1,
+      "startSec": 31.619,
+      "text": "El primer cerdito escapó y se refugió en la casa de madera de su hermano.",
+      "endSec": 36.619
+    },
+    {
+      "index": 7,
+      "sceneIndex": 1,
+      "startSec": 36.619,
+      "text": "El lobo fue a la casa de madera, sopló y sopló y al final la derribó.",
+      "endSec": 43.079
+    },
+    {
+      "index": 8,
+      "sceneIndex": 1,
+      "startSec": 43.079,
+      "text": "Los dos corrieron a la casa de ladrillo y entraron justo a tiempo.",
+      "endSec": 47.599
+    },
+    {
+      "index": 9,
+      "sceneIndex": 2,
+      "startSec": 47.599,
+      "text": "El lobo sopló, pero la casa no se movió.",
+      "endSec": 51.139
+    },
+    {
+      "index": 10,
+      "sceneIndex": 2,
+      "startSec": 51.139,
+      "text": "El lobo intentó colarse por la chimenea.",
+      "endSec": 54.02
+    },
+    {
+      "index": 11,
+      "sceneIndex": 2,
+      "startSec": 54.02,
+      "text": "El tercer cerdito encendió un fuego suave y puso una olla con agua tibia.",
+      "endSec": 60.279
+    },
+    {
+      "index": 12,
+      "sceneIndex": 2,
+      "startSec": 60.279,
+      "text": "Cuando el lobo bajó, se mojó y salió corriendo sin hacerse daño.",
+      "endSec": 65.939
+    },
+    {
+      "index": 13,
+      "sceneIndex": 3,
+      "startSec": 65.939,
+      "text": "Los tres cerditos vivieron seguros en la casa de ladrillo.",
+      "endSec": 70.54
+    },
+    {
+      "index": 14,
+      "sceneIndex": 3,
+      "startSec": 70.54,
+      "text": "El lobo no volvió a molestarlos y los hermanos jugaban juntos en el jardín",
+      "endSec": 76.68
+    }
+  ]
+}

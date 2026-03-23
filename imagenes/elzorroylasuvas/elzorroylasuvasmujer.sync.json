@@ -1,0 +1,124 @@
+{
+  "version": 3,
+  "audio": "elzorroylasuvasmujer.mp3",
+  "sources": {
+    "text": "elzorroylasuvas.txt",
+    "timings": "elzorroylasuvasmujer.mp3.txt"
+  },
+  "method": "segments_from_stt_word_timestamps",
+  "note": "Generado automáticamente desde ElevenLabs Speech-to-Text (timestamps word).",
+  "segments": [
+    {
+      "index": 0,
+      "sceneIndex": 0,
+      "startSec": 0.079,
+      "text": "Un zorro que pasaba mucha hambre vio un racimo de uvas maduras colgado de una parra alta.",
+      "endSec": 6.42
+    },
+    {
+      "index": 1,
+      "sceneIndex": 0,
+      "startSec": 6.42,
+      "text": "Las uvas brillaban al sol y el zorro se relamió.",
+      "endSec": 10.359
+    },
+    {
+      "index": 2,
+      "sceneIndex": 0,
+      "startSec": 10.359,
+      "text": "Dio un salto para cogerlas.",
+      "endSec": 12.3
+    },
+    {
+      "index": 3,
+      "sceneIndex": 0,
+      "startSec": 12.3,
+      "text": "No llegó.",
+      "endSec": 13.219
+    },
+    {
+      "index": 4,
+      "sceneIndex": 0,
+      "startSec": 13.219,
+      "text": "Dio otro salto más alto.",
+      "endSec": 15.38
+    },
+    {
+      "index": 5,
+      "sceneIndex": 0,
+      "startSec": 15.38,
+      "text": "Tampoco.",
+      "endSec": 16.359
+    },
+    {
+      "index": 6,
+      "sceneIndex": 0,
+      "startSec": 16.359,
+      "text": "Saltó una y otra vez con todas sus fuerzas.",
+      "endSec": 19.899
+    },
+    {
+      "index": 7,
+      "sceneIndex": 0,
+      "startSec": 19.899,
+      "text": "Cansado y sin haber tocado ni una uva, el zorro se alejó.",
+      "endSec": 24.779
+    },
+    {
+      "index": 8,
+      "sceneIndex": 1,
+      "startSec": 24.779,
+      "text": "Entonces, se dio la vuelta y dijo en voz alta: \"¡Bah!",
+      "endSec": 29.119
+    },
+    {
+      "index": 9,
+      "sceneIndex": 1,
+      "startSec": 29.119,
+      "text": "Estaban verdes, ni las quiero\".",
+      "endSec": 31.84
+    },
+    {
+      "index": 10,
+      "sceneIndex": 1,
+      "startSec": 31.84,
+      "text": "En realidad, las uvas estaban dulces y maduras.",
+      "endSec": 35.779
+    },
+    {
+      "index": 11,
+      "sceneIndex": 1,
+      "startSec": 35.779,
+      "text": "El zorro no quería admitir que no había podido alcanzarlas.",
+      "endSec": 40.0
+    },
+    {
+      "index": 12,
+      "sceneIndex": 1,
+      "startSec": 40.0,
+      "text": "Prefería fingir que no le importaban.",
+      "endSec": 42.899
+    },
+    {
+      "index": 13,
+      "sceneIndex": 1,
+      "startSec": 42.899,
+      "text": "Así nació el dicho: despreciar las uvas como el zorro.",
+      "endSec": 47.84
+    },
+    {
+      "index": 14,
+      "sceneIndex": 2,
+      "startSec": 47.84,
+      "text": "Cuando no conseguimos algo, a veces decimos que no lo queríamos.",
+      "endSec": 52.579
+    },
+    {
+      "index": 15,
+      "sceneIndex": 2,
+      "startSec": 52.579,
+      "text": "Es mejor reconocer el esfuerzo y seguir intentando.",
+      "endSec": 56.219
+    }
+  ]
+}

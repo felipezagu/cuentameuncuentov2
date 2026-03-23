@@ -1,0 +1,152 @@
+{
+  "version": 3,
+  "audio": "rapunzelmujer.mp3",
+  "sources": {
+    "text": "rapunzel.txt",
+    "timings": "rapunzelmujer.mp3.txt"
+  },
+  "method": "segments_from_stt_word_timestamps",
+  "note": "Generado automáticamente desde ElevenLabs Speech-to-Text (timestamps word).",
+  "segments": [
+    {
+      "index": 0,
+      "sceneIndex": 0,
+      "startSec": 0.079,
+      "text": "Un hombre y su mujer no tenían hijos.",
+      "endSec": 3.5
+    },
+    {
+      "index": 1,
+      "sceneIndex": 0,
+      "startSec": 3.5,
+      "text": "Detrás de su casa había un jardín de una bruja.",
+      "endSec": 6.96
+    },
+    {
+      "index": 2,
+      "sceneIndex": 0,
+      "startSec": 6.96,
+      "text": "La mujer deseaba comer los rábanos del jardín.",
+      "endSec": 10.619
+    },
+    {
+      "index": 3,
+      "sceneIndex": 0,
+      "startSec": 10.619,
+      "text": "El hombre entró a cogerlos y la bruja lo atrapó.",
+      "endSec": 14.899
+    },
+    {
+      "index": 4,
+      "sceneIndex": 0,
+      "startSec": 14.899,
+      "text": "A cambio, le pidió el bebé que iban a tener: Rapunzel.",
+      "endSec": 19.42
+    },
+    {
+      "index": 5,
+      "sceneIndex": 0,
+      "startSec": 19.42,
+      "text": "Cuando Rapunzel creció, la bruja la encerró en una torre sin puerta.",
+      "endSec": 23.819
+    },
+    {
+      "index": 6,
+      "sceneIndex": 0,
+      "startSec": 23.819,
+      "text": "Para subir, la bruja gritaba: \"¡Rapunzel, suelta tu trenza!\" Rapunzel dejaba caer su larga cabellera y la bruja trepaba.",
+      "endSec": 34.239
+    },
+    {
+      "index": 7,
+      "sceneIndex": 1,
+      "startSec": 34.239,
+      "text": "Un príncipe oyó cantar a Rapunzel y quiso conocerla.",
+      "endSec": 38.759
+    },
+    {
+      "index": 8,
+      "sceneIndex": 1,
+      "startSec": 38.759,
+      "text": "Cuando la bruja se fue, gritó lo mismo y Rapunzel lo dejó subir.",
+      "endSec": 43.719
+    },
+    {
+      "index": 9,
+      "sceneIndex": 1,
+      "startSec": 43.719,
+      "text": "Se hicieron amigos y se prometieron amor.",
+      "endSec": 46.659
+    },
+    {
+      "index": 10,
+      "sceneIndex": 2,
+      "startSec": 46.659,
+      "text": "La bruja descubrió al príncipe y lo expulsó.",
+      "endSec": 50.34
+    },
+    {
+      "index": 11,
+      "sceneIndex": 2,
+      "startSec": 50.34,
+      "text": "Cortó la trenza a Rapunzel y la envió lejos.",
+      "endSec": 54.02
+    },
+    {
+      "index": 12,
+      "sceneIndex": 2,
+      "startSec": 54.02,
+      "text": "La bruja esperó al príncipe y lo hizo subir.",
+      "endSec": 57.799
+    },
+    {
+      "index": 13,
+      "sceneIndex": 2,
+      "startSec": 57.799,
+      "text": "Cuando llegó arriba, lo dejó caer entre espinas.",
+      "endSec": 61.139
+    },
+    {
+      "index": 14,
+      "sceneIndex": 2,
+      "startSec": 61.139,
+      "text": "El príncipe perdió la vista y vagó por el bosque años.",
+      "endSec": 65.119
+    },
+    {
+      "index": 15,
+      "sceneIndex": 3,
+      "startSec": 65.119,
+      "text": "Un día, oyó la voz de Rapunzel.",
+      "endSec": 67.739
+    },
+    {
+      "index": 16,
+      "sceneIndex": 3,
+      "startSec": 67.739,
+      "text": "Ella lo reconoció y sus lágrimas tocaron sus ojos.",
+      "endSec": 72.08
+    },
+    {
+      "index": 17,
+      "sceneIndex": 3,
+      "startSec": 72.08,
+      "text": "El príncipe recuperó la vista.",
+      "endSec": 74.479
+    },
+    {
+      "index": 18,
+      "sceneIndex": 3,
+      "startSec": 74.479,
+      "text": "Se casaron y vivieron felices.",
+      "endSec": 77.139
+    },
+    {
+      "index": 19,
+      "sceneIndex": 3,
+      "startSec": 77.139,
+      "text": "El amor y la paciencia habían vencido",
+      "endSec": 80.499
+    }
+  ]
+}

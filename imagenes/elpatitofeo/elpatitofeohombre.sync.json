@@ -1,0 +1,124 @@
+{
+  "version": 3,
+  "audio": "elpatitofeohombre.mp3",
+  "sources": {
+    "text": "elpatitofeo.txt",
+    "timings": "elpatitofeohombre.mp3.txt"
+  },
+  "method": "segments_from_stt_word_timestamps",
+  "note": "Generado automáticamente desde ElevenLabs Speech-to-Text (timestamps word).",
+  "segments": [
+    {
+      "index": 0,
+      "sceneIndex": 0,
+      "startSec": 0.079,
+      "text": "En una granja nació un patito más grande y gris que sus hermanos.",
+      "endSec": 5.339
+    },
+    {
+      "index": 1,
+      "sceneIndex": 0,
+      "startSec": 5.339,
+      "text": "Los demás lo llamaban el patito feo y se reían.",
+      "endSec": 9.619
+    },
+    {
+      "index": 2,
+      "sceneIndex": 0,
+      "startSec": 9.619,
+      "text": "La mamá pata lo quería igual.",
+      "endSec": 11.899
+    },
+    {
+      "index": 3,
+      "sceneIndex": 0,
+      "startSec": 11.899,
+      "text": "Él se sentía triste.",
+      "endSec": 14.239
+    },
+    {
+      "index": 4,
+      "sceneIndex": 0,
+      "startSec": 14.239,
+      "text": "Se marchó y pasó el otoño y el invierno solo junto a un pantano, escondido entre los juncos.",
+      "endSec": 22.02
+    },
+    {
+      "index": 5,
+      "sceneIndex": 0,
+      "startSec": 22.02,
+      "text": "Cuando llegó la primavera, voló hasta un estanque y vio unos cisnes muy bonitos.",
+      "endSec": 27.239
+    },
+    {
+      "index": 6,
+      "sceneIndex": 1,
+      "startSec": 27.239,
+      "text": "Se acercó con miedo.",
+      "endSec": 29.019
+    },
+    {
+      "index": 7,
+      "sceneIndex": 1,
+      "startSec": 29.019,
+      "text": "Los cisnes lo rodearon con cariño.",
+      "endSec": 32.2
+    },
+    {
+      "index": 8,
+      "sceneIndex": 1,
+      "startSec": 32.2,
+      "text": "El patito feo se asomó al agua y vio su reflejo.",
+      "endSec": 36.5
+    },
+    {
+      "index": 9,
+      "sceneIndex": 1,
+      "startSec": 36.5,
+      "text": "Ya era un cisne blanco.",
+      "endSec": 38.239
+    },
+    {
+      "index": 10,
+      "sceneIndex": 1,
+      "startSec": 38.239,
+      "text": "Había crecido y se había transformado.",
+      "endSec": 41.52
+    },
+    {
+      "index": 11,
+      "sceneIndex": 1,
+      "startSec": 41.52,
+      "text": "Los cisnes lo recibieron como a uno más.",
+      "endSec": 45.059
+    },
+    {
+      "index": 12,
+      "sceneIndex": 2,
+      "startSec": 45.059,
+      "text": "Los niños que pasaban decían: \"Mira, el cisne nuevo es el más bello\".",
+      "endSec": 50.599
+    },
+    {
+      "index": 13,
+      "sceneIndex": 2,
+      "startSec": 50.599,
+      "text": "El que había sido el patito feo estaba muy feliz.",
+      "endSec": 54.879
+    },
+    {
+      "index": 14,
+      "sceneIndex": 2,
+      "startSec": 54.879,
+      "text": "Nunca hay que burlarse de quien es diferente.",
+      "endSec": 57.899
+    },
+    {
+      "index": 15,
+      "sceneIndex": 2,
+      "startSec": 57.899,
+      "text": "Cada uno tiene su momento de convertirse en quien está destinado a ser.",
+      "endSec": 62.739
+    }
+  ]
+}

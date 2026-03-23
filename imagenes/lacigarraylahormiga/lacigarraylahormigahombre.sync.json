@@ -1,0 +1,117 @@
+{
+  "version": 3,
+  "audio": "lacigarraylahormigahombre.mp3",
+  "sources": {
+    "text": "lacigarraylahormiga.txt",
+    "timings": "lacigarraylahormigahombre.mp3.txt"
+  },
+  "method": "segments_from_stt_word_timestamps",
+  "note": "Generado automáticamente desde ElevenLabs Speech-to-Text (timestamps word).",
+  "segments": [
+    {
+      "index": 0,
+      "sceneIndex": 0,
+      "startSec": 0.179,
+      "text": "Durante el verano, la cigarra cantaba todo el día en la rama de un árbol.",
+      "endSec": 6.039
+    },
+    {
+      "index": 1,
+      "sceneIndex": 0,
+      "startSec": 6.039,
+      "text": "La hormiga pasaba con granos de trigo y comida, trabajando sin parar para guardar provisiones en su hormiguero.",
+      "endSec": 14.42
+    },
+    {
+      "index": 2,
+      "sceneIndex": 0,
+      "startSec": 14.42,
+      "text": "La cigarra le decía: \"¿Por qué trabajas tanto?",
+      "endSec": 18.479
+    },
+    {
+      "index": 3,
+      "sceneIndex": 0,
+      "startSec": 18.479,
+      "text": "Ven a cantar conmigo y disfruta del sol\".",
+      "endSec": 21.479
+    },
+    {
+      "index": 4,
+      "sceneIndex": 0,
+      "startSec": 21.479,
+      "text": "La hormiga respondía: \"Preparo comida para el invierno.",
+      "endSec": 25.539
+    },
+    {
+      "index": 5,
+      "sceneIndex": 1,
+      "startSec": 25.539,
+      "text": "Tú deberías hacer lo mismo\".",
+      "endSec": 27.92
+    },
+    {
+      "index": 6,
+      "sceneIndex": 1,
+      "startSec": 27.92,
+      "text": "La cigarra se reía y seguía cantando.",
+      "endSec": 31.019
+    },
+    {
+      "index": 7,
+      "sceneIndex": 1,
+      "startSec": 31.019,
+      "text": "Llegó el otoño y luego el invierno.",
+      "endSec": 33.7
+    },
+    {
+      "index": 8,
+      "sceneIndex": 1,
+      "startSec": 33.7,
+      "text": "Hizo frío y no había nada que comer en el campo.",
+      "endSec": 37.219
+    },
+    {
+      "index": 9,
+      "sceneIndex": 1,
+      "startSec": 37.219,
+      "text": "La cigarra, hambrienta y tiritando, fue a pedirle a la hormiga un poco de comida.",
+      "endSec": 42.959
+    },
+    {
+      "index": 10,
+      "sceneIndex": 1,
+      "startSec": 42.959,
+      "text": "Le dijo: \"Te dije que cantaras.",
+      "endSec": 46.379
+    },
+    {
+      "index": 11,
+      "sceneIndex": 2,
+      "startSec": 46.379,
+      "text": "Ahora baila\".",
+      "endSec": 47.539
+    },
+    {
+      "index": 12,
+      "sceneIndex": 2,
+      "startSec": 47.539,
+      "text": "Y cerró la puerta.",
+      "endSec": 49.459
+    },
+    {
+      "index": 13,
+      "sceneIndex": 2,
+      "startSec": 49.459,
+      "text": "En versiones más amables, la hormiga comparte un poco y la cigarra aprende a trabajar el próximo verano.",
+      "endSec": 57.479
+    },
+    {
+      "index": 14,
+      "sceneIndex": 2,
+      "startSec": 57.479,
+      "text": "La fábula nos enseña que hay que prepararse y esforzarse a su tiempo.",
+      "endSec": 62.799
+    }
+  ]
+}

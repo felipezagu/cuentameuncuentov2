@@ -1,0 +1,110 @@
+{
+  "version": 3,
+  "audio": "elreymidasmujer.mp3",
+  "sources": {
+    "text": "elreymidas.txt",
+    "timings": "elreymidasmujer.mp3.txt"
+  },
+  "method": "segments_from_stt_word_timestamps",
+  "note": "Generado automáticamente desde ElevenLabs Speech-to-Text (timestamps word).",
+  "segments": [
+    {
+      "index": 0,
+      "sceneIndex": 0,
+      "startSec": 0.079,
+      "text": "El rey Midas amaba el oro más que nada.",
+      "endSec": 3.919
+    },
+    {
+      "index": 1,
+      "sceneIndex": 0,
+      "startSec": 3.919,
+      "text": "Un día ayudó a un amigo del dios Dioniso y este le concedió un deseo.",
+      "endSec": 9.099
+    },
+    {
+      "index": 2,
+      "sceneIndex": 0,
+      "startSec": 9.099,
+      "text": "Midas pidió que todo lo que toque se convierta en oro.",
+      "endSec": 13.439
+    },
+    {
+      "index": 3,
+      "sceneIndex": 0,
+      "startSec": 13.439,
+      "text": "Al principio, Midas estaba feliz.",
+      "endSec": 16.34
+    },
+    {
+      "index": 4,
+      "sceneIndex": 0,
+      "startSec": 16.34,
+      "text": "Tocaba una piedra y se volvía oro, una flor y era oro.",
+      "endSec": 21.1
+    },
+    {
+      "index": 5,
+      "sceneIndex": 0,
+      "startSec": 21.1,
+      "text": "Pero cuando quiso comer, la comida se convertía en oro y no podía probarla.",
+      "endSec": 26.719
+    },
+    {
+      "index": 6,
+      "sceneIndex": 1,
+      "startSec": 26.719,
+      "text": "Midas tenía hambre y miedo.",
+      "endSec": 29.42
+    },
+    {
+      "index": 7,
+      "sceneIndex": 1,
+      "startSec": 29.42,
+      "text": "Entonces su hija corrió a abrazarlo para consolarlo.",
+      "endSec": 33.279
+    },
+    {
+      "index": 8,
+      "sceneIndex": 1,
+      "startSec": 33.279,
+      "text": "En el instante en que la tocó, su hija se convirtió en una estatua de oro.",
+      "endSec": 38.52
+    },
+    {
+      "index": 9,
+      "sceneIndex": 1,
+      "startSec": 38.52,
+      "text": "Midas lloró y suplicó a Dioniso que quitara el don.",
+      "endSec": 42.659
+    },
+    {
+      "index": 10,
+      "sceneIndex": 1,
+      "startSec": 42.659,
+      "text": "El dios le dijo que se bañara en un río especial.",
+      "endSec": 46.599
+    },
+    {
+      "index": 11,
+      "sceneIndex": 2,
+      "startSec": 46.599,
+      "text": "Así lo hizo y perdió el poder.",
+      "endSec": 49.479
+    },
+    {
+      "index": 12,
+      "sceneIndex": 2,
+      "startSec": 49.479,
+      "text": "Al tocar de nuevo a su hija, ella volvió a la vida.",
+      "endSec": 53.419
+    },
+    {
+      "index": 13,
+      "sceneIndex": 2,
+      "startSec": 53.419,
+      "text": "Midas aprendió que hay cosas mucho más valiosas que el oro: el amor y la familia",
+      "endSec": 60.239
+    }
+  ]
+}

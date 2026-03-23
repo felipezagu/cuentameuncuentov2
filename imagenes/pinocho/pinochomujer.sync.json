@@ -1,0 +1,138 @@
+{
+  "version": 3,
+  "audio": "pinochomujer.mp3",
+  "sources": {
+    "text": "pinocho.txt",
+    "timings": "pinochomujer.mp3.txt"
+  },
+  "method": "segments_from_stt_word_timestamps",
+  "note": "Generado automáticamente desde ElevenLabs Speech-to-Text (timestamps word).",
+  "segments": [
+    {
+      "index": 0,
+      "sceneIndex": 0,
+      "startSec": 0.079,
+      "text": "Gepetto era un carpintero que no tenía hijos.",
+      "endSec": 3.779
+    },
+    {
+      "index": 1,
+      "sceneIndex": 0,
+      "startSec": 3.779,
+      "text": "Talló un muñeco de madera llamado Pinocho.",
+      "endSec": 7.319
+    },
+    {
+      "index": 2,
+      "sceneIndex": 0,
+      "startSec": 7.319,
+      "text": "Un hada azul le dio vida y le dijo que sería un niño de verdad si era valiente y sincero.",
+      "endSec": 14.159
+    },
+    {
+      "index": 3,
+      "sceneIndex": 0,
+      "startSec": 14.159,
+      "text": "Dejó a Pepito Grillo como su conciencia.",
+      "endSec": 17.479
+    },
+    {
+      "index": 4,
+      "sceneIndex": 0,
+      "startSec": 17.479,
+      "text": "Pinocho fue al colegio, pero se dejó engañar y acabó en un teatro.",
+      "endSec": 22.76
+    },
+    {
+      "index": 5,
+      "sceneIndex": 0,
+      "startSec": 22.76,
+      "text": "Cuando mentía, le crecía la nariz.",
+      "endSec": 25.539
+    },
+    {
+      "index": 6,
+      "sceneIndex": 1,
+      "startSec": 25.539,
+      "text": "El hada lo perdonó.",
+      "endSec": 27.379
+    },
+    {
+      "index": 7,
+      "sceneIndex": 1,
+      "startSec": 27.379,
+      "text": "Gepetto salió a buscarlo y fue a parar dentro de una ballena grande.",
+      "endSec": 32.38
+    },
+    {
+      "index": 8,
+      "sceneIndex": 1,
+      "startSec": 32.38,
+      "text": "Pinocho entró en la ballena y encontró a Gepetto.",
+      "endSec": 36.239
+    },
+    {
+      "index": 9,
+      "sceneIndex": 1,
+      "startSec": 36.239,
+      "text": "Para salir, hicieron una fogata.",
+      "endSec": 39.099
+    },
+    {
+      "index": 10,
+      "sceneIndex": 1,
+      "startSec": 39.099,
+      "text": "El humo hizo estornudar a la ballena y los expulsó al mar.",
+      "endSec": 43.479
+    },
+    {
+      "index": 11,
+      "sceneIndex": 1,
+      "startSec": 43.479,
+      "text": "Nadaron hasta la orilla.",
+      "endSec": 45.319
+    },
+    {
+      "index": 12,
+      "sceneIndex": 2,
+      "startSec": 45.319,
+      "text": "En casa, Gepetto estaba muy cansado.",
+      "endSec": 48.739
+    },
+    {
+      "index": 13,
+      "sceneIndex": 2,
+      "startSec": 48.739,
+      "text": "Pinocho lo cuidó día y noche.",
+      "endSec": 51.34
+    },
+    {
+      "index": 14,
+      "sceneIndex": 2,
+      "startSec": 51.34,
+      "text": "Demostró que era valiente y sincero.",
+      "endSec": 54.319
+    },
+    {
+      "index": 15,
+      "sceneIndex": 2,
+      "startSec": 54.319,
+      "text": "El hada premió a Pinocho convirtiéndolo en un niño de verdad.",
+      "endSec": 59.34
+    },
+    {
+      "index": 16,
+      "sceneIndex": 2,
+      "startSec": 59.34,
+      "text": "Gepetto y Pepito Grillo estaban muy contentos.",
+      "endSec": 63.439
+    },
+    {
+      "index": 17,
+      "sceneIndex": 3,
+      "startSec": 63.439,
+      "text": "La honestidad y el amor hacen que los sueños se cumplan",
+      "endSec": 67.819
+    }
+  ]
+}

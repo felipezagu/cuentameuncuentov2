@@ -1,0 +1,117 @@
+{
+  "version": 3,
+  "audio": "elpastorcitomentirosomujer.mp3",
+  "sources": {
+    "text": "elpastorcitomentiroso.txt",
+    "timings": "elpastorcitomentirosomujer.mp3.txt"
+  },
+  "method": "segments_from_stt_word_timestamps",
+  "note": "Generado automáticamente desde ElevenLabs Speech-to-Text (timestamps word).",
+  "segments": [
+    {
+      "index": 0,
+      "sceneIndex": 0,
+      "startSec": 0.079,
+      "text": "Un muchacho cuidaba las ovejas en el monte.",
+      "endSec": 3.159
+    },
+    {
+      "index": 1,
+      "sceneIndex": 0,
+      "startSec": 3.159,
+      "text": "Se aburría y un día gritó: \"¡Que viene el lobo, que viene el lobo!\".",
+      "endSec": 8.679
+    },
+    {
+      "index": 2,
+      "sceneIndex": 0,
+      "startSec": 8.679,
+      "text": "Los vecinos subieron corriendo con palos y no había ningún lobo.",
+      "endSec": 13.319
+    },
+    {
+      "index": 3,
+      "sceneIndex": 0,
+      "startSec": 13.319,
+      "text": "El pastor se rió mucho.",
+      "endSec": 15.659
+    },
+    {
+      "index": 4,
+      "sceneIndex": 0,
+      "startSec": 15.659,
+      "text": "Al cabo de unos días volvió a gritar: \"¡Que viene el lobo!\".",
+      "endSec": 20.52
+    },
+    {
+      "index": 5,
+      "sceneIndex": 0,
+      "startSec": 20.52,
+      "text": "De nuevo los aldeanos subieron y de nuevo era mentira.",
+      "endSec": 24.84
+    },
+    {
+      "index": 6,
+      "sceneIndex": 1,
+      "startSec": 24.84,
+      "text": "Se enfadaron y le dijeron que no volverían.",
+      "endSec": 28.5
+    },
+    {
+      "index": 7,
+      "sceneIndex": 1,
+      "startSec": 28.5,
+      "text": "Una tarde, de verdad, apareció un lobo entre las ovejas.",
+      "endSec": 32.34
+    },
+    {
+      "index": 8,
+      "sceneIndex": 1,
+      "startSec": 32.34,
+      "text": "El pastorcito gritó con miedo: \"¡Que viene el lobo, de verdad, ayudadme!\".",
+      "endSec": 38.36
+    },
+    {
+      "index": 9,
+      "sceneIndex": 1,
+      "startSec": 38.36,
+      "text": "Nadie subió.",
+      "endSec": 39.68
+    },
+    {
+      "index": 10,
+      "sceneIndex": 1,
+      "startSec": 39.68,
+      "text": "Pensaron que era otra broma.",
+      "endSec": 41.68
+    },
+    {
+      "index": 11,
+      "sceneIndex": 1,
+      "startSec": 41.68,
+      "text": "El lobo atacó al rebaño y el pastor no pudo hacer nada solo.",
+      "endSec": 46.799
+    },
+    {
+      "index": 12,
+      "sceneIndex": 2,
+      "startSec": 46.799,
+      "text": "Perdió varias ovejas.",
+      "endSec": 48.959
+    },
+    {
+      "index": 13,
+      "sceneIndex": 2,
+      "startSec": 48.959,
+      "text": "Cuando bajó al pueblo llorando, le dijeron: \"Quien miente una vez no es creído cuando dice la verdad\".",
+      "endSec": 56.319
+    },
+    {
+      "index": 14,
+      "sceneIndex": 2,
+      "startSec": 56.319,
+      "text": "El pastorcito aprendió que la mentira tiene consecuencias muy graves.",
+      "endSec": 61.559
+    }
+  ]
+}

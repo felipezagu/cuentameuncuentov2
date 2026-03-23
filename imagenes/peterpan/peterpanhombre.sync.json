@@ -1,0 +1,138 @@
+{
+  "version": 3,
+  "audio": "peterpanhombre.mp3",
+  "sources": {
+    "text": "peterpan.txt",
+    "timings": "peterpanhombre.mp3.txt"
+  },
+  "method": "segments_from_stt_word_timestamps",
+  "note": "Generado automáticamente desde ElevenLabs Speech-to-Text (timestamps word).",
+  "segments": [
+    {
+      "index": 0,
+      "sceneIndex": 0,
+      "startSec": 0.079,
+      "text": "Peter Pan era un niño que volaba y nunca crecía.",
+      "endSec": 4.5
+    },
+    {
+      "index": 1,
+      "sceneIndex": 0,
+      "startSec": 4.5,
+      "text": "Vivía en Nunca Jamás con los niños perdidos.",
+      "endSec": 8.599
+    },
+    {
+      "index": 2,
+      "sceneIndex": 0,
+      "startSec": 8.599,
+      "text": "Una noche entró por la ventana de la casa de Wendy Darling y le contó historias de hadas y piratas.",
+      "endSec": 15.96
+    },
+    {
+      "index": 3,
+      "sceneIndex": 0,
+      "startSec": 15.96,
+      "text": "Sus hermanos John y Michael despertaron y Peter les enseñó a volar.",
+      "endSec": 22.0
+    },
+    {
+      "index": 4,
+      "sceneIndex": 0,
+      "startSec": 22.0,
+      "text": "Peter los llevó volando hasta Nunca Jamás.",
+      "endSec": 25.599
+    },
+    {
+      "index": 5,
+      "sceneIndex": 1,
+      "startSec": 25.599,
+      "text": "Allí conocieron a Campanilla, el hada celosa, y a los niños perdidos.",
+      "endSec": 31.179
+    },
+    {
+      "index": 6,
+      "sceneIndex": 1,
+      "startSec": 31.179,
+      "text": "El capitán Garfio y su barco de piratas querían atrapar a Peter.",
+      "endSec": 35.939
+    },
+    {
+      "index": 7,
+      "sceneIndex": 1,
+      "startSec": 35.939,
+      "text": "Wendy cuidaba de los niños como una madre.",
+      "endSec": 38.799
+    },
+    {
+      "index": 8,
+      "sceneIndex": 1,
+      "startSec": 38.799,
+      "text": "Peter luchaba contra Garfio y los piratas.",
+      "endSec": 42.5
+    },
+    {
+      "index": 9,
+      "sceneIndex": 1,
+      "startSec": 42.5,
+      "text": "Campanilla bebió un veneno que iba para Peter y casi muere.",
+      "endSec": 47.18
+    },
+    {
+      "index": 10,
+      "sceneIndex": 2,
+      "startSec": 47.18,
+      "text": "Los niños aplaudieron para creer en las hadas y la salvaron.",
+      "endSec": 51.5
+    },
+    {
+      "index": 11,
+      "sceneIndex": 2,
+      "startSec": 51.5,
+      "text": "Garfio capturó a los niños y a Wendy.",
+      "endSec": 55.199
+    },
+    {
+      "index": 12,
+      "sceneIndex": 2,
+      "startSec": 55.199,
+      "text": "Peter fue a rescatarlos y luchó con Garfio.",
+      "endSec": 59.599
+    },
+    {
+      "index": 13,
+      "sceneIndex": 2,
+      "startSec": 59.599,
+      "text": "El cocodrilo que perseguía al capitán por haberse comido su mano llegó y Garfio cayó al mar.",
+      "endSec": 66.439
+    },
+    {
+      "index": 14,
+      "sceneIndex": 3,
+      "startSec": 66.439,
+      "text": "Wendy y sus hermanos volvieron a casa.",
+      "endSec": 69.559
+    },
+    {
+      "index": 15,
+      "sceneIndex": 3,
+      "startSec": 69.559,
+      "text": "Peter se quedó en Nunca Jamás para siempre joven.",
+      "endSec": 73.239
+    },
+    {
+      "index": 16,
+      "sceneIndex": 3,
+      "startSec": 73.239,
+      "text": "Prometió volver a buscar a Wendy.",
+      "endSec": 76.279
+    },
+    {
+      "index": 17,
+      "sceneIndex": 3,
+      "startSec": 76.279,
+      "text": "Creer en la magia y en no olvidar al niño que llevamos dentro es el mensaje de Peter Pan",
+      "endSec": 84.399
+    }
+  ]
+}

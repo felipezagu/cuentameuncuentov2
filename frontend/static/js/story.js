@@ -48,6 +48,189 @@ let narracionSyncData = null;
 let narracionAudioEl = null;
 let narracionTimeUpdateAttached = false;
 
+// --- Voz hombre/mujer (MP3 pregrabado) ---
+let allStoriesCache = null;
+// Tolerante al tipo de guion raro que puede aparecer en el título.
+const V2_VOICE_SUFFIX_RE = /\(\s*v2[^)]*narrador\s*(mujer|hombre)\s*\)\s*$/i;
+
+function parseV2VoiceTitle(titulo) {
+  const t = String(titulo || "").trim();
+  const m = t.match(V2_VOICE_SUFFIX_RE);
+  if (!m) return null;
+  return { base: t.replace(m[0], "").trim(), gender: String(m[1]).toLowerCase() };
+}
+
+function stripV2VoiceTitle(titulo) {
+  const p = parseV2VoiceTitle(titulo);
+  return p ? p.base : String(titulo || "").trim();
+}
+
+function detectGenderFromAudio(audioUrl) {
+  const a = (audioUrl ? String(audioUrl) : "").toLowerCase();
+  if (!a) return null;
+  if (a.includes("mujer") || a.endsWith("mujer.mp3")) return "mujer";
+  if (a.includes("hombre") || a.endsWith("hombre.mp3")) return "hombre";
+  return null;
+}
+
+function getBaseTitleForVoiceGrouping(titulo) {
+  // Si todavía existiera sufijo v2 en algún título, lo quita; si no, devuelve el título tal cual.
+  return stripV2VoiceTitle(titulo);
+}
+
+function jsSafeSlug(s) {
+  return String(s || "")
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9]+/g, "");
+}
+
+async function fetchAllStoriesOnce() {
+  if (allStoriesCache) return allStoriesCache;
+  try {
+    const res = await fetch("/api/stories/");
+    if (!res.ok) return (allStoriesCache = []);
+    allStoriesCache = await res.json();
+    return allStoriesCache;
+  } catch {
+    return (allStoriesCache = []);
+  }
+}
+
+function openGoogleSearch(term) {
+  const q = encodeURIComponent(String(term || "").trim());
+  if (!q) return;
+  window.open("https://www.google.com/search?q=" + q, "_blank", "noopener,noreferrer");
+}
+
+async function setupVoiceChoiceOverlay(story) {
+  const wrap = document.getElementById("voice-choice-overlay");
+  const btnMale = document.getElementById("btn-voice-male");
+  const btnFemale = document.getElementById("btn-voice-female");
+  if (!wrap || !btnMale || !btnFemale) return;
+
+  if (!story || !story.titulo) return;
+  // Solo tiene sentido si existe narración pregrabada para ese cuento.
+  if (!story.narracion_audio || !story.narracion_sync) {
+    wrap.classList.add("hidden");
+    return;
+  }
+
+  // Mostramos el bloque desde ya (aunque aún estemos cargando ids),
+  // para que el usuario vea el mensaje antes de que termine el fetch.
+  wrap.classList.remove("hidden");
+  btnMale.disabled = true;
+  btnFemale.disabled = true;
+  btnMale.classList.remove("active");
+  btnFemale.classList.remove("active");
+
+  const currentGender = detectGenderFromAudio(story.narracion_audio) || "hombre";
+  const baseTitle = getBaseTitleForVoiceGrouping(story.titulo);
+
+  const stories = await fetchAllStoriesOnce();
+  let maleId = null;
+  let femaleId = null;
+  (stories || []).forEach((s) => {
+    if (!s || !s.titulo) return;
+    if (getBaseTitleForVoiceGrouping(s.titulo) !== baseTitle) return;
+    const g = detectGenderFromAudio(s.narracion_audio);
+    if (g === "hombre") maleId = s.id;
+    if (g === "mujer") femaleId = s.id;
+  });
+
+  if (!maleId && !femaleId) {
+    wrap.classList.add("hidden");
+    return;
+  }
+
+  const selectedGender = currentGender;
+  const goTo = (targetId) => {
+    if (!targetId) return;
+    stopNarrationOnLeave();
+    // Reutilizamos la misma convención del resto de la app: en móvil usa hash.
+    const hash = isMobileOrTablet() ? "#cuento-inicio" : "";
+    window.location.href = "/cuento/" + targetId + hash;
+  };
+
+  function bindVoiceTap(btn, targetId) {
+    if (!btn) return;
+    const handler = function (e) {
+      // Evita que el overlay arranque la lectura mientras eliges voz.
+      e.preventDefault();
+      e.stopPropagation();
+      goTo(targetId);
+    };
+    btn.addEventListener("click", handler);
+    btn.addEventListener("pointerup", handler, { passive: false });
+    btn.addEventListener("touchend", handler, { passive: false });
+  }
+
+  btnMale.disabled = selectedGender === "hombre" || !maleId;
+  btnFemale.disabled = selectedGender === "mujer" || !femaleId;
+  btnMale.classList.toggle("active", selectedGender === "hombre");
+  btnFemale.classList.toggle("active", selectedGender === "mujer");
+
+  bindVoiceTap(btnMale, maleId);
+  bindVoiceTap(btnFemale, femaleId);
+}
+
+async function setupNarrationVoiceSelect(story, recordedEnabled) {
+  const sel = document.getElementById("narration-voice-select");
+  if (!sel) return;
+
+  // Por defecto lo deshabilitamos.
+  sel.disabled = true;
+  sel.value = "hombre";
+  const maleOpt = sel.querySelector('option[value="hombre"]');
+  const femaleOpt = sel.querySelector('option[value="mujer"]');
+  if (maleOpt) maleOpt.disabled = true;
+  if (femaleOpt) femaleOpt.disabled = true;
+
+  if (!recordedEnabled) return;
+  if (!story || !story.titulo) return;
+  const currentGender = detectGenderFromAudio(story.narracion_audio) || "hombre";
+  const baseTitle = getBaseTitleForVoiceGrouping(story.titulo);
+
+  const stories = await fetchAllStoriesOnce();
+  let maleId = null;
+  let femaleId = null;
+  (stories || []).forEach((s) => {
+    if (!s || !s.titulo) return;
+    if (getBaseTitleForVoiceGrouping(s.titulo) !== baseTitle) return;
+    const g = detectGenderFromAudio(s.narracion_audio);
+    if (g === "hombre") maleId = s.id;
+    if (g === "mujer") femaleId = s.id;
+  });
+
+  if (!maleId && !femaleId) return;
+
+  sel.disabled = false;
+  sel.value = currentGender;
+  if (maleOpt) maleOpt.disabled = !maleId;
+  if (femaleOpt) femaleOpt.disabled = !femaleId;
+}
+
+async function goToV2NarrationGender(gender) {
+  if (!storyData || !storyData.titulo) return;
+  const baseTitle = getBaseTitleForVoiceGrouping(storyData.titulo);
+  if (!gender) return;
+
+  const stories = await fetchAllStoriesOnce();
+  let targetId = null;
+  (stories || []).forEach((s) => {
+    if (!s || !s.titulo) return;
+    if (getBaseTitleForVoiceGrouping(s.titulo) !== baseTitle) return;
+    const g = detectGenderFromAudio(s.narracion_audio);
+    if (g === gender) targetId = s.id;
+  });
+
+  if (!targetId) return;
+  stopNarrationOnLeave();
+  const hash = isMobileOrTablet() ? "#cuento-inicio" : "";
+  window.location.href = "/cuento/" + targetId + hash;
+}
+
 function hideCountdownOverlay() {
   const overlay = document.getElementById("countdown-overlay");
   if (overlay) overlay.classList.add("hidden");
@@ -1029,6 +1212,7 @@ function stopNarrationOnLeave() {
       // Ignorar
     }
   } else if (synth) synth.cancel();
+  stopAllQuizPanelAudio();
   log("Narración detenida (cambio de página o salida)");
 }
 
@@ -1055,6 +1239,7 @@ function isMobileOrTablet() {
 
 function initVoices() {
   const voiceSelect = document.getElementById("voice-select");
+  if (!voiceSelect) return;
   if (!window.speechSynthesis) {
     voiceSelect.innerHTML =
       '<option value="">Narrador del navegador no disponible</option>';
@@ -1089,6 +1274,7 @@ function initVoices() {
 function initRateControl() {
   const range = document.getElementById("rate-range");
   const label = document.getElementById("rate-label");
+  if (!range || !label) return;
   const update = () => {
     label.textContent = `${range.value}x`;
   };
@@ -1252,6 +1438,35 @@ function markCenterButtonUsed() {
 let currentQuestionIndex = 0;
 let quizPreguntas = [];
 let quizUtterance = null;
+let quizAudioEl = null;
+/** Evita que suene audio del panel/cuestionario tras un clic (timeouts pendientes). */
+let quizSpeakDelayTimer = null;
+
+function clearQuizSpeakDelay() {
+  if (quizSpeakDelayTimer != null) {
+    clearTimeout(quizSpeakDelayTimer);
+    quizSpeakDelayTimer = null;
+  }
+}
+
+/** Detiene de inmediato MP3 de configuración, voz del cuestionario y anuncios del panel final. */
+function stopAllQuizPanelAudio() {
+  clearQuizSpeakDelay();
+  try {
+    if (quizAudioEl) {
+      quizAudioEl.pause();
+      quizAudioEl.currentTime = 0;
+      quizAudioEl.onended = null;
+      quizAudioEl.onerror = null;
+      quizAudioEl.removeAttribute("src");
+      quizAudioEl.load();
+    }
+  } catch (e) {
+    // Ignorar
+  }
+  quizUtterance = null;
+  if (window.speechSynthesis) window.speechSynthesis.cancel();
+}
 
 /** Mensajes al terminar el cuestionario: uno al azar, tono motivacional para niños (~20) */
 const QUIZ_DONE_MESSAGES = [
@@ -1278,38 +1493,100 @@ const QUIZ_DONE_MESSAGES = [
 ];
 
 function speakQuizText(text, onEnd) {
-  if (!window.speechSynthesis || !text) return;
-  if (quizUtterance) window.speechSynthesis.cancel();
-  const rate = parseFloat(document.getElementById("rate-range") && document.getElementById("rate-range").value || "1");
-  const voiceSelect = document.getElementById("voice-select");
-  const voiceId = voiceSelect ? voiceSelect.value : "";
-  const utter = new SpeechSynthesisUtterance(text);
-  utter.rate = rate;
-  utter.lang = "es-ES";
-  if (voiceId && window.speechSynthesis.getVoices) {
-    const voices = window.speechSynthesis.getVoices();
-    const voice = voices.find(function (v) { return v.name === voiceId || v.voiceURI === voiceId; });
-    if (voice) utter.voice = voice;
+  // Firma retrocompatible: speakQuizText(text, onEnd?, audioKey?)
+  var cb = null;
+  var audioKey = null;
+  if (typeof onEnd === "function") cb = onEnd;
+  if (arguments.length >= 3 && typeof arguments[2] === "string") audioKey = arguments[2];
+  if (!text) return;
+
+  function stopQuizAudio() {
+    if (!quizAudioEl) return;
+    try {
+      quizAudioEl.pause();
+      quizAudioEl.currentTime = 0;
+      quizAudioEl.onended = null;
+      quizAudioEl.onerror = null;
+    } catch (e) {
+      // Ignorar
+    }
   }
-  if (typeof onEnd === "function") {
-    utter.onend = onEnd;
+
+  function narrationGenderForQuiz() {
+    var g = detectGenderFromAudio(storyData && storyData.narracion_audio ? storyData.narracion_audio : "");
+    return g || "hombre";
   }
-  quizUtterance = utter;
-  window.speechSynthesis.speak(utter);
+
+  function tryPlayConfigAudio(key, onEnded) {
+    var slug = jsSafeSlug(key);
+    if (!slug) return false;
+    var gender = narrationGenderForQuiz();
+    var src = "/imagenes/configuracion/" + slug + gender + ".mp3";
+    try {
+      if (!quizAudioEl) {
+        quizAudioEl = new Audio();
+        quizAudioEl.preload = "auto";
+      }
+      stopQuizAudio();
+      quizAudioEl.src = src;
+      quizAudioEl.onended = function () {
+        if (typeof onEnded === "function") onEnded();
+      };
+      quizAudioEl.onerror = function () {
+        // Si falla este MP3, caemos a SpeechSynthesis.
+        fallbackSpeak(text, onEnded);
+      };
+      quizAudioEl.play().catch(function () {
+        fallbackSpeak(text, onEnded);
+      });
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  function fallbackSpeak(txt, onEnded) {
+    if (!window.speechSynthesis || !txt) return;
+    if (quizUtterance) window.speechSynthesis.cancel();
+    const rate = parseFloat(document.getElementById("rate-range") && document.getElementById("rate-range").value || "1");
+    const voiceSelect = document.getElementById("voice-select");
+    const voiceId = voiceSelect ? voiceSelect.value : "";
+    const utter = new SpeechSynthesisUtterance(txt);
+    utter.rate = rate;
+    utter.lang = "es-ES";
+    if (voiceId && window.speechSynthesis.getVoices) {
+      const voices = window.speechSynthesis.getVoices();
+      const voice = voices.find(function (v) { return v.name === voiceId || v.voiceURI === voiceId; });
+      if (voice) utter.voice = voice;
+    }
+    if (typeof onEnded === "function") {
+      utter.onend = onEnded;
+    }
+    quizUtterance = utter;
+    window.speechSynthesis.speak(utter);
+  }
+
+  // Prioridad: MP3 generado en /imagenes/configuracion.
+  if (audioKey && tryPlayConfigAudio(audioKey, cb)) return;
+  fallbackSpeak(text, cb);
 }
 
-function speakQuestionAndOptions(questionText, opts) {
+function speakQuestionAndOptions(questionText, opts, qIdx) {
   var parts = ["Pregunta. " + questionText];
   if (opts && opts.length) {
     opts.forEach(function (op, i) {
       parts.push("Opción " + (i + 1) + ": " + op);
     });
   }
-  speakQuizText(parts.join(". "));
+  const baseSlug = jsSafeSlug(getBaseTitleForVoiceGrouping(storyData && storyData.titulo ? storyData.titulo : ""));
+  const n = typeof qIdx === "number" ? qIdx + 1 : 1;
+  const key = "config_" + baseSlug + "__q" + String(n).padStart(2, "0");
+  speakQuizText(parts.join(". "), null, key);
 }
 
 function renderOneQuestion(container, q, qIdx, total) {
   if (!container) return;
+  stopAllQuizPanelAudio();
   hideQuizActionsBar();
   container.innerHTML = "";
   const opts = q.opciones || [];
@@ -1330,7 +1607,8 @@ function renderOneQuestion(container, q, qIdx, total) {
   listenBtn.innerHTML = "🔊 Escuchar pregunta";
   listenBtn.setAttribute("aria-label", "Escuchar la pregunta en voz alta");
   listenBtn.addEventListener("click", function () {
-    speakQuestionAndOptions(questionLabel, opts);
+    stopAllQuizPanelAudio();
+    speakQuestionAndOptions(questionLabel, opts, qIdx);
   });
   card.appendChild(listenBtn);
 
@@ -1364,7 +1642,7 @@ function renderOneQuestion(container, q, qIdx, total) {
     btn.dataset.index = String(i);
     btn.addEventListener("click", function () {
       if (btn.disabled) return;
-      if (window.speechSynthesis) window.speechSynthesis.cancel();
+      stopAllQuizPanelAudio();
       optionButtons.forEach(function (b, idx) {
         b.disabled = true;
         b.classList.remove("quiz-option-correct-hint");
@@ -1400,7 +1678,7 @@ function renderOneQuestion(container, q, qIdx, total) {
 
   container.appendChild(card);
 
-  speakQuestionAndOptions(questionLabel, opts);
+  speakQuestionAndOptions(questionLabel, opts, qIdx);
 }
 
 function hideQuizActionsBar() {
@@ -1413,16 +1691,46 @@ function hideQuizActionsBar() {
   if (overlay) overlay.classList.remove("book-quiz-overlay--motivational");
 }
 
+async function goToRandomStory() {
+  stopNarrationOnLeave();
+  try {
+    const res = await fetch("/api/stories/");
+    if (!res.ok) {
+      window.location.href = "/";
+      return;
+    }
+    const stories = await res.json();
+    if (!stories || stories.length === 0) {
+      window.location.href = "/";
+      return;
+    }
+    const currentId = storyData && storyData.id;
+    const others = currentId
+      ? stories.filter(function (s) { return s.id !== currentId; })
+      : stories;
+    const list = others.length ? others : stories;
+    const pick = list[Math.floor(Math.random() * list.length)];
+    if (pick && pick.id) {
+      window.location.href = "/cuento/" + pick.id;
+      return;
+    }
+    window.location.href = "/";
+  } catch {
+    window.location.href = "/";
+  }
+}
+
 function showQuizDone(container) {
   if (!container) return;
+  stopAllQuizPanelAudio();
   container.innerHTML = "";
   const actionsClear = document.getElementById("book-quiz-actions");
   if (actionsClear) {
     actionsClear.innerHTML = "";
     actionsClear.classList.remove("hidden");
   }
-  const motivational =
-    QUIZ_DONE_MESSAGES[Math.floor(Math.random() * QUIZ_DONE_MESSAGES.length)];
+  const doneIdx = Math.floor(Math.random() * QUIZ_DONE_MESSAGES.length);
+  const motivational = QUIZ_DONE_MESSAGES[doneIdx];
 
   const card = document.createElement("div");
   card.className = "book-quiz-card book-quiz-card--done text-center";
@@ -1439,40 +1747,24 @@ function showQuizDone(container) {
     const btnOtro = document.createElement("button");
     btnOtro.type = "button";
     btnOtro.className = "book-quiz-btn book-quiz-btn-yes book-quiz-btn-leer-otro";
-    btnOtro.textContent = "LEER OTRO CUENTO";
+    btnOtro.textContent = "OTRO CUENTO AL AZAR";
     btnOtro.addEventListener("click", async function (e) {
       e.preventDefault();
       e.stopPropagation();
-      try {
-        const res = await fetch("/api/stories/");
-        if (!res.ok) return;
-        const stories = await res.json();
-        if (!stories || stories.length === 0) {
-          window.location.href = "/";
-          return;
-        }
-        const currentId = storyData && storyData.id;
-        const otras = currentId ? stories.filter(function (s) { return s.id !== currentId; }) : stories;
-        const list = otras.length ? otras : stories;
-        const pick = list[Math.floor(Math.random() * list.length)];
-        if (pick && pick.id) {
-          stopNarrationOnLeave();
-          window.location.href = "/cuento/" + pick.id;
-        } else {
-          window.location.href = "/";
-        }
-      } catch {
-        window.location.href = "/";
-      }
+      stopAllQuizPanelAudio();
+      await goToRandomStory();
     });
     actionsEl.appendChild(btnOtro);
   }
 
+  clearQuizSpeakDelay();
   if (window.speechSynthesis) {
     window.speechSynthesis.cancel();
   }
-  window.setTimeout(function () {
-    speakQuizText(motivational);
+  quizSpeakDelayTimer = window.setTimeout(function () {
+    quizSpeakDelayTimer = null;
+    const key = "config_quiz_done_" + String(doneIdx + 1).padStart(2, "0");
+    speakQuizText(motivational, null, key);
   }, 350);
 
   const overlay = document.getElementById("book-quiz-overlay");
@@ -1484,6 +1776,8 @@ function showEndPanel() {
   const body = document.getElementById("book-quiz-body");
   const actionsEl = document.getElementById("book-quiz-actions");
   if (!overlay || !body) return;
+
+  stopAllQuizPanelAudio();
 
   overlay.classList.remove("book-quiz-overlay--motivational");
 
@@ -1520,6 +1814,7 @@ function showEndPanel() {
     btnQuiz.className = "book-quiz-btn book-quiz-btn-restart book-quiz-btn-yes";
     btnQuiz.textContent = "SI";
     btnQuiz.addEventListener("click", function () {
+      stopAllQuizPanelAudio();
       renderOneQuestion(body, quizPreguntas[0], 0, quizPreguntas.length);
     });
     buttonsWrap.appendChild(btnQuiz);
@@ -1533,12 +1828,12 @@ function showEndPanel() {
     const btnAnother = document.createElement("button");
     btnAnother.type = "button";
     btnAnother.className = "book-quiz-btn book-quiz-btn-another";
-    btnAnother.textContent = "OTRO CUENTO";
-    btnAnother.addEventListener("click", function (e) {
+    btnAnother.textContent = "OTRO CUENTO AL AZAR";
+    btnAnother.addEventListener("click", async function (e) {
       e.preventDefault();
       e.stopPropagation();
-      stopNarrationOnLeave();
-      window.location.href = "/";
+      stopAllQuizPanelAudio();
+      await goToRandomStory();
     });
     actionsEl.appendChild(btnAnother);
 
@@ -1547,10 +1842,54 @@ function showEndPanel() {
     btnSameAgain.className = "book-quiz-btn book-quiz-btn-same-again";
     btnSameAgain.textContent = "Leer mismo cuento nuevamente";
     btnSameAgain.addEventListener("click", function () {
+      stopAllQuizPanelAudio();
       hideEndPanel();
       restartStory();
     });
     actionsEl.appendChild(btnSameAgain);
+
+    // Metadatos del cuento (título + autor) en la pantalla final.
+    const cuentoNombre = stripV2VoiceTitle(storyData && storyData.titulo ? storyData.titulo : storyTitle);
+    if (cuentoNombre) {
+      const meta = document.createElement("div");
+      meta.className = "book-end-meta";
+
+      const cuentoLink = document.createElement("a");
+      cuentoLink.href = "https://www.google.com/search?q=" + encodeURIComponent(cuentoNombre);
+      cuentoLink.target = "_blank";
+      cuentoLink.rel = "noopener noreferrer";
+      cuentoLink.textContent = cuentoNombre;
+      meta.appendChild(cuentoLink);
+
+      const authorEl = document.createElement("div");
+      const authorPrefix = document.createElement("span");
+      authorPrefix.textContent = "Autor: ";
+      authorEl.appendChild(authorPrefix);
+      const authorLink = document.createElement("a");
+      const authorName = (storyData && storyData.autor ? String(storyData.autor) : "").trim() || "Autor desconocido";
+      authorLink.href = "https://www.google.com/search?q=" + encodeURIComponent(authorName);
+      authorLink.target = "_blank";
+      authorLink.rel = "noopener noreferrer";
+      authorLink.textContent = authorName;
+      authorEl.appendChild(authorLink);
+
+      meta.appendChild(authorEl);
+      const portada = (storyData && storyData.portada ? String(storyData.portada) : "").trim();
+      if (portada) {
+        const coverWrap = document.createElement("div");
+        coverWrap.className = "book-end-cover-wrap";
+        const coverImg = document.createElement("img");
+        coverImg.src = portada;
+        coverImg.alt = "Portada del cuento";
+        coverImg.loading = "lazy";
+        coverImg.decoding = "async";
+        coverImg.className = "book-end-cover-img";
+        coverWrap.appendChild(coverImg);
+        meta.appendChild(coverWrap);
+      }
+
+      actionsEl.appendChild(meta);
+    }
   }
 
   overlay.classList.remove("hidden");
@@ -1563,16 +1902,19 @@ function showEndPanel() {
       : "¿Quieres escuchar otro cuento?");
   // Retraso: en móvil, al terminar el último utterance a veces hay un "ghost click"
   // que activaba el enlace del logo (/) antes de que el usuario tocara nada.
+  clearQuizSpeakDelay();
   if (window.speechSynthesis) {
     window.speechSynthesis.cancel();
   }
-  window.setTimeout(function () {
-    speakQuizText(announce);
+  quizSpeakDelayTimer = window.setTimeout(function () {
+    quizSpeakDelayTimer = null;
+    const key = quizPreguntas.length > 0 ? "config_endpanel_con_preguntas" : "config_endpanel_sin_preguntas";
+    speakQuizText(announce, null, key);
   }, 400);
 }
 
 function hideEndPanel() {
-  if (window.speechSynthesis) window.speechSynthesis.cancel();
+  stopAllQuizPanelAudio();
   document.body.classList.remove("story-end-panel-open");
   hideQuizActionsBar();
   const overlay = document.getElementById("book-quiz-overlay");
@@ -1782,7 +2124,20 @@ function initControls() {
   }
 
   if (btnSave && cfgPanel) {
-    btnSave.addEventListener("click", closeConfigModal);
+    btnSave.addEventListener("click", async function () {
+      // Si la narración del cuento es pregrabada, la voz Hombre/Mujer
+      // se resuelve cargando el cuento v2 correspondiente.
+      const narrVoiceSel = document.getElementById("narration-voice-select");
+      if (useRecordedNarration && narrVoiceSel && !narrVoiceSel.disabled) {
+        const desired = narrVoiceSel.value;
+        const currentGender = detectGenderFromAudio(storyData && storyData.narracion_audio ? storyData.narracion_audio : "") || "hombre";
+        if (desired && desired !== currentGender) {
+          await goToV2NarrationGender(desired);
+          return;
+        }
+      }
+      closeConfigModal();
+    });
   }
   const btnAnother = document.getElementById("btn-another-story");
   if (btnAnother) {
@@ -1874,6 +2229,9 @@ async function initPage() {
     setReadingUIVisible(false);
     const overlayTitle = document.getElementById("overlay-story-title");
     if (overlayTitle) overlayTitle.textContent = storyData && storyData.titulo ? storyData.titulo : "";
+    // Botones Hombre/Mujer (solo si el cuento tiene MP3 pregrabado correspondiente).
+    setupVoiceChoiceOverlay(storyData).catch(function () {});
+    setupNarrationVoiceSelect(storyData, useRecordedNarration).catch(function () {});
     hideStartButtons();
   } catch (e) {
     log("initPage ERROR:", e.message || e);

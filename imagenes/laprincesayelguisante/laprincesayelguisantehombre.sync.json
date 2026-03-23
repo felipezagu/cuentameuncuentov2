@@ -1,0 +1,124 @@
+{
+  "version": 3,
+  "audio": "laprincesayelguisantehombre.mp3",
+  "sources": {
+    "text": "laprincesayelguisante.txt",
+    "timings": "laprincesayelguisantehombre.mp3.txt"
+  },
+  "method": "segments_from_stt_word_timestamps",
+  "note": "Generado automáticamente desde ElevenLabs Speech-to-Text (timestamps word).",
+  "segments": [
+    {
+      "index": 0,
+      "sceneIndex": 0,
+      "startSec": 0.079,
+      "text": "Había una vez un príncipe que quería casarse, pero solo con una princesa de verdad.",
+      "endSec": 6.759
+    },
+    {
+      "index": 1,
+      "sceneIndex": 0,
+      "startSec": 6.759,
+      "text": "Viajó por todo el mundo buscándola y siempre encontraba algo que no le convencía.",
+      "endSec": 13.359
+    },
+    {
+      "index": 2,
+      "sceneIndex": 0,
+      "startSec": 13.359,
+      "text": "Volvió al castillo muy triste.",
+      "endSec": 16.399
+    },
+    {
+      "index": 3,
+      "sceneIndex": 0,
+      "startSec": 16.399,
+      "text": "Una noche de tormenta, alguien llamó a la puerta.",
+      "endSec": 19.719
+    },
+    {
+      "index": 4,
+      "sceneIndex": 0,
+      "startSec": 19.719,
+      "text": "Era una joven empapada y sucia que decía ser princesa.",
+      "endSec": 25.159
+    },
+    {
+      "index": 5,
+      "sceneIndex": 1,
+      "startSec": 25.159,
+      "text": "La reina no dijo nada.",
+      "endSec": 26.92
+    },
+    {
+      "index": 6,
+      "sceneIndex": 1,
+      "startSec": 26.92,
+      "text": "La hizo pasar y preparó una habitación especial para probarla.",
+      "endSec": 31.439
+    },
+    {
+      "index": 7,
+      "sceneIndex": 1,
+      "startSec": 31.439,
+      "text": "La reina puso un guisante en el fondo de la cama y encima veinte colchones y veinte edredones.",
+      "endSec": 38.799
+    },
+    {
+      "index": 8,
+      "sceneIndex": 1,
+      "startSec": 38.799,
+      "text": "Así acostaron a la visitante.",
+      "endSec": 41.86
+    },
+    {
+      "index": 9,
+      "sceneIndex": 1,
+      "startSec": 41.86,
+      "text": "A la mañana siguiente le preguntaron cómo había dormido.",
+      "endSec": 46.18
+    },
+    {
+      "index": 10,
+      "sceneIndex": 2,
+      "startSec": 46.18,
+      "text": "La joven dijo que había pasado una noche horrible.",
+      "endSec": 50.059
+    },
+    {
+      "index": 11,
+      "sceneIndex": 2,
+      "startSec": 50.059,
+      "text": "Algo duro le había dejado el cuerpo lleno de cardenales.",
+      "endSec": 54.659
+    },
+    {
+      "index": 12,
+      "sceneIndex": 2,
+      "startSec": 54.659,
+      "text": "Solo una princesa de verdad podría ser tan sensible para notar un guisante bajo tantos colchones.",
+      "endSec": 62.639
+    },
+    {
+      "index": 13,
+      "sceneIndex": 2,
+      "startSec": 62.639,
+      "text": "El príncipe se casó con ella, seguros de que era una princesa auténtica.",
+      "endSec": 68.879
+    },
+    {
+      "index": 14,
+      "sceneIndex": 3,
+      "startSec": 68.879,
+      "text": "El guisante fue guardado en el museo del reino.",
+      "endSec": 73.319
+    },
+    {
+      "index": 15,
+      "sceneIndex": 3,
+      "startSec": 73.319,
+      "text": "Y colorín colorado, este cuento se ha acabado.",
+      "endSec": 77.119
+    }
+  ]
+}

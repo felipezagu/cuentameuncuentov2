@@ -1,0 +1,117 @@
+{
+  "version": 3,
+  "audio": "elzorroylaciguenahombre.mp3",
+  "sources": {
+    "text": "elzorroylaciguena.txt",
+    "timings": "elzorroylaciguenahombre.mp3.txt"
+  },
+  "method": "segments_from_stt_word_timestamps",
+  "note": "Generado automáticamente desde ElevenLabs Speech-to-Text (timestamps word).",
+  "segments": [
+    {
+      "index": 0,
+      "sceneIndex": 0,
+      "startSec": 0.079,
+      "text": "El zorro invitó a la cigüeña a comer.",
+      "endSec": 3.599
+    },
+    {
+      "index": 1,
+      "sceneIndex": 0,
+      "startSec": 3.599,
+      "text": "Puso la sopa en un plato muy llano.",
+      "endSec": 6.96
+    },
+    {
+      "index": 2,
+      "sceneIndex": 0,
+      "startSec": 6.96,
+      "text": "El zorro lamía contento, pero la cigüeña con su pico largo no podía probar ni una gota.",
+      "endSec": 13.679
+    },
+    {
+      "index": 3,
+      "sceneIndex": 0,
+      "startSec": 13.679,
+      "text": "Se fue con hambre y enfadada.",
+      "endSec": 16.619
+    },
+    {
+      "index": 4,
+      "sceneIndex": 0,
+      "startSec": 16.619,
+      "text": "La cigüeña quiso devolver la invitación.",
+      "endSec": 19.819
+    },
+    {
+      "index": 5,
+      "sceneIndex": 0,
+      "startSec": 19.819,
+      "text": "Preparó un buen guiso y lo sirvió dentro de una jarra de cuello largo y estrecho.",
+      "endSec": 26.099
+    },
+    {
+      "index": 6,
+      "sceneIndex": 1,
+      "startSec": 26.099,
+      "text": "Ella metía el pico y comía perfectamente.",
+      "endSec": 29.739
+    },
+    {
+      "index": 7,
+      "sceneIndex": 1,
+      "startSec": 29.739,
+      "text": "El zorro no podía meter el hocico en la jarra.",
+      "endSec": 33.38
+    },
+    {
+      "index": 8,
+      "sceneIndex": 1,
+      "startSec": 33.38,
+      "text": "Solo podía oler el aroma y lamer por fuera.",
+      "endSec": 37.119
+    },
+    {
+      "index": 9,
+      "sceneIndex": 1,
+      "startSec": 37.119,
+      "text": "La cigüeña comió tranquila y le dijo: \"Hoy tú te quedas con hambre, como yo ayer\".",
+      "endSec": 43.419
+    },
+    {
+      "index": 10,
+      "sceneIndex": 1,
+      "startSec": 43.419,
+      "text": "El zorro se dio cuenta de que había sido egoísta.",
+      "endSec": 47.18
+    },
+    {
+      "index": 11,
+      "sceneIndex": 2,
+      "startSec": 47.18,
+      "text": "Tratar mal a los demás hace que nos traten igual.",
+      "endSec": 50.879
+    },
+    {
+      "index": 12,
+      "sceneIndex": 2,
+      "startSec": 50.879,
+      "text": "La cigüeña no quiso ser cruel, solo quiso que el zorro entendiera.",
+      "endSec": 56.36
+    },
+    {
+      "index": 13,
+      "sceneIndex": 2,
+      "startSec": 56.36,
+      "text": "Desde entonces, el zorro recordó: no hagas a los demás lo que no quieras para ti.",
+      "endSec": 64.68
+    },
+    {
+      "index": 14,
+      "sceneIndex": 3,
+      "startSec": 64.68,
+      "text": "Tratar bien a los amigos es la mejor manera de tener buenos amigos.",
+      "endSec": 70.079
+    }
+  ]
+}

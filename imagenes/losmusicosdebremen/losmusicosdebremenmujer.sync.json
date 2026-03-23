@@ -1,0 +1,124 @@
+{
+  "version": 3,
+  "audio": "losmusicosdebremenmujer.mp3",
+  "sources": {
+    "text": "losmusicosdebremen.txt",
+    "timings": "losmusicosdebremenmujer.mp3.txt"
+  },
+  "method": "segments_from_stt_word_timestamps",
+  "note": "Generado automáticamente desde ElevenLabs Speech-to-Text (timestamps word).",
+  "segments": [
+    {
+      "index": 0,
+      "sceneIndex": 0,
+      "startSec": 0.099,
+      "text": "Un burro que había trabajado mucho para su amo se dio cuenta de que ya no podía cargar.",
+      "endSec": 6.219
+    },
+    {
+      "index": 1,
+      "sceneIndex": 0,
+      "startSec": 6.219,
+      "text": "El amo quiso deshacerse de él.",
+      "endSec": 9.179
+    },
+    {
+      "index": 2,
+      "sceneIndex": 0,
+      "startSec": 9.179,
+      "text": "El burro escapó y decidió ir a Bremen a ser músico.",
+      "endSec": 13.5
+    },
+    {
+      "index": 3,
+      "sceneIndex": 0,
+      "startSec": 13.5,
+      "text": "Por el camino encontró un perro viejo, luego un gato y un gallo, todos en la misma situación.",
+      "endSec": 21.439
+    },
+    {
+      "index": 4,
+      "sceneIndex": 0,
+      "startSec": 21.439,
+      "text": "Los cuatro se hicieron amigos y siguieron el camino a Bremen.",
+      "endSec": 25.879
+    },
+    {
+      "index": 5,
+      "sceneIndex": 1,
+      "startSec": 25.879,
+      "text": "Por la noche vieron una casa con luz, se acercaron y miraron por la ventana.",
+      "endSec": 32.119
+    },
+    {
+      "index": 6,
+      "sceneIndex": 1,
+      "startSec": 32.119,
+      "text": "Dentro había unos ladrones cenando y contando monedas.",
+      "endSec": 36.259
+    },
+    {
+      "index": 7,
+      "sceneIndex": 1,
+      "startSec": 36.259,
+      "text": "Los animales planearon asustar a los ladrones.",
+      "endSec": 39.279
+    },
+    {
+      "index": 8,
+      "sceneIndex": 1,
+      "startSec": 39.279,
+      "text": "Se subieron uno encima del otro, el burro abajo, el perro sobre él, el gato encima y el gallo en lo alto.",
+      "endSec": 47.879
+    },
+    {
+      "index": 9,
+      "sceneIndex": 2,
+      "startSec": 47.879,
+      "text": "A una señal, el burro rebuznó, el perro ladró, el gato maulló y el gallo cantó.",
+      "endSec": 55.379
+    },
+    {
+      "index": 10,
+      "sceneIndex": 2,
+      "startSec": 55.379,
+      "text": "Los ladrones creyeron que era un fantasma y salieron corriendo.",
+      "endSec": 59.479
+    },
+    {
+      "index": 11,
+      "sceneIndex": 2,
+      "startSec": 59.479,
+      "text": "Los cuatro amigos entraron en la casa, comieron lo que quedaba y se acostaron cada uno en su rincón preferido.",
+      "endSec": 67.979
+    },
+    {
+      "index": 12,
+      "sceneIndex": 3,
+      "startSec": 67.979,
+      "text": "Uno de los ladrones volvió a espiar.",
+      "endSec": 70.9
+    },
+    {
+      "index": 13,
+      "sceneIndex": 3,
+      "startSec": 70.9,
+      "text": "El gato le arañó, el perro le mordió, el burro le dio una coz y el gallo lo persiguió.",
+      "endSec": 79.379
+    },
+    {
+      "index": 14,
+      "sceneIndex": 3,
+      "startSec": 79.379,
+      "text": "Los ladrones no volvieron.",
+      "endSec": 81.919
+    },
+    {
+      "index": 15,
+      "sceneIndex": 3,
+      "startSec": 81.919,
+      "text": "Los cuatro vivieron allí felices y ya no necesitaron ir a Bremen",
+      "endSec": 87.0
+    }
+  ]
+}

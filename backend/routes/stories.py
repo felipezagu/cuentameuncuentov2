@@ -29,6 +29,7 @@ class StoryOut(BaseModel):
     descripcion: str | None
     portada: str | None
     categoria: str | None
+    autor: str | None = None
     ambiente: str | None
     destacado: bool
     narracion_audio: str | None = None
@@ -70,6 +71,7 @@ def get_story(story_id: int, db: Session = Depends(get_db)):
         descripcion=story.descripcion,
         portada=story.portada,
         categoria=story.categoria,
+        autor=getattr(story, "autor", None),
         ambiente=story.ambiente,
         destacado=story.destacado,
         narracion_audio=getattr(story, "narracion_audio", None),

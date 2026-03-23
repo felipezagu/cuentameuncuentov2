@@ -1,0 +1,103 @@
+{
+  "version": 3,
+  "audio": "laliebreylatortugahombre.mp3",
+  "sources": {
+    "text": "laliebreylatortuga.txt",
+    "timings": "laliebreylatortugahombre.mp3.txt"
+  },
+  "method": "segments_from_stt_word_timestamps",
+  "note": "Generado automáticamente desde ElevenLabs Speech-to-Text (timestamps word).",
+  "segments": [
+    {
+      "index": 0,
+      "sceneIndex": 0,
+      "startSec": 0.079,
+      "text": "Una liebre muy veloz se burlaba de la tortuga por lo lenta que era.",
+      "endSec": 4.799
+    },
+    {
+      "index": 1,
+      "sceneIndex": 0,
+      "startSec": 4.799,
+      "text": "La tortuga, tranquila, le propuso una carrera hasta el árbol del camino.",
+      "endSec": 10.359
+    },
+    {
+      "index": 2,
+      "sceneIndex": 0,
+      "startSec": 10.359,
+      "text": "La liebre se rió y aceptó.",
+      "endSec": 13.0
+    },
+    {
+      "index": 3,
+      "sceneIndex": 0,
+      "startSec": 13.0,
+      "text": "\"En un salto te gano\", dijo.",
+      "endSec": 16.579
+    },
+    {
+      "index": 4,
+      "sceneIndex": 0,
+      "startSec": 16.579,
+      "text": "Sonaron la salida y la liebre salió disparada.",
+      "endSec": 20.359
+    },
+    {
+      "index": 5,
+      "sceneIndex": 0,
+      "startSec": 20.359,
+      "text": "Enseguida dejó atrás a la tortuga y tan segura estaba que se paró a mitad de camino a descansar bajo un árbol.",
+      "endSec": 28.939
+    },
+    {
+      "index": 6,
+      "sceneIndex": 1,
+      "startSec": 28.939,
+      "text": "La tortuga siguió paso a paso, sin parar, avanzando poco a poco.",
+      "endSec": 35.259
+    },
+    {
+      "index": 7,
+      "sceneIndex": 1,
+      "startSec": 35.259,
+      "text": "La liebre se quedó dormida pensando que tenía tiempo de sobra.",
+      "endSec": 40.36
+    },
+    {
+      "index": 8,
+      "sceneIndex": 1,
+      "startSec": 40.36,
+      "text": "Cuando la liebre despertó, miró hacia atrás y no vio a la tortuga.",
+      "endSec": 45.439
+    },
+    {
+      "index": 9,
+      "sceneIndex": 2,
+      "startSec": 45.439,
+      "text": "Corrió hacia la meta, pero ya era tarde.",
+      "endSec": 48.659
+    },
+    {
+      "index": 10,
+      "sceneIndex": 2,
+      "startSec": 48.659,
+      "text": "La tortuga había llegado primero y estaba esperándola junto al árbol.",
+      "endSec": 54.299
+    },
+    {
+      "index": 11,
+      "sceneIndex": 2,
+      "startSec": 54.299,
+      "text": "La liebre aprendió que la soberbia y el descuido pueden hacer perder hasta al más rápido.",
+      "endSec": 61.619
+    },
+    {
+      "index": 12,
+      "sceneIndex": 2,
+      "startSec": 61.619,
+      "text": "La constancia y el esfuerzo de la tortuga habían ganado la carrera.",
+      "endSec": 66.86
+    }
+  ]
+}
