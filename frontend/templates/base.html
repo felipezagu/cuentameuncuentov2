@@ -23,9 +23,10 @@
       },
     };
   </script>
-  <!-- Google AdSense (loader global). El mismo sirve para PC y móvil. -->
+  {% if adsense_enabled %}
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3994777682000954"
-          crossorigin="anonymous"></script>
+       crossorigin="anonymous"></script>
+  {% endif %}
   <link rel="stylesheet" href="/static/css/styles.css?v=44">
 </head>
 <body class="min-h-screen font-nunito kid-body app-body" id="body-bg">

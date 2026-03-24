@@ -241,7 +241,9 @@ def _run_in_background(fn):
 @app.get("/", response_class=HTMLResponse)
 async def home(request: Request):
     if os.getenv("DISABLE_STATS") == "1":
-        return templates.TemplateResponse("index.html", {"request": request})
+        return templates.TemplateResponse(
+            "index.html", {"request": request, "adsense_enabled": True}
+        )
 
     def _bump():
         db = SessionLocal()
@@ -252,14 +254,17 @@ async def home(request: Request):
             db.close()
 
     _run_in_background(_bump)
-    return templates.TemplateResponse("index.html", {"request": request})
+    return templates.TemplateResponse(
+        "index.html", {"request": request, "adsense_enabled": True}
+    )
 
 
 @app.get("/cuento/{story_id}", response_class=HTMLResponse)
 async def story_page(request: Request, story_id: int):
     if os.getenv("DISABLE_STATS") == "1":
         return templates.TemplateResponse(
-            "story.html", {"request": request, "story_id": story_id}
+            "story.html",
+            {"request": request, "story_id": story_id, "adsense_enabled": True},
         )
 
     def _bump():
@@ -272,7 +277,8 @@ async def story_page(request: Request, story_id: int):
 
     _run_in_background(_bump)
     return templates.TemplateResponse(
-        "story.html", {"request": request, "story_id": story_id}
+        "story.html",
+        {"request": request, "story_id": story_id, "adsense_enabled": True},
     )
 
 
