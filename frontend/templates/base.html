@@ -23,9 +23,9 @@
       },
     };
   </script>
-  {% if adsense_enabled %}
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3994777682000954"
-       crossorigin="anonymous"></script>
+  {% set _path = request.url.path if request is defined else "" %}
+  {% if not _path.startswith("/admin") and not _path.startswith("/tools") and not _path.startswith("/api") %}
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3994777682000954" crossorigin="anonymous"></script>
   {% endif %}
   <link rel="stylesheet" href="/static/css/styles.css?v=44">
 </head>
