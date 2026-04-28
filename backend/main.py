@@ -2,11 +2,13 @@ import json
 import io
 import ipaddress
 import os
+import smtplib
 import time
 import re
 import unicodedata
 from pathlib import Path
 from typing import Annotated
+from email.message import EmailMessage
 
 from dotenv import load_dotenv
 
@@ -300,6 +302,64 @@ async def contacto_page(request: Request):
     return templates.TemplateResponse(
         "contacto.html", {"request": request, "adsense_enabled": True}
     )
+
+
+def _send_contact_email(nombre: str, email: str, mensaje: str) -> None:
+    smtp_host = (os.getenv("SMTP_HOST") or "smtp.gmail.com").strip()
+    smtp_port = int((os.getenv("SMTP_PORT") or "587").strip())
+    smtp_user = (os.getenv("SMTP_USER") or "").strip()
+    smtp_password = (os.getenv("SMTP_PASSWORD") or "").strip()
+    mail_to = (os.getenv("CONTACT_EMAIL_TO") or "felipezagu@gmail.com").strip()
+
+    if not smtp_user or not smtp_password:
+        raise RuntimeError("SMTP no configurado: faltan SMTP_USER/SMTP_PASSWORD")
+
+    msg = EmailMessage()
+    msg["Subject"] = f"[Contacto CUC] Mensaje de {nombre}"
+    msg["From"] = smtp_user
+    msg["To"] = mail_to
+    msg["Reply-To"] = email
+    msg.set_content(
+        "Nuevo mensaje desde formulario de contacto de cuentameuncuento.cl\n\n"
+        f"Nombre: {nombre}\n"
+        f"Email: {email}\n\n"
+        "Mensaje:\n"
+        f"{mensaje}\n"
+    )
+
+    with smtplib.SMTP(smtp_host, smtp_port, timeout=20) as server:
+        server.starttls()
+        server.login(smtp_user, smtp_password)
+        server.send_message(msg)
+
+
+@app.post("/contacto")
+async def contacto_submit(
+    request: Request,
+    nombre: str = Form(...),
+    email: str = Form(...),
+    mensaje: str = Form(...),
+    website: str = Form(""),
+):
+    # Honeypot anti-bot: campo oculto debe quedar vacío.
+    if (website or "").strip():
+        return RedirectResponse(url="/contacto?ok=1", status_code=303)
+
+    nombre = (nombre or "").strip()
+    email = (email or "").strip()
+    mensaje = (mensaje or "").strip()
+
+    if len(nombre) < 2 or len(mensaje) < 15:
+        return RedirectResponse(url="/contacto?error=validacion", status_code=303)
+    if not re.match(r"^[^@\s]+@[^@\s]+\.[^@\s]+$", email):
+        return RedirectResponse(url="/contacto?error=email", status_code=303)
+
+    try:
+        _send_contact_email(nombre=nombre, email=email, mensaje=mensaje)
+    except Exception:
+        return RedirectResponse(url="/contacto?error=envio", status_code=303)
+
+    return RedirectResponse(url="/contacto?ok=1", status_code=303)
 
 
 @app.get("/privacidad", response_class=HTMLResponse)

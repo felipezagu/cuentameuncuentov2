@@ -7,6 +7,20 @@
     <h1 class="font-fredoka text-3xl sm:text-4xl font-bold kid-text-main mt-2">Contacto</h1>
   </header>
 
+  {% set ok = request.query_params.get("ok") %}
+  {% set error = request.query_params.get("error") %}
+
+  {% if ok %}
+  <div class="mb-4 rounded-xl border border-emerald-200 bg-emerald-50 text-emerald-800 px-4 py-3 text-sm">
+    Tu mensaje fue enviado correctamente. Gracias por contactarnos.
+  </div>
+  {% endif %}
+  {% if error %}
+  <div class="mb-4 rounded-xl border border-rose-200 bg-rose-50 text-rose-800 px-4 py-3 text-sm">
+    No se pudo enviar el mensaje. Revisa los datos e inténtalo nuevamente.
+  </div>
+  {% endif %}
+
   <div class="rounded-2xl bg-white/85 border border-slate-200 shadow-sm p-5 sm:p-6 space-y-4 kid-text-main">
     <p>
       Si tienes dudas, sugerencias de cuentos o quieres reportar un problema técnico, puedes escribirnos.
@@ -14,7 +28,7 @@
     </p>
 
     <div class="space-y-2 text-sm sm:text-base">
-      <p><strong>Correo de contacto:</strong> contacto@cuentameuncuento.cl</p>
+      <p><strong>Correo de contacto:</strong> felipezagu@gmail.com</p>
       <p><strong>Horario de respuesta:</strong> lunes a viernes, 09:00 a 18:00 (Chile)</p>
       <p><strong>Sitio web:</strong> https://cuentameuncuento.cl</p>
     </div>
@@ -22,6 +36,33 @@
     <p class="text-sm kid-text-muted">
       Al escribirnos, evita incluir datos sensibles de menores de edad. Si reportas un error, indica el nombre del cuento y una breve descripción para ayudarte más rápido.
     </p>
+
+    <form method="post" action="/contacto" class="mt-2 space-y-3">
+      <div>
+        <label for="contact-name" class="block text-sm font-semibold mb-1">Nombre</label>
+        <input id="contact-name" name="nombre" type="text" required minlength="2"
+               class="w-full rounded-xl border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400" />
+      </div>
+      <div>
+        <label for="contact-email" class="block text-sm font-semibold mb-1">Correo electrónico</label>
+        <input id="contact-email" name="email" type="email" required
+               class="w-full rounded-xl border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400" />
+      </div>
+      <div>
+        <label for="contact-message" class="block text-sm font-semibold mb-1">Mensaje</label>
+        <textarea id="contact-message" name="mensaje" required minlength="15" rows="5"
+                  class="w-full rounded-xl border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400"></textarea>
+      </div>
+      <!-- Honeypot anti-spam (oculto para humanos) -->
+      <div class="hidden" aria-hidden="true">
+        <label for="contact-website">Sitio web</label>
+        <input id="contact-website" name="website" type="text" tabindex="-1" autocomplete="off" />
+      </div>
+      <button type="submit"
+              class="inline-flex items-center justify-center rounded-xl bg-indigo-600 text-white font-semibold px-4 py-2 hover:bg-indigo-700 transition">
+        Enviar mensaje
+      </button>
+    </form>
   </div>
 </section>
 {% endblock %}
