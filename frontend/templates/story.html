@@ -144,6 +144,31 @@
     </a>
   </div>
 
+  <section id="story-editorial" class="mt-6 rounded-2xl border border-slate-200 bg-white/85 shadow-sm p-4 sm:p-5">
+    <h2 class="font-fredoka text-xl font-bold kid-text-main">Guía de lectura del cuento</h2>
+    <p id="story-summary" class="mt-2 text-sm sm:text-base kid-text-main"></p>
+    <div class="mt-4 grid sm:grid-cols-3 gap-3">
+      <div class="rounded-xl border border-indigo-100 bg-indigo-50/60 p-3">
+        <h3 class="font-semibold text-indigo-700">Edad sugerida</h3>
+        <p id="story-age" class="mt-1 text-sm kid-text-main">5 a 9 años</p>
+      </div>
+      <div class="rounded-xl border border-amber-100 bg-amber-50/70 p-3">
+        <h3 class="font-semibold text-amber-700">Duración estimada</h3>
+        <p id="story-time" class="mt-1 text-sm kid-text-main">Lectura breve</p>
+      </div>
+      <div class="rounded-xl border border-emerald-100 bg-emerald-50/70 p-3">
+        <h3 class="font-semibold text-emerald-700">Tipo de cuento</h3>
+        <p id="story-origin" class="mt-1 text-sm kid-text-main">Tradicional / dominio público</p>
+      </div>
+    </div>
+    <h3 class="mt-4 font-semibold kid-text-main">Aprendizajes que puede trabajar este cuento</h3>
+    <ul id="story-lessons" class="mt-2 list-disc pl-5 text-sm kid-text-main space-y-1">
+      <li>Comprensión oral y lectora.</li>
+      <li>Vocabulario y secuencia narrativa.</li>
+      <li>Reflexión sobre valores positivos.</li>
+    </ul>
+  </section>
+
   <div id="config-panel"
        class="config-modal hidden"
        role="dialog"
@@ -180,6 +205,6 @@
 <script>
   window.STORY_ID = {{ story_id }};
 </script>
-<script src="/static/js/story.js?v=38"></script>
+<script src="/static/js/story.js?v=39"></script>
 {% endblock %}
 

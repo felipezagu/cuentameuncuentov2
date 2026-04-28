@@ -1252,6 +1252,74 @@ function populateHeader(story) {
   }
 }
 
+function inferReadingAge(story) {
+  const c = String((story && story.categoria) || "").toLowerCase();
+  if (/fabula|fábula|animales|princesa|fantasia|fantasía/.test(c)) return "4 a 8 años";
+  if (/aventura|clasico|clásico/.test(c)) return "6 a 10 años";
+  return "5 a 9 años";
+}
+
+function inferReadingTime(story) {
+  const escenas = (story && Array.isArray(story.escenas)) ? story.escenas.length : 0;
+  if (escenas <= 3) return "3 a 5 minutos";
+  if (escenas <= 5) return "5 a 8 minutos";
+  return "8 a 12 minutos";
+}
+
+function buildStorySummary(story) {
+  if (!story || !Array.isArray(story.escenas) || story.escenas.length === 0) {
+    return "Este cuento infantil está adaptado para lectura acompañada con narración y texto sincronizado.";
+  }
+  const first = String(story.escenas[0].texto || "").trim();
+  const second = story.escenas[1] ? String(story.escenas[1].texto || "").trim() : "";
+  const firstShort = first.split(".").slice(0, 2).join(".").trim();
+  const secondShort = second.split(".").slice(0, 1).join(".").trim();
+  let out = firstShort;
+  if (out && !out.endsWith(".")) out += ".";
+  if (secondShort) {
+    out += " " + secondShort;
+    if (!out.endsWith(".")) out += ".";
+  }
+  return out || (story.descripcion || "");
+}
+
+function inferLessons(story) {
+  const text = ((story && story.descripcion) || "") + " " + (story && story.titulo ? story.titulo : "");
+  const t = text.toLowerCase();
+  const lessons = [
+    "Comprensión lectora y seguimiento de secuencias.",
+    "Vocabulario y expresión oral.",
+  ];
+  if (/mentira|honest|verdad/.test(t)) lessons.push("Importancia de la honestidad.");
+  else if (/amig|colabor|equipo/.test(t)) lessons.push("Valor de la amistad y la cooperación.");
+  else if (/esfuerzo|constancia|trabajo/.test(t)) lessons.push("Constancia y esfuerzo para lograr metas.");
+  else lessons.push("Reflexión sobre valores positivos y convivencia.");
+  return lessons.slice(0, 3);
+}
+
+function populateStoryEditorial(story) {
+  const summaryEl = document.getElementById("story-summary");
+  const ageEl = document.getElementById("story-age");
+  const timeEl = document.getElementById("story-time");
+  const originEl = document.getElementById("story-origin");
+  const lessonsEl = document.getElementById("story-lessons");
+  if (!summaryEl || !ageEl || !timeEl || !originEl || !lessonsEl) return;
+
+  summaryEl.textContent = buildStorySummary(story);
+  ageEl.textContent = inferReadingAge(story);
+  timeEl.textContent = inferReadingTime(story);
+  originEl.textContent = (story && story.autor)
+    ? "Adaptación de tradición literaria (" + story.autor + ")"
+    : "Cuento tradicional adaptado para lectura infantil";
+
+  lessonsEl.innerHTML = "";
+  inferLessons(story).forEach(function (lesson) {
+    const li = document.createElement("li");
+    li.textContent = lesson;
+    lessonsEl.appendChild(li);
+  });
+}
+
 function isMobileOrTablet() {
   return window.innerWidth <= 1024 || /Android|webOS|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
 }
@@ -2205,6 +2273,7 @@ async function initPage() {
     uiDebug("fetchStory OK titulo=" + (storyData && storyData.titulo ? storyData.titulo : ""));
     storyTitle = storyData && storyData.titulo ? storyData.titulo : "";
     populateHeader(storyData);
+    populateStoryEditorial(storyData);
 
     useRecordedNarration = false;
     narracionSyncData = null;

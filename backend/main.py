@@ -15,7 +15,7 @@ from fastapi import Depends, FastAPI, File, Form, HTTPException, Request, Upload
 # Cargar .env.local y .env para LUMA_API_KEY, etc.
 load_dotenv(Path(__file__).resolve().parent.parent / ".env.local")
 load_dotenv(Path(__file__).resolve().parent.parent / ".env")
-from fastapi.responses import HTMLResponse, RedirectResponse
+from fastapi.responses import HTMLResponse, PlainTextResponse, RedirectResponse, Response
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from starlette.middleware.sessions import SessionMiddleware
@@ -48,6 +48,12 @@ async def _request_timing_log(request: Request, call_next):
 @app.get("/healthz")
 async def healthz():
     return {"ok": True}
+
+
+@app.get("/ads.txt", response_class=PlainTextResponse)
+async def ads_txt():
+    # Formato oficial de AdSense para autorización de inventario.
+    return "google.com, pub-3994777682000954, DIRECT, f08c47fec0942fa0\n"
 
 templates = Jinja2Templates(directory=str(BASE_DIR / "frontend" / "templates"))
 
@@ -280,6 +286,65 @@ async def story_page(request: Request, story_id: int):
         "story.html",
         {"request": request, "story_id": story_id, "adsense_enabled": True},
     )
+
+
+@app.get("/acerca", response_class=HTMLResponse)
+async def acerca_page(request: Request):
+    return templates.TemplateResponse(
+        "acerca.html", {"request": request, "adsense_enabled": True}
+    )
+
+
+@app.get("/contacto", response_class=HTMLResponse)
+async def contacto_page(request: Request):
+    return templates.TemplateResponse(
+        "contacto.html", {"request": request, "adsense_enabled": True}
+    )
+
+
+@app.get("/privacidad", response_class=HTMLResponse)
+async def privacidad_page(request: Request):
+    return templates.TemplateResponse(
+        "privacidad.html", {"request": request, "adsense_enabled": True}
+    )
+
+
+@app.get("/terminos", response_class=HTMLResponse)
+async def terminos_page(request: Request):
+    return templates.TemplateResponse(
+        "terminos.html", {"request": request, "adsense_enabled": True}
+    )
+
+
+@app.get("/robots.txt", response_class=PlainTextResponse)
+async def robots_txt():
+    return "User-agent: *\nAllow: /\nSitemap: https://cuentameuncuento.cl/sitemap.xml\n"
+
+
+@app.get("/sitemap.xml")
+async def sitemap_xml():
+    urls = [
+        "https://cuentameuncuento.cl/",
+        "https://cuentameuncuento.cl/acerca",
+        "https://cuentameuncuento.cl/contacto",
+        "https://cuentameuncuento.cl/privacidad",
+        "https://cuentameuncuento.cl/terminos",
+    ]
+    body = "".join(
+        [
+            "<url><loc>{}</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>".format(
+                u
+            )
+            for u in urls
+        ]
+    )
+    xml = (
+        '<?xml version="1.0" encoding="UTF-8"?>'
+        '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'
+        + body
+        + "</urlset>"
+    )
+    return Response(content=xml, media_type="application/xml")
 
 
 @app.get("/tools/tts-upload", response_class=HTMLResponse)

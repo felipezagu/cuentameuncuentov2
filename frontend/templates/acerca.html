@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="max-w-4xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
+  <header class="mb-6">
+    <p class="text-xs font-bold uppercase tracking-wide text-indigo-500">Proyecto educativo</p>
+    <h1 class="font-fredoka text-3xl sm:text-4xl font-bold kid-text-main mt-2">Acerca de Cuéntame un Cuento</h1>
+  </header>
+
+  <article class="space-y-4 text-sm sm:text-base kid-text-main leading-relaxed">
+    <p>
+      Cuéntame un Cuento es una plataforma de lectura y narración infantil diseñada para que niños y familias disfruten historias clásicas y fábulas con una experiencia tipo karaoke.
+      El objetivo es apoyar el desarrollo del lenguaje, la comprensión lectora y el gusto por la lectura desde edades tempranas.
+    </p>
+    <p>
+      Nuestro enfoque combina audio narrado, texto sincronizado, ilustraciones y navegación simple. Esto permite que cada niño avance a su ritmo: puede escuchar, leer en voz alta o hacer ambas cosas al mismo tiempo.
+    </p>
+    <p>
+      Trabajamos con cuentos tradicionales de dominio público y adaptaciones breves en lenguaje claro, para que sean aptas para niñas y niños. Cada historia busca entregar un aprendizaje positivo, como empatía, honestidad, constancia o colaboración.
+    </p>
+    <p>
+      Esta plataforma está pensada para uso familiar y escolar. Si eres apoderado o docente, puedes usar los cuentos como material de apoyo para actividades de lectura compartida.
+    </p>
+  </article>
+
+  <section class="mt-8 grid sm:grid-cols-3 gap-3">
+    <div class="rounded-2xl bg-white/80 border border-slate-200 p-4 shadow-sm">
+      <h2 class="font-bold text-indigo-600">Lectura guiada</h2>
+      <p class="text-sm mt-1 kid-text-muted">Texto destacado de forma progresiva para seguir la narración.</p>
+    </div>
+    <div class="rounded-2xl bg-white/80 border border-slate-200 p-4 shadow-sm">
+      <h2 class="font-bold text-indigo-600">Historias breves</h2>
+      <p class="text-sm mt-1 kid-text-muted">Cuentos cortos, claros y apropiados para niñas y niños.</p>
+    </div>
+    <div class="rounded-2xl bg-white/80 border border-slate-200 p-4 shadow-sm">
+      <h2 class="font-bold text-indigo-600">Uso familiar</h2>
+      <p class="text-sm mt-1 kid-text-muted">Experiencia segura, simple y pensada para padres y educadores.</p>
+    </div>
+  </section>
+</section>
+{% endblock %}
