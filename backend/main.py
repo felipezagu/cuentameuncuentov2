@@ -309,10 +309,11 @@ def _send_contact_email(nombre: str, email: str, mensaje: str) -> None:
     smtp_port = int((os.getenv("SMTP_PORT") or "587").strip())
     smtp_user = (os.getenv("SMTP_USER") or "").strip()
     smtp_password = (os.getenv("SMTP_PASSWORD") or "").strip()
-    mail_to = (os.getenv("CONTACT_EMAIL_TO") or "felipezagu@gmail.com").strip()
+    smtp_secure = (os.getenv("SMTP_SECURE") or "starttls").strip().lower()
+    mail_to = (os.getenv("CONTACT_EMAIL_TO") or "").strip()
 
-    if not smtp_user or not smtp_password:
-        raise RuntimeError("SMTP no configurado: faltan SMTP_USER/SMTP_PASSWORD")
+    if not smtp_user or not smtp_password or not mail_to:
+        raise RuntimeError("SMTP no configurado: faltan SMTP_USER/SMTP_PASSWORD/CONTACT_EMAIL_TO")
 
     msg = EmailMessage()
     msg["Subject"] = f"[Contacto CUC] Mensaje de {nombre}"
@@ -327,8 +328,15 @@ def _send_contact_email(nombre: str, email: str, mensaje: str) -> None:
         f"{mensaje}\n"
     )
 
-    with smtplib.SMTP(smtp_host, smtp_port, timeout=20) as server:
-        server.starttls()
+    if smtp_secure == "ssl":
+        with smtplib.SMTP_SSL(smtp_host, smtp_port, timeout=25) as server:
+            server.login(smtp_user, smtp_password)
+            server.send_message(msg)
+        return
+
+    with smtplib.SMTP(smtp_host, smtp_port, timeout=25) as server:
+        if smtp_secure in ("starttls", "tls", ""):
+            server.starttls()
         server.login(smtp_user, smtp_password)
         server.send_message(msg)
 
@@ -356,7 +364,8 @@ async def contacto_submit(
 
     try:
         _send_contact_email(nombre=nombre, email=email, mensaje=mensaje)
-    except Exception:
+    except Exception as exc:
+        print(f"[contacto] error enviando correo: {exc}", flush=True)
         return RedirectResponse(url="/contacto?error=envio", status_code=303)
 
     return RedirectResponse(url="/contacto?ok=1", status_code=303)
