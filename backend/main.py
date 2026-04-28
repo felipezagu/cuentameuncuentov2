@@ -308,7 +308,7 @@ def _send_contact_email(nombre: str, email: str, mensaje: str) -> None:
     smtp_host = (os.getenv("SMTP_HOST") or "smtp.gmail.com").strip()
     smtp_port = int((os.getenv("SMTP_PORT") or "587").strip())
     smtp_user = (os.getenv("SMTP_USER") or "").strip()
-    smtp_password = (os.getenv("SMTP_PASSWORD") or "").strip()
+    smtp_password = (os.getenv("SMTP_PASSWORD") or "").strip().replace(" ", "")
     smtp_secure = (os.getenv("SMTP_SECURE") or "starttls").strip().lower()
     mail_to = (os.getenv("CONTACT_EMAIL_TO") or "").strip()
 
@@ -334,9 +334,19 @@ def _send_contact_email(nombre: str, email: str, mensaje: str) -> None:
             server.send_message(msg)
         return
 
-    with smtplib.SMTP(smtp_host, smtp_port, timeout=25) as server:
-        if smtp_secure in ("starttls", "tls", ""):
-            server.starttls()
+    # starttls por defecto. Si el host/proxy falla con STARTTLS, intentamos SSL:465.
+    try:
+        with smtplib.SMTP(smtp_host, smtp_port, timeout=25) as server:
+            if smtp_secure in ("starttls", "tls", ""):
+                server.starttls()
+            server.login(smtp_user, smtp_password)
+            server.send_message(msg)
+            return
+    except Exception:
+        if smtp_secure not in ("starttls", "tls", ""):
+            raise
+
+    with smtplib.SMTP_SSL(smtp_host, 465, timeout=25) as server:
         server.login(smtp_user, smtp_password)
         server.send_message(msg)
 
