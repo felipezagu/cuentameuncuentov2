@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="crea" aria-labelledby="crea-title">
+  <header class="crea-head">
+    <p class="crea-head__badge">✨ Nuevo</p>
+    <h1 id="crea-title" class="crea-head__title">Crea tu cuento</h1>
+    <p class="crea-head__sub">Elige los personajes, el lugar y lo que quieres aprender. ¡Nosotros escribimos el cuento y te lo leemos!</p>
+  </header>
+
+  <!-- Asistente paso a paso -->
+  <form id="crea-form" class="crea-card" autocomplete="off" novalidate>
+    <ol class="crea-steps" aria-label="Pasos">
+      <li class="is-current">1</li><li>2</li><li>3</li><li>4</li>
+    </ol>
+
+    <fieldset class="crea-step is-active" data-step="1">
+      <legend class="crea-q">¿Quién es el héroe de tu cuento?</legend>
+      <div class="crea-chips" data-field="personaje">
+        {% for k, v in opciones.personajes.items() %}
+        <button type="button" class="crea-chip" data-value="{{ k }}"><span class="crea-chip__emoji" aria-hidden="true">{{ v.emoji }}</span>{{ v.label }}</button>
+        {% endfor %}
+      </div>
+      <label class="crea-label" for="crea-nombre">¿Cómo se llama?</label>
+      <input id="crea-nombre" name="nombre" class="crea-input" maxlength="20" placeholder="Ej: Sofía">
+    </fieldset>
+
+    <fieldset class="crea-step" data-step="2">
+      <legend class="crea-q">¿Quién lo acompaña?</legend>
+      <div class="crea-chips" data-field="amigo_tipo">
+        {% for k, v in opciones.personajes.items() %}
+        <button type="button" class="crea-chip" data-value="{{ k }}"><span class="crea-chip__emoji" aria-hidden="true">{{ v.emoji }}</span>{{ v.label }}</button>
+        {% endfor %}
+      </div>
+      <label class="crea-label" for="crea-amigo">¿Cómo se llama su amigo o amiga?</label>
+      <input id="crea-amigo" name="amigo" class="crea-input" maxlength="20" placeholder="Ej: Toby">
+    </fieldset>
+
+    <fieldset class="crea-step" data-step="3">
+      <legend class="crea-q">¿Dónde pasa la aventura?</legend>
+      <div class="crea-chips crea-chips--big" data-field="lugar">
+        {% for k, v in opciones.lugares.items() %}
+        <button type="button" class="crea-chip crea-chip--place crea-place--{{ k }}" data-value="{{ k }}"><span class="crea-chip__emoji" aria-hidden="true">{{ v.emoji }}</span>{{ v.label }}</button>
+        {% endfor %}
+      </div>
+    </fieldset>
+
+    <fieldset class="crea-step" data-step="4">
+      <legend class="crea-q">¿Qué aprenderán en el cuento?</legend>
+      <div class="crea-chips" data-field="valor">
+        {% for k, v in opciones.valores.items() %}
+        <button type="button" class="crea-chip" data-value="{{ k }}"><span class="crea-chip__emoji" aria-hidden="true">{{ v.emoji }}</span>{{ v.label }}</button>
+        {% endfor %}
+      </div>
+      <div id="crea-idea-wrap" class="hidden">
+        <label class="crea-label" for="crea-idea">¿Tienes una idea? <span class="crea-optional">(opcional)</span></label>
+        <textarea id="crea-idea" name="idea" class="crea-input crea-textarea" maxlength="160" rows="2" placeholder="Ej: encuentran un mapa del tesoro"></textarea>
+      </div>
+    </fieldset>
+
+    <p id="crea-error" class="crea-error" role="alert"></p>
+
+    <div class="crea-nav">
+      <button type="button" id="crea-back" class="crea-btn crea-btn--ghost" hidden>← Atrás</button>
+      <button type="button" id="crea-dice" class="crea-btn crea-btn--ghost" title="Elegir todo al azar">🎲 Sorpréndeme</button>
+      <button type="button" id="crea-next" class="crea-btn crea-btn--primary">Siguiente →</button>
+    </div>
+  </form>
+
+  <!-- Cargando -->
+  <div id="crea-loading" class="crea-loading hidden" role="status" aria-live="polite">
+    <div class="crea-loading__wand" aria-hidden="true">🪄</div>
+    <p>Escribiendo tu cuento…</p>
+  </div>
+
+  <!-- Lector del cuento creado -->
+  <article id="crea-reader" class="crea-reader hidden" aria-live="polite">
+    <h2 id="crea-story-title" class="crea-reader__title"></h2>
+    <div id="crea-scene" class="crea-scene" aria-hidden="true"></div>
+    <p id="crea-text" class="crea-text"></p>
+    <nav id="crea-dots" class="cuc-page-dots crea-dots" aria-label="Páginas"></nav>
+    <div class="crea-controls">
+      <button type="button" id="crea-prev" class="crea-btn crea-btn--ghost" aria-label="Página anterior">◀</button>
+      <button type="button" id="crea-play" class="crea-btn crea-btn--primary">🔊 Escuchar</button>
+      <button type="button" id="crea-next-page" class="crea-btn crea-btn--ghost" aria-label="Página siguiente">▶</button>
+    </div>
+    <div id="crea-end" class="crea-end hidden"></div>
+    <div class="crea-after">
+      <button type="button" id="crea-again" class="crea-btn crea-btn--ghost">✨ Crear otro cuento</button>
+    </div>
+  </article>
+
+  <section id="crea-saved" class="crea-saved hidden" aria-labelledby="crea-saved-title">
+    <h2 id="crea-saved-title" class="crea-saved__title">📚 Mis cuentos creados</h2>
+    <div id="crea-saved-list" class="crea-saved__list"></div>
+  </section>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/js/crea.js?v=1"></script>
+{% endblock %}

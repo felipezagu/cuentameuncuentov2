@@ -3251,3 +3251,518 @@ body.dark-mode .cuc-font-btn {
     animation: none;
   }
 }
+
+
+/* Karaoke palabra a palabra (solo en la frase que se está leyendo) */
+.karaoke-sentence.current .karaoke-word {
+  transition: color 0.15s ease, background-color 0.15s ease;
+  border-radius: 0.25em;
+}
+
+.karaoke-sentence.current .karaoke-word.kw-read {
+  color: #7c3aed;
+}
+
+.karaoke-sentence.current .karaoke-word.kw-on {
+  color: #1f1300;
+  background: linear-gradient(180deg, transparent 8%, #fde047 8%, #facc15 92%, transparent 92%);
+  box-shadow: 0 0 0 0.08em #facc15;
+}
+
+body.dark-mode .karaoke-sentence.current .karaoke-word.kw-read {
+  color: #6d28d9;
+}
+
+/* ==========================================================================
+   Crea tu cuento
+   ========================================================================== */
+.crea {
+  max-width: 52rem;
+  margin: 0 auto;
+  padding: 1.5rem 1rem 3rem;
+}
+
+.crea-head {
+  text-align: center;
+  margin-bottom: 1.25rem;
+}
+
+.crea-head__badge {
+  display: inline-block;
+  padding: 0.2rem 0.7rem;
+  border-radius: 9999px;
+  background: #f59e0b;
+  color: #1f1300;
+  font-weight: 800;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.crea-head__title {
+  font-family: "Fredoka", "Nunito", sans-serif;
+  font-size: clamp(2rem, 6vw, 3rem);
+  font-weight: 700;
+  margin-top: 0.4rem;
+  background: linear-gradient(90deg, #f472b6, #a78bfa, #60a5fa);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.crea-head__sub {
+  max-width: 32rem;
+  margin: 0.4rem auto 0;
+  opacity: 0.85;
+}
+
+body.dark-mode .crea-head__sub {
+  color: #e2e8f0;
+}
+
+.crea-card,
+.crea-reader,
+.crea-saved {
+  border-radius: 1.75rem;
+  padding: 1.25rem;
+  background: rgba(255, 255, 255, 0.92);
+  color: #1e1b4b;
+  box-shadow: 0 25px 50px rgba(15, 23, 42, 0.25);
+}
+
+@media (min-width: 640px) {
+  .crea-card,
+  .crea-reader,
+  .crea-saved {
+    padding: 2rem;
+  }
+}
+
+.crea-steps {
+  display: flex;
+  justify-content: center;
+  gap: 0.6rem;
+  margin-bottom: 1.25rem;
+  list-style: none;
+  padding: 0;
+}
+
+.crea-steps li {
+  width: 2.2rem;
+  height: 2.2rem;
+  display: grid;
+  place-items: center;
+  border-radius: 9999px;
+  background: #ede9fe;
+  color: #6d28d9;
+  font-weight: 800;
+  transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.crea-steps li.is-done {
+  background: #a78bfa;
+  color: #fff;
+}
+
+.crea-steps li.is-current {
+  background: #7c3aed;
+  color: #fff;
+  transform: scale(1.15);
+  box-shadow: 0 6px 16px rgba(124, 58, 237, 0.4);
+}
+
+.crea-step {
+  display: none;
+  border: 0;
+  padding: 0;
+  margin: 0;
+  animation: crea-in 0.35s ease both;
+}
+
+.crea-step.is-active {
+  display: block;
+}
+
+@keyframes crea-in {
+  from { opacity: 0; transform: translateX(16px); }
+  to { opacity: 1; transform: none; }
+}
+
+.crea-q {
+  font-family: "Fredoka", "Nunito", sans-serif;
+  font-size: 1.4rem;
+  font-weight: 700;
+  margin-bottom: 0.9rem;
+  text-align: center;
+  width: 100%;
+}
+
+.crea-chips {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(6.2rem, 1fr));
+  gap: 0.6rem;
+}
+
+.crea-chips--big {
+  grid-template-columns: repeat(auto-fill, minmax(8rem, 1fr));
+}
+
+.crea-chip {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.2rem;
+  padding: 0.7rem 0.4rem;
+  border-radius: 1.1rem;
+  border: 3px solid transparent;
+  background: #f5f3ff;
+  color: #3b0764;
+  font-weight: 800;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.crea-chip:hover {
+  transform: translateY(-3px);
+}
+
+.crea-chip:focus-visible {
+  outline: 3px solid #f59e0b;
+  outline-offset: 2px;
+}
+
+.crea-chip.is-selected {
+  border-color: #7c3aed;
+  background: #ede9fe;
+  box-shadow: 0 8px 20px rgba(124, 58, 237, 0.3);
+  transform: scale(1.05);
+}
+
+.crea-chip__emoji {
+  font-size: 2.2rem;
+  line-height: 1.1;
+}
+
+.crea-chip--place {
+  color: #fff;
+  min-height: 6rem;
+  justify-content: center;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
+}
+
+.crea-chip--place.is-selected {
+  border-color: #fde047;
+}
+
+/* Fondos por lugar (tarjetas, escena y guardados) */
+.crea-place--bosque { background: linear-gradient(160deg, #4ade80, #15803d); }
+.crea-place--mar { background: linear-gradient(160deg, #38bdf8, #1d4ed8); }
+.crea-place--espacio { background: linear-gradient(160deg, #312e81, #0f172a); }
+.crea-place--castillo { background: linear-gradient(160deg, #f9a8d4, #9333ea); }
+.crea-place--ciudad { background: linear-gradient(160deg, #fdba74, #ea580c); }
+.crea-place--selva { background: linear-gradient(160deg, #a3e635, #047857); }
+.crea-place--montana { background: linear-gradient(160deg, #e0f2fe, #64748b); }
+.crea-place--granja { background: linear-gradient(160deg, #fde68a, #d97706); }
+
+.crea-label {
+  display: block;
+  margin: 1.1rem 0 0.35rem;
+  font-weight: 800;
+}
+
+.crea-optional {
+  font-weight: 600;
+  opacity: 0.6;
+}
+
+.crea-input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border-radius: 1rem;
+  border: 2px solid #ddd6fe;
+  background: #fff;
+  color: #1e1b4b;
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.crea-input:focus {
+  outline: none;
+  border-color: #7c3aed;
+  box-shadow: 0 0 0 4px rgba(124, 58, 237, 0.2);
+}
+
+.crea-textarea {
+  resize: vertical;
+  font-weight: 600;
+}
+
+.crea-error {
+  min-height: 1.4rem;
+  margin-top: 0.75rem;
+  text-align: center;
+  font-weight: 800;
+  color: #be123c;
+}
+
+.crea-nav,
+.crea-controls,
+.crea-after {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-top: 0.75rem;
+}
+
+.crea-btn {
+  padding: 0.7rem 1.3rem;
+  border-radius: 9999px;
+  border: 2px solid transparent;
+  font-weight: 800;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.crea-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+}
+
+.crea-btn:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.crea-btn--primary {
+  background: linear-gradient(135deg, #8b5cf6, #ec4899);
+  color: #fff;
+  box-shadow: 0 10px 22px rgba(139, 92, 246, 0.35);
+}
+
+.crea-btn--ghost {
+  background: #f5f3ff;
+  border-color: #ddd6fe;
+  color: #5b21b6;
+}
+
+.crea-loading {
+  text-align: center;
+  padding: 3rem 1rem;
+  font-weight: 800;
+  font-size: 1.2rem;
+  color: #f8fafc;
+}
+
+.crea-loading.hidden {
+  display: none;
+}
+
+.crea-loading__wand {
+  font-size: 4rem;
+  display: inline-block;
+  animation: crea-wand 0.9s ease-in-out infinite alternate;
+}
+
+@keyframes crea-wand {
+  from { transform: rotate(-20deg) scale(1); filter: drop-shadow(0 0 0 #fde047); }
+  to { transform: rotate(20deg) scale(1.15); filter: drop-shadow(0 0 18px #fde047); }
+}
+
+.crea-reader__title {
+  font-family: "Fredoka", "Nunito", sans-serif;
+  font-size: 1.6rem;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 0.9rem;
+}
+
+.crea-scene {
+  position: relative;
+  height: 13rem;
+  border-radius: 1.4rem;
+  overflow: hidden;
+  box-shadow: inset 0 -30px 60px rgba(0, 0, 0, 0.18);
+}
+
+.crea-scene__big {
+  position: absolute;
+  right: 6%;
+  top: 8%;
+  font-size: 4.5rem;
+  opacity: 0.85;
+}
+
+.crea-scene__hero,
+.crea-scene__friend {
+  position: absolute;
+  bottom: 10%;
+  font-size: 5rem;
+  transition: transform 0.6s ease;
+  animation: crea-bounce 2.2s ease-in-out infinite;
+}
+
+.crea-scene__hero {
+  left: calc(14% + var(--crea-shift, 0%));
+}
+
+.crea-scene__friend {
+  left: calc(52% - var(--crea-shift, 0%));
+  font-size: 4rem;
+  animation-delay: 0.4s;
+}
+
+@keyframes crea-bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+.crea-scene__deco {
+  position: absolute;
+  font-size: 2rem;
+  animation: crea-float 5s ease-in-out infinite;
+}
+
+.crea-scene__deco--1 { left: 6%; top: 12%; }
+.crea-scene__deco--2 { left: 70%; bottom: 12%; animation-delay: 1.2s; }
+.crea-scene__deco--3 { left: 38%; top: 6%; animation-delay: 2.4s; }
+
+@keyframes crea-float {
+  0%, 100% { transform: translateY(0) rotate(0); }
+  50% { transform: translateY(-8px) rotate(8deg); }
+}
+
+.crea-text {
+  margin: 1.2rem 0 0.5rem;
+  font-size: clamp(1.25rem, 3.4vw, 1.6rem);
+  line-height: 1.6;
+  font-weight: 700;
+  color: #1e1b4b;
+}
+
+.crea-text--in {
+  animation: crea-in 0.4s ease both;
+}
+
+.crea-word {
+  cursor: pointer;
+  border-radius: 0.3em;
+  transition: color 0.15s ease, background-color 0.15s ease;
+}
+
+.crea-word.kw-read {
+  color: #7c3aed;
+}
+
+.crea-word.kw-on {
+  color: #1f1300;
+  background: #facc15;
+  box-shadow: 0 0 0 0.1em #facc15;
+}
+
+.crea-dots {
+  justify-content: center;
+  margin: 0.5rem 0;
+}
+
+.crea-end {
+  margin-top: 1.25rem;
+  text-align: center;
+}
+
+.crea-end.hidden {
+  display: none;
+}
+
+.crea-end__title,
+.crea-end__result {
+  font-size: 1.3rem;
+  font-weight: 800;
+  margin: 0.6rem 0;
+}
+
+.crea-q-card {
+  margin: 0.75rem auto;
+  max-width: 32rem;
+  padding: 0.9rem;
+  border-radius: 1.2rem;
+  background: #f5f3ff;
+}
+
+.crea-q-card__q {
+  font-weight: 800;
+  margin-bottom: 0.5rem;
+}
+
+.crea-q-card__opts {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.crea-saved {
+  margin-top: 1.5rem;
+}
+
+.crea-saved.hidden,
+.crea-reader.hidden,
+.crea-card.hidden {
+  display: none;
+}
+
+.crea-saved__title {
+  font-family: "Fredoka", "Nunito", sans-serif;
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+}
+
+.crea-saved__list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(10rem, 1fr));
+  gap: 0.75rem;
+}
+
+.crea-saved__item {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.3rem;
+  min-height: 7rem;
+  padding: 0.8rem;
+  border: none;
+  border-radius: 1.1rem;
+  color: #fff;
+  text-align: left;
+  font-weight: 800;
+  cursor: pointer;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+  transition: transform 0.15s ease;
+}
+
+.crea-saved__item:hover {
+  transform: translateY(-3px) rotate(-1deg);
+}
+
+.crea-saved__emoji {
+  font-size: 2rem;
+}
+
+/* Botón "Crea tu cuento" en la portada */
+.home-cta--crea {
+  background: linear-gradient(135deg, #f59e0b, #ec4899);
+  color: #fff;
+  box-shadow: 0 10px 25px rgba(236, 72, 153, 0.35);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .crea-scene__hero,
+  .crea-scene__friend,
+  .crea-scene__deco,
+  .crea-loading__wand {
+    animation: none;
+  }
+}

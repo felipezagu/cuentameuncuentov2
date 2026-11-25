@@ -21,7 +21,7 @@ from starlette.middleware.sessions import SessionMiddleware
 from .config import DATA_DIR, IMAGENES_DIR, STATIC_DIR, UPLOADS_DIR, env_flag
 from .db_init import init_db, load_if_empty, seed_demo_data
 from .routes import admin as admin_router
-from .routes import admin_pages, pages, tools
+from .routes import admin_pages, crea, pages, tools
 from .routes import stories as stories_router
 from .security import require_admin, session_secret
 
@@ -54,6 +54,7 @@ app.mount("/imagenes", StaticFiles(directory=str(IMAGENES_DIR)), name="imagenes"
 app.include_router(stories_router.router)
 app.include_router(admin_router.router, dependencies=[Depends(require_admin)])
 app.include_router(pages.router)
+app.include_router(crea.router)
 app.include_router(admin_pages.router)
 app.include_router(tools.router)
 
