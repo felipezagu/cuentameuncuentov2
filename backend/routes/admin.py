@@ -9,7 +9,7 @@ from sqlalchemy.orm import Session
 
 from ..database import get_db
 from ..db_init import narraciones_from_json, base_title, merge_voice_duplicates, story_to_json
-from ..models import Narration, Scene, Story
+from ..models import Narration, Scene, Story, StoryAlias
 from ..leonardo import build_prompt, build_prompt_luma
 from ..luma import generate_scene_image_luma, slug_nombre_cuento
 
@@ -145,7 +145,12 @@ def set_luma_revisado(story_id: int, payload: dict, db: Session = Depends(get_db
 def export_cuentos(db: Session = Depends(get_db)):
     """Exporta todos los cuentos (escenas, preguntas y narraciones) en el formato de cuentos.json."""
     stories = db.query(Story).order_by(Story.id).all()
-    body = json.dumps({"cuentos": [story_to_json(s) for s in stories]}, ensure_ascii=False, indent=2)
+    aliases: dict[int, list[int]] = {}
+    for a in db.query(StoryAlias).all():
+        aliases.setdefault(a.story_id, []).append(a.old_id)
+    body = json.dumps(
+        {"cuentos": [story_to_json(s, aliases.get(s.id)) for s in stories]}, ensure_ascii=False, indent=2
+    )
     return Response(
         content=body,
         media_type="application/json",

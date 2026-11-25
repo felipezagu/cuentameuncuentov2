@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
 """
-Carga en la base de datos los cuentos de cuentos.json.
+Sincroniza la base de datos con cuentos.json (la fuente de verdad de los cuentos).
 
-Borra todos los cuentos actuales y los reemplaza por los del JSON
-(acepta el formato nuevo con "narraciones" y el antiguo con narracion_audio/sync).
+Actualiza cada cuento en su lugar (por su "id"), así se conservan las estadísticas de
+lecturas y las URLs /cuento/<id>. Los cuentos que no estén en el JSON se borran.
+Railway lo ejecuta en cada despliegue.
 
-    python scripts/cargar_cuentos_en_db.py
+    python scripts/cargar_cuentos_en_db.py            # sincronizar (recomendado)
+    python scripts/cargar_cuentos_en_db.py --reset    # borrar todo y cargar de cero
 """
 import sys
 from pathlib import Path
@@ -21,8 +23,8 @@ def main():
     if not path.is_file():
         print("No se encuentra cuentos.json en la raíz del proyecto.")
         sys.exit(1)
-    n = load_cuentos_json(path)
-    print(f"Listo. Hay {n} cuentos en la base de datos. Recarga la app para verlos.")
+    n = load_cuentos_json(path, reset="--reset" in sys.argv)
+    print(f"Listo. Hay {n} cuentos en la base de datos.")
 
 
 if __name__ == "__main__":
