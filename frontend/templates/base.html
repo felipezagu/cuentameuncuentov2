@@ -10,24 +10,13 @@
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
   <link rel="icon" type="image/png" href="/static/img/logo.png">
   <link rel="apple-touch-icon" href="/static/img/logo.png">
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          fontFamily: {
-            fredoka: ['Fredoka', 'Nunito', 'sans-serif'],
-            nunito: ['Nunito', 'sans-serif'],
-          },
-        },
-      },
-    };
-  </script>
   {% set _path = request.url.path if request is defined else "" %}
   {% if not _path.startswith("/admin") and not _path.startswith("/tools") and not _path.startswith("/api") %}
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3994777682000954" crossorigin="anonymous"></script>
   {% endif %}
-  <link rel="stylesheet" href="/static/css/styles.css?v=44">
+  <link rel="stylesheet" href="/static/css/styles.css?v=46">
+  {# Tailwind va después de styles.css: así se comportaba el CDN (inyectaba sus estilos al final) #}
+  <link rel="stylesheet" href="/static/css/tailwind.css?v=1">
 </head>
 <body class="min-h-screen font-nunito kid-body app-body" id="body-bg">
   <div class="bg-magic" aria-hidden="true"></div>

@@ -632,14 +632,16 @@ body.dark-mode .categoria-btn.active {
   cursor: default;
   transform: none;
   box-shadow: none;
+  opacity: 0.4;
 }
 
-.voice-choice-btn--male:disabled {
+/* Voz elegida (se cambia sin salir de la página) */
+.voice-choice-btn--male.active {
   background: #4f46e5;
   border-color: #4f46e5;
 }
 
-.voice-choice-btn--female:disabled {
+.voice-choice-btn--female.active {
   background: #ec4899;
   border-color: #ec4899;
 }
@@ -2767,3 +2769,206 @@ body.dark-mode .home-empty {
   color: #cbd5e1 !important;
 }
 
+
+
+/* ==========================================================================
+   Interacción: palabras tocables, modo "Lo leo yo", estrellas
+   ========================================================================== */
+
+.karaoke-word {
+  cursor: pointer;
+  border-radius: 0.3em;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.karaoke-word:hover {
+  background: rgba(251, 191, 36, 0.25);
+}
+
+.karaoke-word--tapped {
+  animation: cuc-word-pop 0.6s ease;
+}
+
+@keyframes cuc-word-pop {
+  0% { background: rgba(251, 191, 36, 0); transform: scale(1); }
+  30% { background: rgba(251, 191, 36, 0.55); transform: scale(1.15); }
+  100% { background: rgba(251, 191, 36, 0); transform: scale(1); }
+}
+
+.karaoke-word--tapped {
+  display: inline-block;
+}
+
+.self-read-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 1rem;
+  padding: 0.55rem 1.25rem;
+  border-radius: 9999px;
+  border: 2px solid rgba(255, 255, 255, 0.6);
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+  font-weight: 800;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.15s ease, transform 0.15s ease;
+}
+
+.self-read-btn:hover {
+  background: rgba(255, 255, 255, 0.25);
+  transform: translateY(-1px);
+}
+
+#countdown-overlay .self-read-btn {
+  display: flex;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* El botón "Léemelo" solo aparece en modo "Lo leo yo"; ahí sobran Silencio y velocidad */
+.story-control-btn-narrate {
+  display: none;
+  background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%);
+}
+
+body.cuc-self-read .story-control-btn-narrate {
+  display: inline-flex;
+}
+
+body.cuc-self-read #btn-pause-main,
+body.cuc-self-read #story-player-dock {
+  display: none !important;
+}
+
+/* En "Lo leo yo" todo el texto de la página se ve igual de grande */
+body.cuc-self-read .story-reading-active .karaoke-sentence {
+  font-size: 1em;
+}
+
+.cuc-toast {
+  position: fixed;
+  left: 50%;
+  bottom: 1.5rem;
+  z-index: 80;
+  transform: translate(-50%, 150%);
+  padding: 0.65rem 1.2rem;
+  border-radius: 9999px;
+  background: #1e1b4b;
+  color: #fff;
+  font-weight: 800;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.cuc-toast--show {
+  animation: cuc-toast 2.8s ease forwards;
+}
+
+@keyframes cuc-toast {
+  0% { opacity: 0; transform: translate(-50%, 150%); }
+  12% { opacity: 1; transform: translate(-50%, 0); }
+  85% { opacity: 1; transform: translate(-50%, 0); }
+  100% { opacity: 0; transform: translate(-50%, 150%); }
+}
+
+.cuc-stars-earned {
+  text-align: center;
+  margin-bottom: 0.5rem;
+}
+
+.cuc-stars-earned__stars {
+  font-size: 2.4rem;
+  line-height: 1;
+  letter-spacing: 0.15em;
+}
+
+.cuc-star {
+  display: inline-block;
+  color: #d1d5db;
+}
+
+.cuc-star--on {
+  color: #f59e0b;
+  text-shadow: 0 2px 6px rgba(245, 158, 11, 0.45);
+  animation: cuc-star-in 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+@keyframes cuc-star-in {
+  0% { transform: scale(0) rotate(-60deg); opacity: 0; }
+  100% { transform: scale(1) rotate(0); opacity: 1; }
+}
+
+.cuc-stars-earned__label {
+  margin-top: 0.25rem;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #92400e;
+}
+
+/* Home: estrellas en la tarjeta y resumen del álbum */
+.story-card-v2__stars {
+  position: absolute;
+  left: 0.5rem;
+  bottom: 0.5rem;
+  padding: 0.1rem 0.45rem;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.92);
+  color: #f59e0b;
+  font-size: 0.85rem;
+  letter-spacing: 0.05em;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+.home-album {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  max-width: 64rem;
+  margin: 0 auto 0.5rem;
+  padding: 0.75rem 1rem;
+  border-radius: 1rem;
+  background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+  color: #78350f;
+  font-weight: 700;
+}
+
+.home-album__star {
+  font-size: 1.8rem;
+}
+
+.home-album__bar {
+  flex: 1;
+  height: 0.6rem;
+  border-radius: 9999px;
+  background: rgba(120, 53, 15, 0.15);
+  overflow: hidden;
+}
+
+.home-album__fill {
+  height: 100%;
+  background: #f59e0b;
+  border-radius: inherit;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .karaoke-word--tapped,
+  .cuc-star--on,
+  .cuc-toast--show {
+    animation-duration: 0.01s;
+  }
+}
+
+/* Modo oscuro: las tarjetas informativas (bg-white/85) quedaban con texto blanco sobre fondo blanco */
+body.dark-mode .bg-white\/85 {
+  background-color: rgba(15, 23, 42, 0.78) !important;
+  border-color: rgba(148, 163, 184, 0.25) !important;
+}
+
+body.dark-mode .bg-indigo-50\/60,
+body.dark-mode .bg-amber-50\/70,
+body.dark-mode .bg-emerald-50\/70 {
+  background-color: rgba(30, 41, 59, 0.85) !important;
+  border-color: rgba(148, 163, 184, 0.2) !important;
+}

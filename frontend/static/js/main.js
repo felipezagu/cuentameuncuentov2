@@ -37,62 +37,6 @@ function normalizeStoryMediaUrl(url) {
   return "/" + s.replace(/^\/+/, "");
 }
 
-function parseV2VoiceTitle(titulo) {
-  const t = String(titulo || "").trim();
-  const m = t.match(/\(\s*v2[^)]*narrador\s*(mujer|hombre)\s*\)\s*$/i);
-  if (!m) return null;
-  return { base: t.replace(m[0], "").trim(), gender: String(m[1]).toLowerCase() };
-}
-
-function dedupeV2VoiceStoriesPreferHombre(stories) {
-  const out = [];
-  const outNonNarrated = [];
-  const groupedNarrated = new Map();
-  const narratedBaseKeys = new Set();
-
-  const detectGenderFromAudio = (s) => {
-    const a = (s && s.narracion_audio ? String(s.narracion_audio) : "").toLowerCase();
-    if (!a) return null;
-    if (a.includes("mujer") || a.endsWith("mujer.mp3")) return "mujer";
-    if (a.includes("hombre") || a.endsWith("hombre.mp3")) return "hombre";
-    return null;
-  };
-
-  (stories || []).forEach((s) => {
-    const hasNarration = !!(s && s.narracion_audio && s.narracion_sync);
-    if (!hasNarration) {
-      outNonNarrated.push(s);
-      return;
-    }
-
-    const parsed = parseV2VoiceTitle(s && s.titulo ? s.titulo : "");
-    const baseTitle = (parsed && parsed.base ? parsed.base : String(s && s.titulo ? s.titulo : "")).trim();
-    if (!groupedNarrated.has(baseTitle)) groupedNarrated.set(baseTitle, { hombre: null, mujer: null });
-    const g = groupedNarrated.get(baseTitle);
-    narratedBaseKeys.add(baseTitle);
-
-    const gender = detectGenderFromAudio(s);
-    if (gender === "hombre") g.hombre = s;
-    else if (gender === "mujer") g.mujer = s;
-    else {
-      if (!g.hombre && !g.mujer) g.hombre = s;
-    }
-  });
-
-  groupedNarrated.forEach((g) => {
-    if (g.hombre) out.push(g.hombre);
-    else if (g.mujer) out.push(g.mujer);
-  });
-
-  const narratedByBase = new Set(out.map((s) => (s && s.titulo ? String(s.titulo).trim() : "")));
-  outNonNarrated.forEach((s) => {
-    const baseTitle = String(s && s.titulo ? s.titulo : "").trim();
-    if (!narratedByBase.has(baseTitle)) out.push(s);
-  });
-
-  return out;
-}
-
 /** Rango de edad sugerido por categoría (heurística). */
 function edadRangoForStory(story) {
   const c = String(story.categoria || "").toLowerCase();
@@ -275,6 +219,16 @@ function createStoryCard(story, opts) {
 
   cover.appendChild(badges);
   cover.appendChild(favBtn);
+
+  // Estrellas ganadas en este navegador (rewards.js)
+  const progreso = window.CUCRewards ? window.CUCRewards.get(story.id) : null;
+  if (progreso && progreso.leido) {
+    const stars = document.createElement("span");
+    stars.className = "story-card-v2__stars";
+    stars.textContent = window.CUCRewards.starString(progreso.estrellas || 0);
+    stars.setAttribute("aria-label", (progreso.estrellas || 0) + " de 3 estrellas");
+    cover.appendChild(stars);
+  }
   card.appendChild(cover);
   card.appendChild(info);
 
@@ -325,9 +279,38 @@ function createCarouselRow(title, stories, emptyHint) {
   return section;
 }
 
+function createAlbumSummary(allStories) {
+  if (!window.CUCRewards) return null;
+  const ids = new Set(allStories.map((s) => s.id));
+  const sum = window.CUCRewards.summary();
+  const leidos = sum.leidos.filter((id) => ids.has(id)).length;
+  if (!leidos) return null;
+  const total = allStories.length;
+  const el = document.createElement("section");
+  el.className = "home-album";
+  el.setAttribute("aria-label", "Tu álbum de cuentos");
+  const star = document.createElement("span");
+  star.className = "home-album__star";
+  star.setAttribute("aria-hidden", "true");
+  star.textContent = "⭐";
+  const text = document.createElement("span");
+  text.textContent = sum.estrellas + " estrellas · " + leidos + " de " + total + " cuentos leídos";
+  const bar = document.createElement("div");
+  bar.className = "home-album__bar";
+  const fill = document.createElement("div");
+  fill.className = "home-album__fill";
+  fill.style.width = Math.round((leidos / Math.max(total, 1)) * 100) + "%";
+  bar.appendChild(fill);
+  el.append(star, text, bar);
+  return el;
+}
+
 function renderNetflixRows(container, allStories) {
   if (!container) return;
   container.innerHTML = "";
+
+  const album = createAlbumSummary(allStories);
+  if (album) container.appendChild(album);
 
   const histIds = loadJsonArray(LS_HIST).map(Number).filter((n) => !Number.isNaN(n));
   const favIds = getFavoriteIds();
@@ -335,6 +318,8 @@ function renderNetflixRows(container, allStories) {
   const favorites = storiesByIds(allStories, favIds);
   const history = storiesByIds(allStories, histIds).filter((s) => favIds.indexOf(s.id) === -1);
   const recommended = recommendedFrom(allStories, histIds);
+  const leidos = new Set(window.CUCRewards ? window.CUCRewards.summary().leidos : []);
+  const porDescubrir = shuffleInPlace(allStories.filter((s) => !leidos.has(s.id))).slice(0, 14);
 
   const popular = shuffleInPlace(allStories.filter((s) => s.destacado)).slice(0, 14);
   let sleep = allStories.filter(isSleepStory);
@@ -351,6 +336,9 @@ function renderNetflixRows(container, allStories) {
   if (favorites.length) container.appendChild(createCarouselRow("♥ Tus favoritos", favorites, ""));
   if (history.length) container.appendChild(createCarouselRow("🕐 Vistos recientemente", history, ""));
   if (recommended.length) container.appendChild(createCarouselRow("✨ Recomendados para ti", recommended, ""));
+  if (leidos.size && porDescubrir.length) {
+    container.appendChild(createCarouselRow("🗺️ Aún no los has leído", porDescubrir, ""));
+  }
   container.appendChild(createCarouselRow("🔥 Cuentos populares", popular, "Marca cuentos como destacados en el admin."));
   container.appendChild(createCarouselRow("🌙 Para dormir", sleep, ""));
   container.appendChild(createCarouselRow("⚡ Cuentos cortos", cortos, ""));
@@ -448,8 +436,7 @@ function wireFilters() {
 }
 
 async function init() {
-  let stories = await fetchStories();
-  stories = dedupeV2VoiceStoriesPreferHombre(stories);
+  const stories = await fetchStories();
   shuffleInPlace(stories);
   window.__CUC_STORIES__ = stories;
 
