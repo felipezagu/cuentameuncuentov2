@@ -98,6 +98,29 @@ Cada cuento aparece **una sola vez**; sus voces van en `narraciones`:
 - **Deslizar** con el dedo (o flechas ← → del teclado) para cambiar de página; **espacio** pausa.
 - **Estrellas:** 1 por terminar el cuento, +1 por acertar la mitad del quiz, +1 por acertarlo todo.
   En la portada se ve el progreso ("X de N cuentos leídos") y una fila de cuentos aún no leídos.
+- **Puntos de página** bajo el libro para saltar a cualquier página, y botones **A− / A+** para el tamaño de letra.
+- **Confeti** al conseguir las 3 estrellas.
+- **Cuento del día** en la portada (el mismo para todos, cambia a medianoche).
+- **App instalable** (PWA): botón "Instalar" en navegadores compatibles; los cuentos ya abiertos se pueden ver sin internet.
+
+## Imágenes
+
+Las ilustraciones están en **WebP** (≈ 8 veces más livianas que los PNG originales: de 208 MB a 24 MB).
+Al agregar imágenes nuevas en `.png`/`.jpg`:
+
+```bash
+python scripts/optimizar_imagenes.py   # convierte a WebP y crea miniaturas de portadas
+python scripts/migrar_db.py            # actualiza las rutas en la base de datos
+```
+
+## CSS
+
+Tailwind se compila localmente. Si agregas clases nuevas en plantillas o JS:
+
+```bash
+npm install          # solo la primera vez
+npm run build:css    # genera frontend/static/css/tailwind.css (súbelo al repo)
+```
 
 ## Exportar cuentos a TXT (un archivo por cuento, 5 párrafos)
 

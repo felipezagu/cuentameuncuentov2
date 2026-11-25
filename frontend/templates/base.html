@@ -8,15 +8,19 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
-  <link rel="icon" type="image/png" href="/static/img/logo.png">
-  <link rel="apple-touch-icon" href="/static/img/logo.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="/static/img/icon-192.png">
+  <link rel="apple-touch-icon" href="/static/img/apple-touch-icon.png">
+  <link rel="manifest" href="/manifest.webmanifest">
+  <meta name="theme-color" content="#1e1b4b">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Cuentos">
   {% set _path = request.url.path if request is defined else "" %}
   {% if not _path.startswith("/admin") and not _path.startswith("/tools") and not _path.startswith("/api") %}
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3994777682000954" crossorigin="anonymous"></script>
   {% endif %}
-  <link rel="stylesheet" href="/static/css/styles.css?v=46">
+  <link rel="stylesheet" href="/static/css/styles.css?v=48">
   {# Tailwind va después de styles.css: así se comportaba el CDN (inyectaba sus estilos al final) #}
-  <link rel="stylesheet" href="/static/css/tailwind.css?v=1">
+  <link rel="stylesheet" href="/static/css/tailwind.css?v=2">
 </head>
 <body class="min-h-screen font-nunito kid-body app-body" id="body-bg">
   <div class="bg-magic" aria-hidden="true"></div>
@@ -28,7 +32,7 @@
       <a href="/" class="kid-home-link flex items-center gap-3 min-w-0">
         <div class="kid-logo kid-logo--brand flex items-center justify-center overflow-hidden shrink-0">
           <img
-            src="/static/img/logo.png"
+            src="/static/img/logo.webp"
             alt=""
             class="kid-logo-img"
             width="240"
@@ -45,6 +49,9 @@
         <a href="/#catalogo" class="app-nav-link">Catálogo</a>
         <a href="/acerca" class="app-nav-link">Acerca</a>
         <a href="/contacto" class="app-nav-link">Contacto</a>
+        <button id="btn-install-app" type="button" class="app-nav-link app-install-btn hidden" title="Instalar como app">
+          ⬇ <span class="hidden sm:inline">Instalar</span>
+        </button>
         <button id="toggle-theme" type="button" class="kid-btn-night px-3 py-2 rounded-xl shadow-sm transition text-xs sm:text-sm font-semibold" aria-label="Cambiar tema">
           🌙
         </button>
@@ -73,6 +80,7 @@
   <script src="/static/js/background.js?v=2"></script>
   <script src="/static/js/home_background.js"></script>
   <script src="/static/js/theme.js"></script>
+  <script src="/static/js/pwa.js?v=1"></script>
   {% block scripts %}{% endblock %}
 </body>
 </html>

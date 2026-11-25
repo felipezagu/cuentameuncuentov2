@@ -7,7 +7,9 @@ from email.message import EmailMessage
 from fastapi import APIRouter, Form, Request
 from fastapi.responses import HTMLResponse, PlainTextResponse, RedirectResponse, Response
 
-from ..config import SITE_URL, templates
+from fastapi.responses import FileResponse
+
+from ..config import SITE_URL, STATIC_DIR, templates
 from ..database import SessionLocal
 from ..models import DailyStat, Story, StoryAlias, StoryStat
 from ..stats import bump_daily_visits, bump_story_read, run_in_background, stats_enabled
@@ -30,6 +32,21 @@ async def healthz():
 async def ads_txt():
     # Formato oficial de AdSense para autorización de inventario.
     return "google.com, pub-3994777682000954, DIRECT, f08c47fec0942fa0\n"
+
+
+@router.get("/sw.js", include_in_schema=False)
+async def service_worker():
+    # Servido desde la raíz para que pueda controlar todo el sitio.
+    return FileResponse(
+        STATIC_DIR / "sw.js",
+        media_type="application/javascript",
+        headers={"Cache-Control": "no-cache", "Service-Worker-Allowed": "/"},
+    )
+
+
+@router.get("/manifest.webmanifest", include_in_schema=False)
+async def manifest():
+    return FileResponse(STATIC_DIR / "manifest.webmanifest", media_type="application/manifest+json")
 
 
 @router.get("/", response_class=HTMLResponse)
