@@ -37,6 +37,13 @@ function normalizeStoryMediaUrl(url) {
   return "/" + s.replace(/^\/+/, "");
 }
 
+/** Miniatura (400px) de la portada para tarjetas; si no existe se usa la original. */
+function thumbUrl(portada) {
+  const url = normalizeStoryMediaUrl(portada);
+  const m = url.match(/^\/imagenes\/portadas\/([^/]+\.webp)$/i);
+  return m ? "/imagenes/portadas/sm/" + m[1] : url;
+}
+
 /** Rango de edad sugerido por categoría (heurística). */
 function edadRangoForStory(story) {
   const c = String(story.categoria || "").toLowerCase();
@@ -169,12 +176,20 @@ function createStoryCard(story, opts) {
     img.alt = "";
     img.loading = "lazy";
     img.decoding = "async";
-    img.src = portadaUrl;
+    img.src = thumbUrl(story.portada);
     img.referrerPolicy = "no-referrer-when-downgrade";
+    img.addEventListener("load", function () {
+      cover.classList.add("is-loaded");
+    });
     img.addEventListener("error", function () {
+      if (img.src.indexOf("/portadas/sm/") !== -1) {
+        img.src = portadaUrl; // sin miniatura: probar la imagen original
+        return;
+      }
       img.removeAttribute("src");
       cover.classList.add("story-card-v2__cover--empty");
     });
+    if (img.complete && img.naturalWidth) cover.classList.add("is-loaded");
     cover.appendChild(img);
   } else {
     cover.classList.add("story-card-v2__cover--empty");
@@ -213,7 +228,9 @@ function createStoryCard(story, opts) {
   const meta = document.createElement("p");
   meta.className = "story-card-v2__meta";
   const n = typeof story.num_escenas === "number" ? story.num_escenas : "?";
-  meta.textContent = (story.categoria || "Cuento") + " · " + n + " partes";
+  const voces = Array.isArray(story.narraciones) ? story.narraciones.length : 0;
+  meta.textContent =
+    (story.categoria || "Cuento") + " · " + n + " partes" + (voces ? " · 🎧" + (voces > 1 ? " " + voces + " voces" : "") : "");
   info.appendChild(title);
   info.appendChild(meta);
 
@@ -435,7 +452,75 @@ function wireFilters() {
 
 }
 
+/** Mismo cuento para todos durante el día (cambia a medianoche). */
+function storyOfTheDay(stories) {
+  const sorted = stories.slice().sort((a, b) => a.id - b.id);
+  const d = new Date();
+  const seed = d.getFullYear() * 1000 + Math.floor((d - new Date(d.getFullYear(), 0, 0)) / 86400000);
+  return sorted[seed % sorted.length];
+}
+
+function renderStoryOfTheDay(stories) {
+  const art = document.querySelector(".home-hero__art");
+  if (!art || !stories.length) return;
+  const story = storyOfTheDay(stories);
+  const card = document.createElement("article");
+  card.className = "story-of-day";
+  card.setAttribute("aria-label", "Cuento del día: " + story.titulo);
+
+  const img = document.createElement("img");
+  img.className = "story-of-day__img";
+  img.alt = "";
+  img.decoding = "async";
+  img.src = normalizeStoryMediaUrl(story.portada);
+
+  const body = document.createElement("div");
+  body.className = "story-of-day__body";
+  const badge = document.createElement("span");
+  badge.className = "story-of-day__badge";
+  badge.textContent = "📅 Cuento del día";
+  const h = document.createElement("h2");
+  h.className = "story-of-day__title";
+  h.textContent = story.titulo;
+  const desc = document.createElement("p");
+  desc.className = "story-of-day__desc";
+  desc.textContent = story.descripcion || "";
+  const btn = document.createElement("button");
+  btn.type = "button";
+  btn.className = "story-of-day__btn";
+  btn.innerHTML = '<span aria-hidden="true">▶</span> Leer ahora';
+  btn.addEventListener("click", () => navigateToStory(story));
+  const progreso = window.CUCRewards ? window.CUCRewards.get(story.id) : null;
+  if (progreso && progreso.leido) {
+    const st = document.createElement("span");
+    st.className = "story-of-day__stars";
+    st.textContent = window.CUCRewards.starString(progreso.estrellas || 0);
+    body.append(badge, h, desc, st, btn);
+  } else {
+    body.append(badge, h, desc, btn);
+  }
+  card.append(img, body);
+  card.addEventListener("click", (e) => {
+    if (e.target !== btn) navigateToStory(story);
+  });
+  art.appendChild(card);
+  art.classList.add("has-story-of-day");
+}
+
+function renderSkeleton(container) {
+  if (!container) return;
+  const row = document.createElement("section");
+  row.className = "home-row home-row--skeleton";
+  row.setAttribute("aria-hidden", "true");
+  row.innerHTML =
+    '<div class="skeleton skeleton--title"></div><div class="home-carousel__track">' +
+    '<div class="skeleton skeleton--card"></div>'.repeat(6) +
+    "</div>";
+  container.appendChild(row);
+}
+
 async function init() {
+  renderSkeleton(document.getElementById("home-rows"));
   const stories = await fetchStories();
   shuffleInPlace(stories);
   window.__CUC_STORIES__ = stories;
@@ -445,6 +530,7 @@ async function init() {
   const rowsEl = document.getElementById("home-rows");
 
   if (!stories.length) {
+    if (rowsEl) rowsEl.innerHTML = "";
     if (contenedor) {
       contenedor.innerHTML =
         '<p class="home-empty">Aún no hay cuentos. Carga cuentos desde el panel admin.</p>';
@@ -464,6 +550,7 @@ async function init() {
   const categoriasParaFiltro = shuffleInPlace([...categoriasUnicas]);
   renderFiltroCategorias(categoriasParaFiltro);
 
+  renderStoryOfTheDay(stories);
   renderNetflixRows(rowsEl, stories);
   renderCatalogGrid(stories);
   wireFilters();

@@ -47,6 +47,8 @@ function setReadingUIVisible(visible) {
   if (controls) controls.classList.toggle("hidden", !visible);
   if (dock) dock.classList.toggle("hidden", !visible);
   if (cfgToggle) cfgToggle.classList.toggle("hidden", !visible);
+  const readingBar = document.getElementById("cuc-reading-bar");
+  if (readingBar) readingBar.classList.toggle("hidden", !visible);
 }
 
 function setKaraokeBoxVisible(visible) {
@@ -385,6 +387,13 @@ function renderCurrentPage(animate) {
 
   if (flipClone) {
     triggerPageTurnEffect(flipClone);
+  }
+
+  if (pageChanged) {
+    // Aviso para interact.js (puntos de página, precarga de la siguiente ilustración)
+    document.dispatchEvent(
+      new CustomEvent("cuc:page", { detail: { page: pageIdx, total: pages.length } })
+    );
   }
 }
 

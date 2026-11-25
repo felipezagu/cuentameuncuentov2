@@ -181,7 +181,8 @@
     document.addEventListener("keydown", function (e) {
       if (e.altKey || e.ctrlKey || e.metaKey) return;
       const tag = (e.target && e.target.tagName) || "";
-      if (/INPUT|TEXTAREA|SELECT|BUTTON/.test(tag)) return;
+      if (/INPUT|TEXTAREA|SELECT/.test(tag)) return;
+      if (tag === "BUTTON" && e.key === " ") return; // espacio sobre un botón = pulsarlo
       if (!isReading() || isOverlayOpen()) return;
       if (e.key === "ArrowRight") {
         e.preventDefault();
@@ -249,7 +250,177 @@
       (gained ? " · ¡+" + gained + (gained === 1 ? " estrella!" : " estrellas!") : "");
     renderStarsBadge(cardEl, e.estrellas, label);
     if (gained) showToast("⭐ ¡+" + gained + "!");
+    if (gained && e.estrellas === 3) setTimeout(confetti, 500);
     quizCorrect = 0;
+  }
+
+  // ---------------------------------------------------------------------------
+  // 5) Barra de lectura: puntos de página (saltar), tamaño de letra
+  // ---------------------------------------------------------------------------
+  const SCALE_KEY = "cuc_text_scale";
+  const SCALES = [0.85, 1, 1.15, 1.3, 1.5];
+
+  function goToPage(n) {
+    if (n < 0 || n >= pages.length) return;
+    const idx = getFirstSentenceIndexForPage(n);
+    if (useRecordedNarration && narracionAudioEl && narracionSyncData) {
+      narracionAudioEl.currentTime = narracionStartSecForSentence(idx);
+      currentWordIndex = 0;
+      highlight(idx);
+      if (isPlaying && !isPaused) narracionAudioEl.play().catch(function () {});
+      return;
+    }
+    if (isPlaying && synth) synth.cancel();
+    currentWordIndex = 0;
+    highlight(idx);
+    if (isPlaying && !isPaused) speakCurrent();
+  }
+
+  function getScaleIdx() {
+    let v = 1;
+    try {
+      v = parseFloat(localStorage.getItem(SCALE_KEY) || "1");
+    } catch (e) {
+      v = 1;
+    }
+    const i = SCALES.indexOf(v);
+    return i === -1 ? 1 : i;
+  }
+
+  function applyScale(i) {
+    const idx = Math.max(0, Math.min(SCALES.length - 1, i));
+    document.body.style.setProperty("--cuc-text-scale", String(SCALES[idx]));
+    try {
+      localStorage.setItem(SCALE_KEY, String(SCALES[idx]));
+    } catch (e) {
+      // Ignorar
+    }
+    const minus = document.getElementById("cuc-font-minus");
+    const plus = document.getElementById("cuc-font-plus");
+    if (minus) minus.disabled = idx === 0;
+    if (plus) plus.disabled = idx === SCALES.length - 1;
+    updateHighlightOnly();
+    return idx;
+  }
+
+  function buildReadingBar() {
+    const book = document.getElementById("cuento-inicio");
+    if (!book || document.getElementById("cuc-reading-bar")) return;
+    const bar = document.createElement("div");
+    bar.id = "cuc-reading-bar";
+    bar.className = "cuc-reading-bar hidden";
+
+    const dots = document.createElement("nav");
+    dots.id = "cuc-page-dots";
+    dots.className = "cuc-page-dots";
+    dots.setAttribute("aria-label", "Páginas del cuento");
+
+    const font = document.createElement("div");
+    font.className = "cuc-font-ctrl";
+    font.setAttribute("role", "group");
+    font.setAttribute("aria-label", "Tamaño de la letra");
+    font.innerHTML =
+      '<button type="button" id="cuc-font-minus" class="cuc-font-btn" aria-label="Letra más pequeña">A−</button>' +
+      '<button type="button" id="cuc-font-plus" class="cuc-font-btn cuc-font-btn--big" aria-label="Letra más grande">A+</button>';
+
+    bar.appendChild(dots);
+    bar.appendChild(font);
+    book.insertAdjacentElement("afterend", bar);
+
+    let scaleIdx = applyScale(getScaleIdx());
+    document.getElementById("cuc-font-minus").addEventListener("click", function () {
+      scaleIdx = applyScale(scaleIdx - 1);
+    });
+    document.getElementById("cuc-font-plus").addEventListener("click", function () {
+      scaleIdx = applyScale(scaleIdx + 1);
+    });
+  }
+
+  function renderDots(page, total) {
+    const nav = document.getElementById("cuc-page-dots");
+    if (!nav) return;
+    if (nav.childElementCount !== total) {
+      nav.innerHTML = "";
+      for (let i = 0; i < total; i++) {
+        const b = document.createElement("button");
+        b.type = "button";
+        b.className = "cuc-page-dot";
+        b.setAttribute("aria-label", "Ir a la página " + (i + 1));
+        b.addEventListener("click", function () { goToPage(i); });
+        nav.appendChild(b);
+      }
+    }
+    Array.prototype.forEach.call(nav.children, function (b, i) {
+      b.classList.toggle("is-current", i === page);
+      b.classList.toggle("is-read", i < page);
+      if (i === page) b.setAttribute("aria-current", "page");
+      else b.removeAttribute("aria-current");
+    });
+  }
+
+  /** Precarga la ilustración de la página siguiente para que el cambio sea instantáneo. */
+  function preloadNextImage(page) {
+    if (!storyData || !Array.isArray(storyData.escenas)) return;
+    const next = (pages[page + 1] || [])[0];
+    const esc = typeof next === "number" ? storyData.escenas[next] : null;
+    if (esc && esc.imagen) {
+      const img = new Image();
+      img.decoding = "async";
+      img.src = normalizeMediaUrl(esc.imagen);
+    }
+  }
+
+  // ---------------------------------------------------------------------------
+  // 6) Confeti cuando gana las 3 estrellas
+  // ---------------------------------------------------------------------------
+  function confetti() {
+    if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const canvas = document.createElement("canvas");
+    canvas.className = "cuc-confetti";
+    canvas.setAttribute("aria-hidden", "true");
+    document.body.appendChild(canvas);
+    const ctx = canvas.getContext("2d");
+    const dpr = window.devicePixelRatio || 1;
+    const w = window.innerWidth;
+    const h = window.innerHeight;
+    canvas.width = w * dpr;
+    canvas.height = h * dpr;
+    ctx.scale(dpr, dpr);
+    const colors = ["#f59e0b", "#ec4899", "#8b5cf6", "#22c55e", "#3b82f6", "#facc15"];
+    const parts = [];
+    for (let i = 0; i < 140; i++) {
+      parts.push({
+        x: w / 2 + (Math.random() - 0.5) * w * 0.3,
+        y: h * 0.35,
+        vx: (Math.random() - 0.5) * 12,
+        vy: -Math.random() * 12 - 4,
+        s: 5 + Math.random() * 6,
+        r: Math.random() * Math.PI,
+        vr: (Math.random() - 0.5) * 0.3,
+        c: colors[i % colors.length],
+      });
+    }
+    const start = performance.now();
+    (function frame(now) {
+      const t = now - start;
+      ctx.clearRect(0, 0, w, h);
+      parts.forEach(function (p) {
+        p.vy += 0.35;
+        p.vx *= 0.99;
+        p.x += p.vx;
+        p.y += p.vy;
+        p.r += p.vr;
+        ctx.save();
+        ctx.globalAlpha = Math.max(0, 1 - t / 2600);
+        ctx.translate(p.x, p.y);
+        ctx.rotate(p.r);
+        ctx.fillStyle = p.c;
+        ctx.fillRect(-p.s / 2, -p.s / 4, p.s, p.s / 2);
+        ctx.restore();
+      });
+      if (t < 2600) requestAnimationFrame(frame);
+      else canvas.remove();
+    })(start);
   }
 
   // ---------------------------------------------------------------------------
@@ -257,6 +428,11 @@
     const container = document.getElementById("karaoke-container");
     if (container) container.addEventListener("click", onWordTap);
     injectSelfReadControls();
+    buildReadingBar();
+    document.addEventListener("cuc:page", function (e) {
+      renderDots(e.detail.page, e.detail.total);
+      preloadNextImage(e.detail.page);
+    });
     bindSwipe();
     bindKeyboard();
   }
