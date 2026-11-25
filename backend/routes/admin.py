@@ -8,7 +8,8 @@ from pydantic import BaseModel
 from sqlalchemy.orm import Session
 
 from ..database import get_db
-from ..models import Story, Scene
+from ..db_init import narraciones_from_json, base_title, merge_voice_duplicates, story_to_json
+from ..models import Narration, Scene, Story
 from ..leonardo import build_prompt, build_prompt_luma
 from ..luma import generate_scene_image_luma, slug_nombre_cuento
 
@@ -22,78 +23,83 @@ class SceneIn(BaseModel):
     imagen: str | None = None
 
 
+class NarrationIn(BaseModel):
+    voz: str
+    audio: str
+    sync: str
+
+
 class StoryIn(BaseModel):
     titulo: str
     descripcion: str | None = None
     portada: str | None = None
     categoria: str | None = None
+    autor: str | None = None
     ambiente: str | None = None
     destacado: bool = False
-    narracion_audio: str | None = None
-    narracion_sync: str | None = None
+    # None = no tocar las narraciones existentes (antes, guardar desde el panel las borraba)
+    narraciones: List[NarrationIn] | None = None
     escenas: List[SceneIn]
+
+
+def _apply_story_fields(story: Story, payload: StoryIn) -> None:
+    story.titulo = payload.titulo
+    story.descripcion = payload.descripcion
+    story.portada = payload.portada
+    story.categoria = payload.categoria
+    if payload.autor is not None:
+        story.autor = payload.autor.strip() or None
+    story.ambiente = payload.ambiente
+    story.destacado = payload.destacado
+
+
+def _replace_scenes(db: Session, story: Story, escenas: List[SceneIn]) -> None:
+    db.query(Scene).filter(Scene.story_id == story.id).delete()
+    for s in escenas:
+        db.add(Scene(story_id=story.id, orden=s.orden, texto=s.texto, imagen=s.imagen))
+
+
+def _replace_narrations(db: Session, story: Story, narraciones: List[NarrationIn] | None) -> None:
+    if narraciones is None:
+        return
+    db.query(Narration).filter(Narration.story_id == story.id).delete()
+    seen = set()
+    for n in narraciones:
+        voz = (n.voz or "").strip().lower()
+        audio, sync = (n.audio or "").strip(), (n.sync or "").strip()
+        if not (voz and audio and sync) or voz in seen:
+            continue
+        seen.add(voz)
+        db.add(Narration(story_id=story.id, voz=voz, audio=audio, sync=sync))
 
 
 @router.post("/stories", status_code=status.HTTP_201_CREATED)
 def create_story(payload: StoryIn, db: Session = Depends(get_db)):
-    story = Story(
-        titulo=payload.titulo,
-        descripcion=payload.descripcion,
-        portada=payload.portada,
-        categoria=payload.categoria,
-        ambiente=payload.ambiente,
-        destacado=payload.destacado,
-    )
+    story = Story()
+    _apply_story_fields(story, payload)
     db.add(story)
     db.flush()
-
-    for s in payload.escenas:
-        scene = Scene(
-            story_id=story.id,
-            orden=s.orden,
-            texto=s.texto,
-            imagen=s.imagen,
-        )
-        db.add(scene)
-
+    _replace_scenes(db, story, payload.escenas)
+    _replace_narrations(db, story, payload.narraciones)
     db.commit()
-    db.refresh(story)
     return {"id": story.id}
 
 
 @router.put("/stories/{story_id}")
 def update_story(story_id: int, payload: StoryIn, db: Session = Depends(get_db)):
-    story: Story | None = db.query(Story).filter(Story.id == story_id).first()
+    story: Story | None = db.get(Story, story_id)
     if not story:
         raise HTTPException(status_code=404, detail="Cuento no encontrado")
-
-    story.titulo = payload.titulo
-    story.descripcion = payload.descripcion
-    story.portada = payload.portada
-    story.categoria = payload.categoria
-    story.ambiente = payload.ambiente
-    story.destacado = payload.destacado
-    story.narracion_audio = (payload.narracion_audio or "").strip() or None
-    story.narracion_sync = (payload.narracion_sync or "").strip() or None
-
-    db.query(Scene).filter(Scene.story_id == story.id).delete()
-    for s in payload.escenas:
-        db.add(
-            Scene(
-                story_id=story.id,
-                orden=s.orden,
-                texto=s.texto,
-                imagen=s.imagen,
-            )
-        )
-
+    _apply_story_fields(story, payload)
+    _replace_scenes(db, story, payload.escenas)
+    _replace_narrations(db, story, payload.narraciones)
     db.commit()
     return {"ok": True}
 
 
 @router.delete("/stories/{story_id}", status_code=status.HTTP_204_NO_CONTENT)
 def delete_story(story_id: int, db: Session = Depends(get_db)):
-    story = db.query(Story).filter(Story.id == story_id).first()
+    story = db.get(Story, story_id)
     if not story:
         raise HTTPException(status_code=404, detail="Cuento no encontrado")
     db.delete(story)
@@ -137,24 +143,9 @@ def set_luma_revisado(story_id: int, payload: dict, db: Session = Depends(get_db
 
 @router.get("/export-cuentos")
 def export_cuentos(db: Session = Depends(get_db)):
-    """Exporta todos los cuentos con sus escenas y preguntas a JSON descargable."""
+    """Exporta todos los cuentos (escenas, preguntas y narraciones) en el formato de cuentos.json."""
     stories = db.query(Story).order_by(Story.id).all()
-    cuentos = []
-    for s in stories:
-        escenas = [{"orden": e.orden, "texto": e.texto, "imagen": e.imagen} for e in sorted(s.escenas, key=lambda x: x.orden)]
-        cuentos.append({
-            "titulo": s.titulo,
-            "descripcion": s.descripcion or "",
-            "portada": s.portada or "",
-            "categoria": s.categoria or "",
-            "ambiente": s.ambiente or "",
-            "destacado": bool(s.destacado),
-            "preguntas": s.preguntas,
-            "narracion_audio": getattr(s, "narracion_audio", None) or "",
-            "narracion_sync": getattr(s, "narracion_sync", None) or "",
-            "escenas": escenas,
-        })
-    body = json.dumps({"cuentos": cuentos}, ensure_ascii=False, indent=2)
+    body = json.dumps({"cuentos": [story_to_json(s) for s in stories]}, ensure_ascii=False, indent=2)
     return Response(
         content=body,
         media_type="application/json",
@@ -164,46 +155,35 @@ def export_cuentos(db: Session = Depends(get_db)):
 
 @router.post("/import-cuentos")
 def import_cuentos(payload: dict, db: Session = Depends(get_db)):
-    """Carga cuentos desde un JSON con formato { \"cuentos\": [ { titulo, descripcion, portada, categoria, destacado, preguntas, escenas }, ... ] }."""
-    cuentos = payload.get("cuentos") if isinstance(payload, dict) else []
+    """Añade cuentos desde un JSON con el formato de cuentos.json ({"cuentos": [...]})."""
+    cuentos = payload.get("cuentos") if isinstance(payload, dict) else None
     if not isinstance(cuentos, list):
         raise HTTPException(status_code=400, detail="El JSON debe tener una lista 'cuentos'")
     created = 0
     for c in cuentos:
-        titulo = c.get("titulo") or "Sin título"
-        descripcion = c.get("descripcion") or ""
-        portada = c.get("portada") or None
-        categoria = c.get("categoria") or None
-        ambiente = c.get("ambiente") or None
-        destacado = bool(c.get("destacado", False))
         preguntas = c.get("preguntas")
         if isinstance(preguntas, list):
-            preguntas = json.dumps(preguntas)
-        narracion_audio = (c.get("narracion_audio") or "").strip() or None
-        narracion_sync = (c.get("narracion_sync") or "").strip() or None
-        escenas_data = c.get("escenas") or []
+            preguntas = json.dumps(preguntas, ensure_ascii=False)
         story = Story(
-            titulo=titulo,
-            descripcion=descripcion,
-            portada=portada,
-            categoria=categoria,
-            ambiente=ambiente,
-            destacado=destacado,
-            preguntas=preguntas,
-            narracion_audio=narracion_audio,
-            narracion_sync=narracion_sync,
+            titulo=base_title(c.get("titulo")) or "Sin título",
+            descripcion=c.get("descripcion") or "",
+            portada=c.get("portada") or None,
+            categoria=c.get("categoria") or None,
+            autor=c.get("autor") or None,
+            ambiente=c.get("ambiente") or None,
+            destacado=bool(c.get("destacado", False)),
+            preguntas=preguntas or None,
         )
         db.add(story)
         db.flush()
-        for e in escenas_data:
-            scene = Scene(
-                story_id=story.id,
-                orden=int(e.get("orden", 1)),
-                texto=e.get("texto") or "",
-                imagen=e.get("imagen"),
-            )
-            db.add(scene)
+        for i, e in enumerate(c.get("escenas") or [], start=1):
+            db.add(Scene(story_id=story.id, orden=int(e.get("orden") or i),
+                         texto=e.get("texto") or "", imagen=e.get("imagen") or None))
+        for n in narraciones_from_json(c):
+            db.add(Narration(story_id=story.id, **n))
         created += 1
+    db.flush()
+    merge_voice_duplicates(db)
     db.commit()
     return {"ok": True, "importados": created}
 
