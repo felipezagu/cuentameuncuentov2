@@ -1,6 +1,7 @@
 {
   "cuentos": [
     {
+      "id": 1,
       "titulo": "Aladino",
       "descripcion": "Un joven encuentra una lámpara mágica con un genio que cumple deseos. Cuento de Las mil y una noches.",
       "portada": "/imagenes/portadas/aladino.webp",
@@ -73,9 +74,13 @@
           "texto": "Aladino recuperó la lámpara con la ayuda de su esposa. El genio volvió a obedecerle y trajo el palacio de vuelta. El mago fue vencido. Aladino y la princesa vivieron felices. La verdadera riqueza no está en los deseos mágicos sino en ser bueno y valiente. Y la lámpara quedó guardada para usarla con sabiduría.",
           "imagen": "/imagenes/aladino/05.webp"
         }
+      ],
+      "ids_antiguos": [
+        2
       ]
     },
     {
+      "id": 3,
       "titulo": "Alicia en el País de las Maravillas",
       "descripcion": "Alicia sigue a un conejo blanco y cae por una madriguera a un mundo de fantasía. Obra de Lewis Carroll.",
       "portada": "/imagenes/portadas/aliciaenelpaisdelasmaravillas.webp",
@@ -148,9 +153,13 @@
           "texto": "Jugó al croquet con flamencos y erizos. La Reina la acusó y todo acabó en un juicio absurdo. Alicia dijo: ¡Sois solo un montón de naipes! Y empezó a despertar. Alicia despertó con la cabeza en el regazo de su hermana. Le contó el sueño. Los sueños pueden ser tan locos y tan vivos que a veces no sabemos si hemos estado en otro mundo.",
           "imagen": "/imagenes/aliciaenelpaisdelasmaravillas/05.webp"
         }
+      ],
+      "ids_antiguos": [
+        4
       ]
     },
     {
+      "id": 5,
       "titulo": "Blancanieves",
       "descripcion": "Una princesa, una manzana y siete enanitos.",
       "portada": "/imagenes/portadas/blancanieves.webp",
@@ -228,9 +237,13 @@
           "texto": "Un príncipe que pasaba la vio y se enamoró. Al acercarse para despedirse, la besó en la frente. Blancanieves despertó. La reina se fue del reino y no volvió. Blancanieves y el príncipe se casaron y vivieron felices.",
           "imagen": "/imagenes/blancanieves/05.webp"
         }
+      ],
+      "ids_antiguos": [
+        6
       ]
     },
     {
+      "id": 7,
       "titulo": "Caperucita Roja",
       "descripcion": "Un clásico cuento del bosque.",
       "portada": "/imagenes/portadas/caperucitaroja.webp",
@@ -308,9 +321,13 @@
           "texto": "El leñador asustó al lobo y este salió corriendo del bosque. Abrieron el armario y sacaron a la abuelita, que estaba bien. Caperucita aprendió a no hablar con desconocidos y a no apartarse del camino. Las tres se sentaron a merendar juntas.",
           "imagen": "/imagenes/caperucitaroja/05.webp"
         }
+      ],
+      "ids_antiguos": [
+        8
       ]
     },
     {
+      "id": 9,
       "titulo": "Cenicienta",
       "descripcion": "Un zapato de cristal y un baile en el palacio.",
       "portada": "/imagenes/portadas/lacenicienta.webp",
@@ -383,9 +400,13 @@
           "texto": "El príncipe hizo probar el zapato a todas las jóvenes. En casa de Cenicienta las hermanastras probaron sin éxito. El príncipe preguntó si había otra joven; Cenicienta bajó de la buhardilla. Cenicienta se calzó el zapatito y sacó el otro. El hada la vistió de nuevo. El príncipe la reconoció. Se casaron y Cenicienta perdonó a su familia. Vivieron felices para siempre.",
           "imagen": "/imagenes/cenicienta/05.webp"
         }
+      ],
+      "ids_antiguos": [
+        10
       ]
     },
     {
+      "id": 11,
       "titulo": "El León y el Ratón",
       "descripcion": "Un león deja libre a un ratón; más tarde el ratón le devuelve el favor. Fábula de Esopo.",
       "portada": "/imagenes/portadas/elratonyelleon.webp",
@@ -458,9 +479,13 @@
           "texto": "El ratón oyó los rugidos y reconoció la voz del león. Fue hasta la red y con sus dientecillos empezó a roer las cuerdas. Trabajó sin parar hasta que abrió un agujero. El león salió libre. Nunca más dudó de que un favor, por pequeño que sea, puede devolverse cuando menos lo esperas. Los dos se despidieron como amigos.",
           "imagen": "/imagenes/elleonyelraton/05.webp"
         }
+      ],
+      "ids_antiguos": [
+        12
       ]
     },
     {
+      "id": 13,
       "titulo": "El Libro de la Selva",
       "descripcion": "Mowgli, un niño criado por lobos, vive aventuras en la selva con Baloo y Bagheera. Relatos de Rudyard Kipling.",
       "portada": "/imagenes/portadas/ellibrodelaselva.webp",
@@ -533,9 +558,13 @@
           "texto": "Shere Khan quiso atacar a Mowgli. Mowgli reunió a los búfalos y lo llevó hacia una trampa; el tigre murió. Los hombres de la aldea no lo aceptaron y Mowgli volvió a la selva. Mowgli entendió que era de la selva pero también de los hombres. Con sus amigos Baloo y Bagheera, siguió viviendo entre dos mundos. La naturaleza y el respeto son la verdadera ley.",
           "imagen": "/imagenes/ellibrodelaselva/05.webp"
         }
+      ],
+      "ids_antiguos": [
+        14
       ]
     },
     {
+      "id": 15,
       "titulo": "El Mago de Oz",
       "descripcion": "Dorothy y su perro son llevados por un tornado a Oz; busca al Mago para volver a casa. Novela de L. Frank Baum.",
       "portada": "/imagenes/portadas/elmagodeoz.webp",
@@ -608,9 +637,13 @@
           "texto": "Volvieron al Mago. Resultó ser un hombre normal que había llegado en globo. No tenía magia real pero les dio a cada uno lo que creían necesitar: ya lo tenían dentro. A Dorothy le dijo que las zapatillas podían llevarla a casa. Dorothy dio tres golpes con los talones y dijo: No hay lugar como mi casa. Despertó en Kansas con su familia. A veces lo que buscamos está en nosotros o en el camino de vuelta a casa.",
           "imagen": "/imagenes/elmagodeoz/05.webp"
         }
+      ],
+      "ids_antiguos": [
+        16
       ]
     },
     {
+      "id": 17,
       "titulo": "El Pastorcito Mentiroso",
       "descripcion": "Un pastor que gritaba ¡que viene el lobo! por diversión deja de ser creído cuando el lobo llega de verdad. Fábula de Esopo.",
       "portada": "/imagenes/portadas/elpastormentiroso.webp",
@@ -678,9 +711,13 @@
           "texto": "Una tarde de verdad apareció un lobo entre las ovejas. El pastorcito gritó con miedo: ¡Que viene el lobo! ¡De verdad! ¡Ayudadme! Nadie subió. Pensaron que era otra broma. El lobo atacó al rebaño y el pastor no pudo hacer nada solo. Perdió varias ovejas. Cuando bajó al pueblo llorando, le dijeron: quien miente una vez, no es creído cuando dice la verdad. El pastorcito aprendió que la mentira tiene consecuencias muy graves.",
           "imagen": "/imagenes/elpastorcitomentiroso/05.webp"
         }
+      ],
+      "ids_antiguos": [
+        18
       ]
     },
     {
+      "id": 19,
       "titulo": "El Patito Feo",
       "descripcion": "Un patito diferente que se convierte en cisne.",
       "portada": "/imagenes/portadas/elpatitofeo.webp",
@@ -748,9 +785,13 @@
           "texto": "Se acercó con miedo. Los cisnes lo rodearon con cariño. El patito feo se asomó al agua y vio su reflejo: ya era un cisne blanco. Había crecido y se había transformado. Los cisnes lo recibieron como a uno más. Los niños que pasaban decían: ¡Mira, el cisne nuevo es el más bello! El que había sido el patito feo estaba muy feliz. Nunca hay que burlarse de quien es diferente. Cada uno tiene su momento de convertirse en quien está destinado a ser.",
           "imagen": "/imagenes/elpatitofeo/05.webp"
         }
+      ],
+      "ids_antiguos": [
+        20
       ]
     },
     {
+      "id": 21,
       "titulo": "El Perro y su Reflejo",
       "descripcion": "Un perro lleva un hueso y al ver su reflejo en el agua quiere el del otro perro; abre la boca y pierde el suyo. Fábula de Esopo.",
       "portada": "/imagenes/portadas/elperroysureflejo.webp",
@@ -818,9 +859,13 @@
           "texto": "Quiso gruñir para asustar al otro perro y quedarse con su hueso. Abrió la boca para ladrar. En ese instante su hueso se cayó al río y se lo llevó la corriente. El reflejo desapareció. El perro se quedó sin hueso y con hambre. Había perdido lo que tenía por querer lo que creía que tenía el otro. La codicia y la envidia nos hacen perder lo que ya tenemos. Es mejor valorar lo nuestro y no arriesgarlo por lo que vemos en los demás.",
           "imagen": "/imagenes/elperroysureflejo/05.webp"
         }
+      ],
+      "ids_antiguos": [
+        22
       ]
     },
     {
+      "id": 23,
       "titulo": "El Principito",
       "descripcion": "Un piloto conoce en el desierto a un niño de otro planeta. Novela de Antoine de Saint-Exupéry.",
       "portada": "/imagenes/portadas/elprincipito.webp",
@@ -893,9 +938,13 @@
           "texto": "El Principito entendió que su rosa era única porque era él quien la había cuidado. El piloto y él buscaron un pozo en el desierto y encontraron uno. El agua era como un regalo. La serpiente ayudó al Principito a volver a su planeta. El piloto miró las estrellas y supo que en una de ellas estaba el Principito riendo. Cuando mires el cielo, recuerda: lo esencial es invisible a los ojos.",
           "imagen": "/imagenes/elprincipito/05.webp"
         }
+      ],
+      "ids_antiguos": [
+        24
       ]
     },
     {
+      "id": 25,
       "titulo": "El Rey Midas",
       "descripcion": "Un rey pide que todo lo que toque se convierta en oro; al tocar a su hija se arrepiente. Leyenda griega.",
       "portada": "/imagenes/portadas/elreymidas.webp",
@@ -963,9 +1012,13 @@
           "texto": "Midas tenía hambre y miedo. Entonces su hija corrió a abrazarlo para consolarlo. En el instante en que la tocó, su hija se convirtió en una estatua de oro. Midas lloró y suplicó a Dioniso que quitara el don. El dios le dijo que se bañara en un río especial. Así lo hizo y perdió el poder. Al tocar de nuevo a su hija, ella volvió a la vida. Midas aprendió que hay cosas mucho más valiosas que el oro: el amor y la familia.",
           "imagen": "/imagenes/elreymidas/05.webp"
         }
+      ],
+      "ids_antiguos": [
+        26
       ]
     },
     {
+      "id": 27,
       "titulo": "El Sastrecillo Valiente",
       "descripcion": "Un sastre mata siete moscas de un golpe y se cree héroe; con astucia vence a gigantes y gana la corona. Cuento de los hermanos Grimm.",
       "portada": "/imagenes/portadas/elsastrecillovaliente.webp",
@@ -1038,9 +1091,13 @@
           "texto": "Luego debía capturar un unicornio. Se escondió detrás de un árbol y cuando el unicornio embistió, lo enganchó en el tronco. El rey le puso una última prueba: cazar un jabalí feroz. El sastre encerró al jabalí en una capilla y el rey tuvo que darle a su hija y la mitad del reino. La valentía y la astucia pueden más que la fuerza. Y el sastrecillo vivió como rey.",
           "imagen": "/imagenes/elsastrecillovaliente/05.webp"
         }
+      ],
+      "ids_antiguos": [
+        28
       ]
     },
     {
+      "id": 29,
       "titulo": "El Traje Nuevo del Emperador",
       "descripcion": "Un emperador vanidoso es engañado por dos pillos que dicen tejer un traje que solo los tontos no ven. Cuento de Hans Christian Andersen.",
       "portada": "/imagenes/portadas/eltrajenuevodelemperador.webp",
@@ -1113,9 +1170,13 @@
           "texto": "Un niño pequeño gritó: ¡Pero si va en cueros! La gente empezó a susurrar y a reír. El emperador lo oyó y se ruborizó, pero siguió el desfile más digno que pudo. La mentira se había extendido por miedo a parecer tonto. La valentía del niño que dijo la verdad nos enseña que hay que tener valor para decir lo que vemos, aunque los demás callen.",
           "imagen": "/imagenes/eltrajenuevodelemperador/05.webp"
         }
+      ],
+      "ids_antiguos": [
+        30
       ]
     },
     {
+      "id": 31,
       "titulo": "El Zorro y la Cigüeña",
       "descripcion": "El zorro invita a la cigüeña a comer en un plato llano; ella no puede. La cigüeña le devuelve la invitación en una jarra de cuello largo. Fábula de Esopo.",
       "portada": "/imagenes/portadas/laciguenayelzorro.webp",
@@ -1188,9 +1249,13 @@
           "texto": "El zorro se dio cuenta de que había sido egoísta. Tratar mal a los demás hace que nos traten igual. La cigüeña no quiso ser cruel; solo quiso que el zorro entendiera. Desde entonces el zorro recordó: no hagas a los demás lo que no quieras para ti. Tratar bien a los amigos es la mejor manera de tener buenos amigos.",
           "imagen": "/imagenes/elzorroylaciguena/05.webp"
         }
+      ],
+      "ids_antiguos": [
+        32
       ]
     },
     {
+      "id": 33,
       "titulo": "El Zorro y las Uvas",
       "descripcion": "Un zorro no alcanza unas uvas y dice que estaban verdes. Fábula de Esopo.",
       "portada": "/imagenes/portadas/lazorraylasuvas.webp",
@@ -1258,9 +1323,13 @@
           "texto": "Cansado y sin haber tocado ni una uva, el zorro se alejó. Entonces se dio la vuelta y dijo en voz alta: ¡Bah! Estaban verdes. Ni las quiero. En realidad las uvas estaban dulces y maduras. El zorro no quería admitir que no había podido alcanzarlas. Prefería fingir que no le importaban. Así nació el dicho: despreciar las uvas como el zorro. Cuando no conseguimos algo, a veces decimos que no lo queríamos. Es mejor reconocer el esfuerzo y seguir intentando.",
           "imagen": "/imagenes/elzorroylasuvas/05.webp"
         }
+      ],
+      "ids_antiguos": [
+        34
       ]
     },
     {
+      "id": 35,
       "titulo": "Hansel y Gretel",
       "descripcion": "Dos hermanos perdidos en el bosque.",
       "portada": "/imagenes/portadas/hanselygretel.webp",
@@ -1338,9 +1407,13 @@
           "texto": "Gretel cerró la puerta del horno con cuidado y la bruja quedó atrapada un rato. Los niños salieron y encontraron un cofre con monedas. Volvieron a casa; su padre estaba solo y los abrazó. Nunca más pasaron hambre.",
           "imagen": "/imagenes/hanselygretel/05.webp"
         }
+      ],
+      "ids_antiguos": [
+        36
       ]
     },
     {
+      "id": 37,
       "titulo": "La Bella Durmiente",
       "descripcion": "Un hechizo de sueño y un beso de amor.",
       "portada": "/imagenes/portadas/labelladurmiente.webp",
@@ -1413,9 +1486,13 @@
           "texto": "Felipe escapó con la ayuda de las hadas. Llegó al castillo y venció los obstáculos. Maléfica se desvaneció y las espinas se abrieron. Felipe besó a Aurora y ella despertó. Todo el reino despertó con ella. Se casaron y vivieron felices para siempre.",
           "imagen": "/imagenes/labelladurmiente/05.webp"
         }
+      ],
+      "ids_antiguos": [
+        38
       ]
     },
     {
+      "id": 39,
       "titulo": "La Bella y la Bestia",
       "descripcion": "Un mercader promete a una bestia a su hija; ella se queda en el castillo y el amor rompe el hechizo. Cuento de Jeanne-Marie Leprince de Beaumont.",
       "portada": "/imagenes/portadas/labellaylabestia.webp",
@@ -1488,9 +1565,13 @@
           "texto": "Encontró a la Bestia débil y triste. Bella le dijo que lo quería y que no quería que muriera. En ese momento brilló una luz y la Bestia se transformó en un príncipe. Un hada lo había hechizado por ser egoísta. Solo el amor verdadero podía romper el hechizo. Bella había visto la bondad bajo su aspecto de bestia. Se casaron y vivieron felices en el castillo.",
           "imagen": "/imagenes/labellaylabestia/05.webp"
         }
+      ],
+      "ids_antiguos": [
+        40
       ]
     },
     {
+      "id": 41,
       "titulo": "La Cigarra y la Hormiga",
       "descripcion": "La cigarra canta todo el verano; la hormiga trabaja. Cuando llega el invierno, cada una recoge lo que sembró. Fábula de La Fontaine.",
       "portada": "/imagenes/portadas/lacigarraylahormiga.webp",
@@ -1558,9 +1639,13 @@
           "texto": "La cigarra se reía y seguía cantando. Llegó el otoño y luego el invierno. Hizo frío y no había nada que comer en el campo. La cigarra, hambrienta y tiritando, fue a pedirle a la hormiga un poco de comida. Le dijo: te dije que cantaras; ahora baila. Y cerró la puerta. En versiones más amables, la hormiga comparte un poco y la cigarra aprende a trabajar el próximo verano. La fábula nos enseña que hay que prepararse y esforzarse a su tiempo.",
           "imagen": "/imagenes/lacigarraylahormiga/05.webp"
         }
+      ],
+      "ids_antiguos": [
+        42
       ]
     },
     {
+      "id": 43,
       "titulo": "La Gallina de los Huevos de Oro",
       "descripcion": "Una gallina pone un huevo de oro cada día. La avaricia hace que sus dueños la pierdan y se queden sin nada. Fábula de Esopo.",
       "portada": "/imagenes/portadas/lagallinadeloshuevosdeoro.webp",
@@ -1628,9 +1713,13 @@
           "texto": "No había montañas de oro; era una gallina como las demás. Los dos se quedaron mirando, sin creerlo. Habían perdido a la gallina que cada día les daba un huevo de oro. Ya no tendrían ni un huevo más. Se arrepintieron mucho pero era tarde. La avaricia rompe el saco. Quien no sabe esperar y quiere todo de golpe puede perder lo que ya tenía. Es mejor valorar lo que tenemos y no arriesgarlo por codicia.",
           "imagen": "/imagenes/lagallinadeloshuevosdeoro/05.webp"
         }
+      ],
+      "ids_antiguos": [
+        44
       ]
     },
     {
+      "id": 45,
       "titulo": "La Hormiga y la Paloma",
       "descripcion": "Una hormiga es salvada por una paloma; después la hormiga salva a la paloma. Fábula sobre la gratitud.",
       "portada": "/imagenes/portadas/lapalomaylahormiga.webp",
@@ -1698,9 +1787,13 @@
           "texto": "Días después un cazador apuntó con su escopeta a la paloma. La hormiga lo vio, subió por la pierna del cazador y le dio un fuerte mordisco. El cazador gritó y falló el tiro. La paloma escapó volando. La hormiga había cumplido su promesa. Un favor, por pequeño que sea, puede devolverse de la manera más inesperada. La bondad se multiplica cuando la recordamos y la devolvemos.",
           "imagen": "/imagenes/lahormigaylapaloma/05.webp"
         }
+      ],
+      "ids_antiguos": [
+        46
       ]
     },
     {
+      "id": 47,
       "titulo": "La Lechera",
       "descripcion": "Una lechera lleva la leche al mercado y sueña con todo lo que comprará; tropieza y lo pierde todo. Cuento popular.",
       "portada": "/imagenes/portadas/lalechera.webp",
@@ -1768,9 +1861,13 @@
           "texto": "Pensó: le diré que no de entrada, así me buscará más. Y con el gesto de negar movió la cabeza. El cántaro se balanceó y cayó al suelo. La leche se derramó por el camino. No había leche, ni huevos, ni pollos, ni vestido, ni fiesta. La lechera se sentó y lloró. No hay que contar los pollos antes de que nazcan. Soñar está bien, pero sin olvidar lo que tenemos entre manos. La realidad es lo que pisamos ahora.",
           "imagen": "/imagenes/lalechera/05.webp"
         }
+      ],
+      "ids_antiguos": [
+        48
       ]
     },
     {
+      "id": 49,
       "titulo": "La Liebre y la Tortuga",
       "descripcion": "La liebre, muy segura de sí misma, reta a la tortuga a una carrera. La paciencia y la constancia ganan. Fábula de Esopo.",
       "portada": "/imagenes/portadas/laliebreylatortuga.webp",
@@ -1838,9 +1935,13 @@
           "texto": "La tortuga siguió paso a paso, sin parar, avanzando poco a poco. La liebre se quedó dormida pensando que tenía tiempo de sobra. Cuando la liebre despertó, miró hacia atrás y no vio a la tortuga. Corrió hacia la meta pero ya era tarde: la tortuga había llegado primero y estaba esperándola junto al árbol. La liebre aprendió que la soberbia y el descuido pueden hacer perder hasta al más rápido. La constancia y el esfuerzo de la tortuga habían ganado la carrera.",
           "imagen": "/imagenes/laliebreylatortuga/05.webp"
         }
+      ],
+      "ids_antiguos": [
+        50
       ]
     },
     {
+      "id": 51,
       "titulo": "La Princesa y el Guisante",
       "descripcion": "Un príncipe busca una princesa de verdad. Una noche llega una joven empapada y la reina pone a prueba su sensibilidad. Cuento de Hans Christian Andersen.",
       "portada": "/imagenes/portadas/laprincesayelguisante.webp",
@@ -1913,9 +2014,13 @@
           "texto": "La joven dijo que había pasado una noche horrible: algo duro le había dejado el cuerpo lleno de cardenales. Solo una princesa de verdad podría ser tan sensible para notar un guisante bajo tantos colchones. El príncipe se casó con ella, seguros de que era una princesa auténtica. El guisante fue guardado en el museo del reino. Y colorín colorado, este cuento se ha acabado.",
           "imagen": "/imagenes/laprincesayelguisante/05.webp"
         }
+      ],
+      "ids_antiguos": [
+        52
       ]
     },
     {
+      "id": 53,
       "titulo": "La Ratita Presumida",
       "descripcion": "Una ratita que barre su casita encuentra una moneda y busca con quién casarse. Cuento popular español.",
       "portada": "/imagenes/portadas/laratitapresumida.webp",
@@ -1988,9 +2093,13 @@
           "texto": "La ratita aceptó y se casó con el gato. Prepararon una fiesta y la ratita estaba muy contenta. Por la noche se fueron a dormir a la casita. En algunas versiones el gato era bueno y vivieron felices. En otras, la ratita aprendió a no fiarse solo de las palabras. Lo importante es elegir bien y ser amable con todos.",
           "imagen": "/imagenes/laratitapresumida/05.webp"
         }
+      ],
+      "ids_antiguos": [
+        54
       ]
     },
     {
+      "id": 55,
       "titulo": "La Sirenita",
       "descripcion": "Una aventura bajo el mar.",
       "portada": "/imagenes/portadas/lasirenita.webp",
@@ -2063,9 +2172,13 @@
           "texto": "Úrsula intentó engañar al príncipe con la voz de Ariel. El rey Tritón y el príncipe lo descubrieron y la detuvieron. Recuperaron la voz de Ariel. El rey Tritón, contento con el amor de su hija, le dio permiso para ser humana. Ariel y el príncipe se casaron y vivieron junto al mar. Ella visitaba a su familia bajo las olas cuando quería.",
           "imagen": "/imagenes/lasirenita/05.webp"
         }
+      ],
+      "ids_antiguos": [
+        56
       ]
     },
     {
+      "id": 57,
       "titulo": "La Zorra y el Cuervo",
       "descripcion": "Un cuervo tiene un queso; la zorra lo halaga para que cante y lo deje caer. Fábula de Esopo.",
       "portada": "/imagenes/portadas/elzorroyelcuervo.webp",
@@ -2133,9 +2246,13 @@
           "texto": "El cuervo quiso demostrar su voz. Abrió el pico para cantar y el queso se cayó al suelo. La zorra lo cogió al vuelo y dijo: Con tu voz no te hace falta el queso. Y se marchó. El cuervo se quedó sin queso y muy avergonzado. Había creído los halagos y había sido engañado. No hay que creer todo lo que nos dicen por halagos. A veces nos adulan para sacarnos algo. La prudencia vale más que el orgullo.",
           "imagen": "/imagenes/lazorrayelcuervo/05.webp"
         }
+      ],
+      "ids_antiguos": [
+        58
       ]
     },
     {
+      "id": 59,
       "titulo": "Los Tres Cerditos",
       "descripcion": "Tres hermanos y un lobo muy soplón.",
       "portada": "/imagenes/portadas/lostrescerditos.webp",
@@ -2208,9 +2325,13 @@
           "texto": "El lobo intentó colarse por la chimenea. El tercer cerdito encendió un fuego suave y puso una olla con agua tibia. Cuando el lobo bajó, se mojó y salió corriendo sin hacerse daño. Los tres cerditos vivieron seguros en la casa de ladrillo. El lobo no volvió a molestarlos y los hermanos jugaban juntos en el jardín.",
           "imagen": "/imagenes/los3cerditos/05.webp"
         }
+      ],
+      "ids_antiguos": [
+        60
       ]
     },
     {
+      "id": 61,
       "titulo": "Los Músicos de Bremen",
       "descripcion": "Un burro, un perro, un gato y un gallo, ya mayores, se unen para ir a Bremen a ser músicos. Cuento de los hermanos Grimm.",
       "portada": "/imagenes/portadas/losmusicosdebremen.webp",
@@ -2283,9 +2404,13 @@
           "texto": "Los ladrones creyeron que era un fantasma y salieron corriendo. Los cuatro amigos entraron en la casa, comieron lo que quedaba y se acostaron cada uno en su rincón preferido. Uno de los ladrones volvió a espiar. El gato le arañó, el perro le mordió, el burro le dio una coz y el gallo lo persiguió. Los ladrones no volvieron. Los cuatro vivieron allí felices y ya no necesitaron ir a Bremen.",
           "imagen": "/imagenes/losmusicosdebremen/05.webp"
         }
+      ],
+      "ids_antiguos": [
+        62
       ]
     },
     {
+      "id": 63,
       "titulo": "Los Siete Cabritillos",
       "descripcion": "La cabra deja a sus siete cabritillos en casa; el lobo los engaña y se los come; la madre los rescata. Cuento de los hermanos Grimm.",
       "portada": "/imagenes/portadas/lossietecabritos.webp",
@@ -2358,9 +2483,13 @@
           "texto": "La madre volvió y el cabritillo le contó todo. Encontraron al lobo dormido bajo un árbol, con la barriga llena. La cabra abrió la barriga con unas tijeras y sacó a los seis cabritillos vivos. Llenaron la barriga del lobo de piedras y la cerraron. Cuando el lobo despertó y fue a beber al río, el peso lo hizo caer y se ahogó. Los siete cabritillos y su madre vivieron felices.",
           "imagen": "/imagenes/lossietecabritillos/05.webp"
         }
+      ],
+      "ids_antiguos": [
+        64
       ]
     },
     {
+      "id": 65,
       "titulo": "Peter Pan",
       "descripcion": "Un niño que no crece lleva a Wendy y sus hermanos al país de Nunca Jamás. Obra de J.M. Barrie.",
       "portada": "/imagenes/portadas/peterpan.webp",
@@ -2433,9 +2562,13 @@
           "texto": "Garfio capturó a los niños y a Wendy. Peter fue a rescatarlos y luchó con Garfio. El cocodrilo que perseguía al capitán por haberse comido su mano llegó y Garfio cayó al mar. Wendy y sus hermanos volvieron a casa. Peter se quedó en Nunca Jamás para siempre joven. Prometió volver a buscar a Wendy. Creer en la magia y en no olvidar al niño que llevamos dentro es el mensaje de Peter Pan.",
           "imagen": "/imagenes/peterpan/05.webp"
         }
+      ],
+      "ids_antiguos": [
+        66
       ]
     },
     {
+      "id": 67,
       "titulo": "Pinocho",
       "descripcion": "Un muñeco de madera que quiere ser niño de verdad.",
       "portada": "/imagenes/portadas/pinocho.webp",
@@ -2508,9 +2641,13 @@
           "texto": "En casa Geppetto estaba muy cansado. Pinocho lo cuidó día y noche. Demostró que era valiente y sincero. El hada premió a Pinocho convirtiéndolo en un niño de verdad. Geppetto y Pepito Grillo estaban muy contentos. La honestidad y el amor hacen que los sueños se cumplan.",
           "imagen": "/imagenes/pinocho/05.webp"
         }
+      ],
+      "ids_antiguos": [
+        68
       ]
     },
     {
+      "id": 69,
       "titulo": "Rapunzel",
       "descripcion": "Una niña con una larga trenza está encerrada en una torre; un príncipe la visita y al final se reúnen. Cuento de los hermanos Grimm.",
       "portada": "/imagenes/portadas/rapunzel.webp",
@@ -2583,9 +2720,13 @@
           "texto": "La bruja esperó al príncipe y lo hizo subir; cuando llegó arriba lo dejó caer entre espinas. El príncipe perdió la vista y vagó por el bosque años. Un día oyó la voz de Rapunzel. Ella lo reconoció y sus lágrimas tocaron sus ojos: el príncipe recuperó la vista. Se casaron y vivieron felices. El amor y la paciencia habían vencido.",
           "imagen": "/imagenes/rapunzel/05.webp"
         }
+      ],
+      "ids_antiguos": [
+        70
       ]
     },
     {
+      "id": 71,
       "titulo": "Ricitos de Oro",
       "descripcion": "Una niña y tres osos en el bosque.",
       "portada": "/imagenes/portadas/ricitosdeoro.webp",
@@ -2658,9 +2799,13 @@
           "texto": "El osito dijo: ¡Alguien ha estado en mi cama y aquí está! Ricitos se despertó y vio a los tres osos. Se asustó un poco pero los osos sonrieron. Ricitos pidió perdón y salió por la ventana hacia el jardín. Los osos la despidieron con un adiós. Desde entonces no entró en casas ajenas sin permiso.",
           "imagen": "/imagenes/ricitosdeoro/05.webp"
         }
+      ],
+      "ids_antiguos": [
+        72
       ]
     },
     {
+      "id": 73,
       "titulo": "El Gato con Botas",
       "descripcion": "Un gato astuto convierte la herencia de su dueño en fortuna y amor. Cuento de Charles Perrault.",
       "portada": "/imagenes/portadas/elgatoconbotas.webp",
@@ -2733,9 +2878,13 @@
           "texto": "El gato corrió por delante y ordenó a los campesinos que dijeran que todas las tierras eran del Marqués de Carabás. Luego entró en el castillo de un ogro. El ogro se transformó en ratón para presumir y el gato lo atrapó. El rey llegó al castillo y creyó que todo era del Marqués. El hijo del molinero se casó con la princesa y el gato vivió como un gran señor. La astucia y la lealtad habían cambiado su suerte.",
           "imagen": "/imagenes/elgatoconbotas/05.webp"
         }
+      ],
+      "ids_antiguos": [
+        74
       ]
     },
     {
+      "id": 75,
       "titulo": "El Flautista de Hamelín",
       "descripcion": "Un pueblo invadido por ratas promete pagar al flautista; no cumplen y él se lleva a los niños. Leyenda alemana.",
       "portada": "/imagenes/portadas/elflautistadehamelin.webp",

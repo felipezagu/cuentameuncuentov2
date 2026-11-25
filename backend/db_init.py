@@ -207,8 +207,44 @@ def narraciones_from_json(c: dict) -> list[dict]:
     return out
 
 
-def load_cuentos_json(path: Path | None = None) -> int:
-    """Borra los cuentos de la BD y carga los de cuentos.json. Devuelve cuántos quedaron."""
+def _apply_cuento(db: Session, story: Story, c: dict) -> None:
+    preguntas = c.get("preguntas")
+    if isinstance(preguntas, list):
+        preguntas = json.dumps(preguntas, ensure_ascii=False)
+    story.titulo = base_title(c.get("titulo")) or "Sin título"
+    story.descripcion = c.get("descripcion") or ""
+    story.portada = c.get("portada") or None
+    story.categoria = c.get("categoria") or None
+    story.autor = c.get("autor") or None
+    story.ambiente = c.get("ambiente") or None
+    story.destacado = bool(c.get("destacado", False))
+    story.preguntas = preguntas or None
+    db.query(Scene).filter(Scene.story_id == story.id).delete()
+    db.query(Narration).filter(Narration.story_id == story.id).delete()
+    db.flush()
+    for i, e in enumerate(c.get("escenas") or [], start=1):
+        db.add(
+            Scene(
+                story_id=story.id,
+                orden=int(e.get("orden") or i),
+                texto=e.get("texto") or "",
+                imagen=e.get("imagen") or None,
+            )
+        )
+    for n in narraciones_from_json(c):
+        db.add(Narration(story_id=story.id, **n))
+
+
+def load_cuentos_json(path: Path | None = None, reset: bool = False) -> int:
+    """
+    Sincroniza la BD con cuentos.json (la fuente de verdad) y devuelve cuántos cuentos quedaron.
+
+    - Cada cuento se identifica por su "id" (o por el título si no tiene id): se actualiza en su
+      lugar, así se CONSERVAN las estadísticas de lecturas y las URLs /cuento/<id>.
+    - "ids_antiguos": ids de copias fusionadas; sus URLs redirigen (301) al cuento.
+    - Los cuentos que ya no están en el JSON se borran.
+    - reset=True borra todo antes de cargar (comportamiento antiguo).
+    """
     path = path or (BASE_DIR / "cuentos.json")
     data = json.loads(path.read_text(encoding="utf-8"))
     cuentos = data.get("cuentos") or []
@@ -216,39 +252,46 @@ def load_cuentos_json(path: Path | None = None) -> int:
     init_db()
     db = SessionLocal()
     try:
-        db.query(StoryAlias).delete()
-        db.query(Story).delete()
-        db.flush()
+        if reset:
+            db.query(StoryAlias).delete()
+            db.query(Story).delete()
+            db.flush()
+
+        by_title = {_title_key(s.titulo): s for s in db.query(Story).all()}
+        keep_ids = set()
+        aliases: dict[int, int] = {}
         for c in cuentos:
-            preguntas = c.get("preguntas")
-            if isinstance(preguntas, list):
-                preguntas = json.dumps(preguntas, ensure_ascii=False)
-            story = Story(
-                titulo=base_title(c.get("titulo")) or "Sin título",
-                descripcion=c.get("descripcion") or "",
-                portada=c.get("portada") or None,
-                categoria=c.get("categoria") or None,
-                autor=c.get("autor") or None,
-                ambiente=c.get("ambiente") or None,
-                destacado=bool(c.get("destacado", False)),
-                preguntas=preguntas or None,
-            )
-            db.add(story)
+            sid = c.get("id")
+            story = db.get(Story, int(sid)) if sid else None
+            if story is None and not sid:
+                story = by_title.get(_title_key(c.get("titulo")))
+            if story is None:
+                titulo = base_title(c.get("titulo")) or "Sin título"
+                story = Story(id=int(sid), titulo=titulo) if sid else Story(titulo=titulo)
+                db.add(story)
+                db.flush()
+            _apply_cuento(db, story, c)
+            keep_ids.add(story.id)
+            for old in c.get("ids_antiguos") or []:
+                aliases[int(old)] = story.id
             db.flush()
-            for i, e in enumerate(c.get("escenas") or [], start=1):
-                db.add(
-                    Scene(
-                        story_id=story.id,
-                        orden=int(e.get("orden") or i),
-                        texto=e.get("texto") or "",
-                        imagen=e.get("imagen") or None,
-                    )
-                )
-            for n in narraciones_from_json(c):
-                db.add(Narration(story_id=story.id, **n))
-            db.flush()
+
+        for s in db.query(Story).all():
+            if s.id not in keep_ids:
+                db.delete(s)
+        db.flush()
+
+        for old_id, sid in aliases.items():
+            if old_id in keep_ids:
+                continue  # el id está en uso por otro cuento: no se puede redirigir
+            alias = db.get(StoryAlias, old_id)
+            if alias:
+                alias.story_id = sid
+            else:
+                db.add(StoryAlias(old_id=old_id, story_id=sid))
+        db.flush()
         db.expire_all()
-        merge_voice_duplicates(db)
+        merge_voice_duplicates(db)  # por si el JSON aún trae el formato antiguo
         db.commit()
         return db.query(Story).count()
     finally:
@@ -267,7 +310,7 @@ def load_if_empty() -> None:
         print(f"[init_db] BD vacía: se cargaron {n} cuentos desde cuentos.json", flush=True)
 
 
-def story_to_json(s: Story) -> dict:
+def story_to_json(s: Story, aliases: list[int] | None = None) -> dict:
     """Formato de un cuento en cuentos.json (inverso de load_cuentos_json)."""
     preguntas = None
     if s.preguntas:
@@ -275,7 +318,8 @@ def story_to_json(s: Story) -> dict:
             preguntas = json.loads(s.preguntas)
         except (TypeError, json.JSONDecodeError):
             preguntas = None
-    return {
+    out = {
+        "id": s.id,
         "titulo": s.titulo,
         "descripcion": s.descripcion or "",
         "portada": s.portada or "",
@@ -291,6 +335,9 @@ def story_to_json(s: Story) -> dict:
             {"orden": e.orden, "texto": e.texto, "imagen": e.imagen or ""} for e in s.escenas
         ],
     }
+    if aliases:
+        out["ids_antiguos"] = sorted(aliases)
+    return out
 
 
 # ---------------------------------------------------------------------------

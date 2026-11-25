@@ -64,7 +64,10 @@ scripts/               utilidades (scripts/legacy = migraciones antiguas ya apli
 
 ## Base de datos
 
-- **Primera vez / recargar todo desde `cuentos.json`:** `python scripts/cargar_cuentos_en_db.py`
+- **Sincronizar con `cuentos.json`:** `python scripts/cargar_cuentos_en_db.py` (Railway lo hace en cada despliegue).
+  Actualiza cada cuento por su `id` y **conserva las estadísticas**; `--reset` borra todo y carga de cero.
+- Cada cuento tiene un `id` fijo (no lo cambies: es su URL `/cuento/<id>`). Para un cuento nuevo, usa un número que no exista o deja el `id` fuera.
+- `ids_antiguos`: URLs viejas que redirigen a ese cuento.
 - **Después de actualizar el código:** `python scripts/migrar_db.py` (no borra nada; es seguro repetirlo).
 
 ### Formato de un cuento en `cuentos.json`
