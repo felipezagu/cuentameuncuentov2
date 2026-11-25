@@ -1,0 +1,12 @@
+{
+  "name": "cuentameuncuento",
+  "private": true,
+  "description": "Solo para compilar el CSS de Tailwind (la app es Python/FastAPI). Vive en esta carpeta para que Railway no confunda el proyecto con uno de Node.",
+  "scripts": {
+    "build:css": "tailwindcss -c tailwind.config.js -i input.css -o ../frontend/static/css/tailwind.css --minify",
+    "watch:css": "tailwindcss -c tailwind.config.js -i input.css -o ../frontend/static/css/tailwind.css --watch"
+  },
+  "devDependencies": {
+    "tailwindcss": "3.4.19"
+  }
+}

@@ -19,7 +19,7 @@ from fastapi.staticfiles import StaticFiles
 from starlette.middleware.sessions import SessionMiddleware
 
 from .config import DATA_DIR, IMAGENES_DIR, STATIC_DIR, UPLOADS_DIR, env_flag
-from .db_init import init_db, seed_demo_data
+from .db_init import init_db, load_if_empty, seed_demo_data
 from .routes import admin as admin_router
 from .routes import admin_pages, pages, tools
 from .routes import stories as stories_router
@@ -58,6 +58,28 @@ app.include_router(admin_pages.router)
 app.include_router(tools.router)
 
 
+def _init_db_once() -> None:
+    """
+    Migra la BD al arrancar. Con varios workers (gunicorn -w 2) todos ejecutan el startup a la vez
+    y SQLite respondía "database is locked", tumbando el despliegue. Un candado de archivo hace que
+    migren de a uno: el primero hace el trabajo y el resto ya no encuentra nada que cambiar.
+    """
+    lock_path = DATA_DIR / ".init.lock"
+    with open(lock_path, "w") as lock:
+        try:
+            import fcntl  # Linux / macOS (en Windows no hace falta: se usa un solo proceso)
+
+            fcntl.flock(lock, fcntl.LOCK_EX)
+        except ImportError:
+            pass
+        try:
+            init_db()
+            # Si la BD quedó vacía (p. ej. Railway sin volumen persistente), cargar cuentos.json.
+            load_if_empty()
+        except Exception as exc:  # no tumbar el sitio por una migración
+            print(f"[init_db] ERROR durante la migración: {exc!r}", flush=True)
+
+
 @app.on_event("startup")
 def on_startup():
     """
@@ -74,6 +96,6 @@ def on_startup():
     falla o queda vacía. Si existe RAILWAY_ENVIRONMENT, creamos tablas al arrancar.
     """
     if os.getenv("AUTO_INIT_DB") == "1" or os.getenv("RAILWAY_ENVIRONMENT"):
-        init_db()
+        _init_db_once()
     if os.getenv("AUTO_SEED_DEMO") == "1":
         threading.Thread(target=seed_demo_data, daemon=True).start()

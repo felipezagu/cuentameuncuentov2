@@ -255,6 +255,18 @@ def load_cuentos_json(path: Path | None = None) -> int:
         db.close()
 
 
+def load_if_empty() -> None:
+    """Carga cuentos.json solo si no hay ningún cuento en la BD (no pisa datos existentes)."""
+    db = SessionLocal()
+    try:
+        empty = db.query(Story).count() == 0
+    finally:
+        db.close()
+    if empty and (BASE_DIR / "cuentos.json").is_file():
+        n = load_cuentos_json()
+        print(f"[init_db] BD vacía: se cargaron {n} cuentos desde cuentos.json", flush=True)
+
+
 def story_to_json(s: Story) -> dict:
     """Formato de un cuento en cuentos.json (inverso de load_cuentos_json)."""
     preguntas = None

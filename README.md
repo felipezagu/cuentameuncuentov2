@@ -118,6 +118,7 @@ python scripts/migrar_db.py            # actualiza las rutas en la base de datos
 Tailwind se compila localmente. Si agregas clases nuevas en plantillas o JS:
 
 ```bash
+cd tailwind
 npm install          # solo la primera vez
 npm run build:css    # genera frontend/static/css/tailwind.css (súbelo al repo)
 ```
