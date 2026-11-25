@@ -1,0 +1,4 @@
+# Railway (Railpack) instala Python con mise. Las versiones antiguas de Python
+# no tienen "attestations" de GitHub y mise se niega a instalarlas; esto lo permite.
+[settings]
+python.github_attestations = false
