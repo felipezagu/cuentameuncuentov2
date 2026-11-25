@@ -10,8 +10,10 @@ Aplicación web infantil para leer y escuchar cuentos interactivos con modo kara
 ## Instalación
 
 ```bash
-cd cuentameuncuento
+cd cuentameuncuentov2
 pip install -r requirements.txt
+cp .env.example .env   # y define ADMIN_KEY
+python scripts/cargar_cuentos_en_db.py
 ```
 
 ## Ejecución
@@ -32,6 +34,70 @@ Luego:
 - En el celular: `http://192.168.100.76:8000/` (usa la IP de tu PC en la red; si cambia, revisa con `ipconfig` en Windows).
 - Panel admin: `http://localhost:8000/admin` (también funciona si abres la app por IP de tu red, p. ej. `http://192.168.x.x:8000/admin`).
 - Herramientas TTS/sync: `/tools/tts-upload` (mismas reglas que el admin; en producción pública están ocultas).
+
+## Estructura del proyecto
+
+```
+backend/
+  main.py              arma la app (middlewares, estáticos, routers)
+  config.py            rutas, .env y plantillas
+  security.py          acceso a /admin y /tools (red local + sesión)
+  models.py            Story, Scene, Narration (voz hombre/mujer), StoryAlias, estadísticas
+  db_init.py           crear/migrar la BD y cargar cuentos.json
+  stats.py             contadores de visitas/lecturas
+  routes/
+    pages.py           páginas públicas, contacto, sitemap
+    stories.py         API pública  /api/stories
+    admin.py           API admin    /api/admin   (requiere login)
+    admin_pages.py     panel        /admin
+    tools.py           herramientas de narración /tools (solo local)
+frontend/
+  templates/           HTML (Jinja2)
+  static/js/main.js    portada: catálogo, filtros, favoritos
+  static/js/rewards.js estrellas y álbum de cuentos leídos (localStorage)
+  static/js/story/     página del cuento, en orden de carga:
+    state.js  voices.js  pages.js  player.js  quiz.js  main.js  interact.js
+cuentos.json           fuente de verdad de los cuentos
+imagenes/<cuento>/     ilustraciones, MP3 por voz y sync.json
+scripts/               utilidades (scripts/legacy = migraciones antiguas ya aplicadas)
+```
+
+## Base de datos
+
+- **Primera vez / recargar todo desde `cuentos.json`:** `python scripts/cargar_cuentos_en_db.py`
+- **Después de actualizar el código:** `python scripts/migrar_db.py` (no borra nada; es seguro repetirlo).
+
+### Formato de un cuento en `cuentos.json`
+
+Cada cuento aparece **una sola vez**; sus voces van en `narraciones`:
+
+```json
+{
+  "titulo": "Caperucita Roja",
+  "descripcion": "…",
+  "portada": "/imagenes/portadas/caperucitaroja.jpg",
+  "categoria": "Clásico",
+  "autor": "Charles Perrault",
+  "destacado": true,
+  "preguntas": [{ "p": "¿A quién visitaba?", "opciones": ["…", "…"], "correcta": 1 }],
+  "narraciones": [
+    { "voz": "hombre", "audio": "/imagenes/caperucitaroja/caperucitarojahombre.mp3",
+      "sync": "/imagenes/caperucitaroja/caperucitarojahombre.sync.json" },
+    { "voz": "mujer",  "audio": "/imagenes/caperucitaroja/caperucitarojamujer.mp3",
+      "sync": "/imagenes/caperucitaroja/caperucitarojamujer.sync.json" }
+  ],
+  "escenas": [{ "orden": 1, "texto": "…", "imagen": "/imagenes/caperucitaroja/01.png" }]
+}
+```
+
+## Cómo interactúa el niño con un cuento
+
+- **Escuchar** con voz de hombre o mujer (se cambia sin salir del cuento; se recuerda la elección).
+- **Lo leo yo:** sin narrador; pasa las páginas a su ritmo y puede pedir **Léemelo** desde la página actual.
+- **Tocar una palabra** para escucharla.
+- **Deslizar** con el dedo (o flechas ← → del teclado) para cambiar de página; **espacio** pausa.
+- **Estrellas:** 1 por terminar el cuento, +1 por acertar la mitad del quiz, +1 por acertarlo todo.
+  En la portada se ve el progreso ("X de N cuentos leídos") y una fila de cuentos aún no leídos.
 
 ## Exportar cuentos a TXT (un archivo por cuento, 5 párrafos)
 
