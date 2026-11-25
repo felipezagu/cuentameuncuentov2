@@ -97,6 +97,7 @@ Cada cuento aparece **una sola vez**; sus voces van en `narraciones`:
 
 - **Escuchar** con voz de hombre o mujer (se cambia sin salir del cuento; se recuerda la elección).
 - **Lo leo yo:** sin narrador; pasa las páginas a su ritmo y puede pedir **Léemelo** desde la página actual.
+- **Karaoke palabra a palabra:** las palabras leídas se colorean y la actual se marca en amarillo.
 - **Tocar una palabra** para escucharla.
 - **Deslizar** con el dedo (o flechas ← → del teclado) para cambiar de página; **espacio** pausa.
 - **Estrellas:** 1 por terminar el cuento, +1 por acertar la mitad del quiz, +1 por acertarlo todo.
@@ -105,6 +106,18 @@ Cada cuento aparece **una sola vez**; sus voces van en `narraciones`:
 - **Confeti** al conseguir las 3 estrellas.
 - **Cuento del día** en la portada (el mismo para todos, cambia a medianoche).
 - **App instalable** (PWA): botón "Instalar" en navegadores compatibles; los cuentos ya abiertos se pueden ver sin internet.
+
+## Crea tu cuento (`/crea-tu-cuento`)
+
+El niño elige héroe, amigo, lugar y valor (o aprieta 🎲 *Sorpréndeme*) y recibe un cuento de 5 páginas
+con escena animada, lectura en voz alta con karaoke y 2 preguntas. Los cuentos creados se guardan en el
+navegador ("Mis cuentos creados").
+
+- **Sin configurar nada:** se arma con plantillas (gratis, siempre funciona).
+- **Con IA:** define `ANTHROPIC_API_KEY` en las variables de Railway. Usa Claude Haiku: cada cuento
+  cuesta una fracción de centavo de dólar. `CREA_CUENTO_POR_HORA` y `CREA_CUENTO_MAX_DIA` ponen un
+  tope de gasto; al superarlo, o si la IA falla, se usan las plantillas automáticamente.
+  Con IA aparece además un campo "¿Tienes una idea?" para que el niño proponga algo propio.
 
 ## Imágenes
 

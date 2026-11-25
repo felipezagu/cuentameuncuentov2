@@ -184,7 +184,7 @@ async def robots_txt():
 
 @router.get("/sitemap.xml")
 async def sitemap_xml():
-    urls = [f"{SITE_URL}/" + p for p in ("", "acerca", "contacto", "privacidad", "terminos")]
+    urls = [f"{SITE_URL}/" + p for p in ("", "crea-tu-cuento", "acerca", "contacto", "privacidad", "terminos")]
     db = SessionLocal()
     try:
         urls += [f"{SITE_URL}/cuento/{sid}" for (sid,) in db.query(Story.id).order_by(Story.id)]

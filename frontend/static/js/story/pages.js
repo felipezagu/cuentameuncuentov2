@@ -213,6 +213,7 @@ function ensureNarracionListeners() {
     setReadingUIVisible(true);
     hideStartButtons();
     highlight(currentIndex);
+    startKaraokeLoop();
   });
   narracionAudioEl.addEventListener("ended", function () {
     if (!useRecordedNarration) return;
@@ -456,12 +457,71 @@ function updateMobileKaraokeReadVisibility() {
   });
 }
 
+/**
+ * Karaoke palabra a palabra: las palabras ya leídas quedan coloreadas y la actual se marca.
+ * (Antes solo se agrandaba la frase; currentWordIndex se calculaba pero nunca se pintaba.)
+ */
+function applyWordHighlight(sentenceEl) {
+  const words = sentenceEl.querySelectorAll(".karaoke-word");
+  words.forEach(function (w, i) {
+    w.classList.toggle("kw-read", i < currentWordIndex);
+    w.classList.toggle("kw-on", i === currentWordIndex);
+  });
+}
+
+function setKaraokeWord(wordIdx) {
+  if (wordIdx === currentWordIndex) return;
+  currentWordIndex = wordIdx;
+  const container = document.getElementById("karaoke-container");
+  const el = container && container.querySelector(".karaoke-sentence.current");
+  if (el) applyWordHighlight(el);
+}
+
+/** Con MP3 solo hay tiempos por frase: repartimos la duración según el largo de cada palabra. */
+function recordedWordIndexForTime(t, sentenceIdx) {
+  const segs = narracionSyncData && narracionSyncData.segments;
+  if (!segs || !segs[sentenceIdx]) return 0;
+  const seg = segs[sentenceIdx];
+  const start = typeof seg.startSec === "number" ? seg.startSec : 0;
+  let end = typeof seg.endSec === "number" ? seg.endSec : null;
+  const next = segs[sentenceIdx + 1];
+  if (next && typeof next.startSec === "number" && (end == null || next.startSec < end)) end = next.startSec;
+  if (end == null || end <= start) return 0;
+  const words = String(seg.text || "").trim().split(/\s+/).filter(Boolean);
+  if (!words.length) return 0;
+  const weights = words.map(function (w) { return w.length + 2; });
+  const total = weights.reduce(function (a, b) { return a + b; }, 0);
+  // Pequeño adelanto para que el resaltado no se sienta atrasado respecto a la voz.
+  const f = Math.min(0.999, Math.max(0, (t + 0.12 - start) / (end - start)));
+  let acc = 0;
+  for (let i = 0; i < words.length; i++) {
+    acc += weights[i] / total;
+    if (f < acc) return i;
+  }
+  return words.length - 1;
+}
+
+let _karaokeRaf = null;
+function karaokeTick() {
+  _karaokeRaf = null;
+  if (!useRecordedNarration || !narracionAudioEl || !isPlaying || isPaused || narracionAudioEl.paused) return;
+  onNarracionTimeUpdate();
+  setKaraokeWord(recordedWordIndexForTime(narracionAudioEl.currentTime, currentIndex));
+  _karaokeRaf = requestAnimationFrame(karaokeTick);
+}
+
+function startKaraokeLoop() {
+  if (_karaokeRaf == null) _karaokeRaf = requestAnimationFrame(karaokeTick);
+}
+
 function updateHighlightOnly() {
   const container = document.getElementById("karaoke-container");
   if (!container) return;
 
   container.querySelectorAll(".karaoke-sentence").forEach((el) => el.classList.remove("current"));
-  container.querySelectorAll(".karaoke-word").forEach((el) => el.classList.remove("current"));
+  container
+    .querySelectorAll(".karaoke-word")
+    .forEach((el) => el.classList.remove("current", "kw-on", "kw-read"));
   container.querySelectorAll(".karaoke-strofa").forEach((block) => block.classList.remove("current"));
 
   const active = isPlaying && !isPaused;
@@ -473,7 +533,10 @@ function updateHighlightOnly() {
     const sentenceIndicesOnPage = getSentenceIndicesOnPage(pageIdx);
     const localSentenceIndex = sentenceIndicesOnPage.indexOf(currentIndex);
     const currentSentenceEl = container.querySelector(".karaoke-sentence[data-sentence-index=\"" + localSentenceIndex + "\"]");
-    if (currentSentenceEl) currentSentenceEl.classList.add("current");
+    if (currentSentenceEl) {
+      currentSentenceEl.classList.add("current");
+      applyWordHighlight(currentSentenceEl);
+    }
 
     const sceneIdx = currentIndex >= 0 && currentIndex < sentences.length ? sceneForSentence[currentIndex] : -1;
     const currentBlock = sceneIdx >= 0 ? container.querySelector(".karaoke-strofa[data-scene-index=\"" + sceneIdx + "\"]") : null;

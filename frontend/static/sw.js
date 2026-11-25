@@ -5,7 +5,7 @@
  * - Ilustraciones y sync.json: se guardan al verlos (los cuentos ya abiertos se ven sin internet).
  * - MP3, admin, herramientas y anuncios: siempre red (no se cachean).
  */
-const VERSION = "v2";
+const VERSION = "v3";
 const STATIC_CACHE = "cuc-static-" + VERSION;
 const PAGES_CACHE = "cuc-pages-" + VERSION;
 const MEDIA_CACHE = "cuc-media-" + VERSION;
