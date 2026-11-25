@@ -135,6 +135,39 @@ def merge_voice_duplicates(db: Session) -> int:
     return merged
 
 
+_IMG_EXT_RE = re.compile(r"\.(png|jpe?g)$", re.I)
+
+
+def webp_path(url: str | None) -> str | None:
+    """
+    /imagenes/x/01.png -> /imagenes/x/01.webp si el .webp existe y el original ya no.
+    (Las ilustraciones se convirtieron a WebP: pesan ~8 veces menos.)
+    """
+    if not url or not url.startswith("/imagenes/") or not _IMG_EXT_RE.search(url):
+        return url
+    candidate = _IMG_EXT_RE.sub(".webp", url)
+    original_file = BASE_DIR / url.lstrip("/")
+    if (BASE_DIR / candidate.lstrip("/")).is_file() and not original_file.is_file():
+        return candidate
+    return url
+
+
+def _migrate_image_paths(db: Session) -> int:
+    changed = 0
+    for s in db.query(Story).all():
+        new = webp_path(s.portada)
+        if new != s.portada:
+            s.portada = new
+            changed += 1
+        for e in s.escenas:
+            new = webp_path(e.imagen)
+            if new != e.imagen:
+                e.imagen = new
+                changed += 1
+    db.flush()
+    return changed
+
+
 def init_db() -> None:
     Base.metadata.create_all(bind=engine)
     _add_missing_story_columns()
@@ -142,9 +175,14 @@ def init_db() -> None:
     try:
         moved = _migrate_legacy_narration_columns(db)
         merged = merge_voice_duplicates(db)
+        images = _migrate_image_paths(db)
         db.commit()
-        if moved or merged:
-            print(f"[init_db] narraciones migradas: {moved}, cuentos fusionados: {merged}", flush=True)
+        if moved or merged or images:
+            print(
+                f"[init_db] narraciones migradas: {moved}, cuentos fusionados: {merged}, "
+                f"rutas de imagen a WebP: {images}",
+                flush=True,
+            )
     finally:
         db.close()
 
