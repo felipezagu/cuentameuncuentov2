@@ -105,6 +105,19 @@
         </div>
 
         <div class="pt-2 border-t border-purple-100 mt-2">
+          <h3 class="text-xs sm:text-sm font-semibold text-purple-900 mb-2">Narraciones (MP3 + sync.json)</h3>
+          {% for voz in ["hombre", "mujer"] %}
+          <div class="grid grid-cols-[4.5rem_1fr_1fr] gap-2 items-center mb-1.5">
+            <span class="text-[11px] font-semibold text-purple-900/80 capitalize">{{ voz }}</span>
+            <input type="text" data-narr-voz="{{ voz }}" data-narr-field="audio" placeholder="/imagenes/.../{{ voz }}.mp3"
+                   class="px-2 py-1 rounded-xl border border-purple-100 text-[11px]">
+            <input type="text" data-narr-voz="{{ voz }}" data-narr-field="sync" placeholder="/imagenes/.../{{ voz }}.sync.json"
+                   class="px-2 py-1 rounded-xl border border-purple-100 text-[11px]">
+          </div>
+          {% endfor %}
+        </div>
+
+        <div class="pt-2 border-t border-purple-100 mt-2">
           <div class="flex items-center justify-between mb-2">
             <h3 class="text-xs sm:text-sm font-semibold text-purple-900">Escenas / estrofas</h3>
             <button type="button" id="btn-add-scene"

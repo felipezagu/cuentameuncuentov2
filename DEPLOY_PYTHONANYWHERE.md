@@ -34,14 +34,9 @@ Si `python3.10` no existe, prueba `python3.9` o el que ofrezca tu cuenta.
 
 ```bash
 # Con el venv activado (source venv/bin/activate)
-python -c "from backend.main import init_db; init_db()"
-# Si sale "No module named 'itsdangerous'", instala y repite:
-# pip install itsdangerous
-# python -c "from backend.main import init_db; init_db()"
-
-# Cargar cuentos desde cuentos.json e integrar imágenes:
+# Crea las tablas y carga los cuentos de cuentos.json:
 python scripts/cargar_cuentos_en_db.py
-python scripts/integrar_imagenes_escenas.py
+# Si sale "No module named 'itsdangerous'": pip install itsdangerous y repite.
 ```
 
 ## 5. Configurar la Web app
@@ -132,4 +127,5 @@ Luego configura la Web app (Manual config, Python 3.10), virtualenv, WSGI y Stat
 - **"Error Reloading web app" / sitio se queda cargando:** PythonAnywhere hace un "ping" tras el Reload con timeout de 20 segundos. Si la app tarda más en responder la primera vez, verás ese mensaje. Prueba a abrir la URL en el navegador: a veces la app sí está funcionando y solo la primera carga es lenta. Revisa el **Error log** y el **Server log** (en la pestaña Web) por 502/504 o mensajes "harakiri". La app está preparada para arrancar rápido (el seed de datos se ejecuta en segundo plano).
 - **502 Bad Gateway:** Revisa el **Error log** en la pestaña Web. Suele ser un fallo al importar (falta dependencia o ruta incorrecta en el WSGI).
 - **Static files no cargan:** Comprueba que las rutas en Static files usen tu usuario y que existan las carpetas `frontend/static`, `uploads`, `imagenes`.
-- **Base de datos vacía:** Ejecuta `python -c "from backend.main import init_db; init_db()"`, después `python scripts/cargar_cuentos_en_db.py` y `python scripts/integrar_imagenes_escenas.py` desde la consola con el venv activado.
+- **Base de datos vacía:** Ejecuta `python scripts/cargar_cuentos_en_db.py` desde la consola con el venv activado (crea las tablas y carga `cuentos.json`).
+- **Después de actualizar el código (`git pull`):** ejecuta `python scripts/migrar_db.py` y luego Reload. Es seguro repetirlo: no borra nada, solo crea tablas nuevas y migra datos (p. ej. unifica los cuentos que estaban duplicados por voz; las URLs antiguas redirigen solas).

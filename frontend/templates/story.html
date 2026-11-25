@@ -31,6 +31,7 @@
             type="button"
             id="btn-voice-male"
             class="voice-choice-btn voice-choice-btn--male"
+            aria-pressed="false"
             disabled
           >
             Hombre
@@ -39,6 +40,7 @@
             type="button"
             id="btn-voice-female"
             class="voice-choice-btn voice-choice-btn--female"
+            aria-pressed="false"
             disabled
           >
             Mujer
@@ -205,6 +207,10 @@
 <script>
   window.STORY_ID = {{ story_id }};
 </script>
-<script src="/static/js/story.js?v=39"></script>
+<script src="/static/js/rewards.js?v=1"></script>
+{# Orden importa: state.js declara el estado que usan los demás #}
+{% for f in ["state", "voices", "pages", "player", "quiz", "main", "interact"] %}
+<script src="/static/js/story/{{ f }}.js?v=42"></script>
+{% endfor %}
 {% endblock %}
 

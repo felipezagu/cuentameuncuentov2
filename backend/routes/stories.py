@@ -1,26 +1,33 @@
+"""API pública de cuentos (solo lectura)."""
 import json
 from typing import Any, List
 
 from fastapi import APIRouter, Depends, HTTPException
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 from sqlalchemy.exc import OperationalError
-from sqlalchemy.orm import Session, joinedload
+from sqlalchemy.orm import Session, selectinload
 
 from ..database import get_db
-from ..models import Story
-
+from ..models import Story, StoryAlias
 
 router = APIRouter(prefix="/api/stories", tags=["stories"])
 
 
 class SceneOut(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
     id: int
     orden: int
     texto: str
     imagen: str | None
 
-    class Config:
-        from_attributes = True
+
+class NarrationOut(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    voz: str
+    audio: str
+    sync: str
 
 
 class StoryOut(BaseModel):
@@ -32,12 +39,8 @@ class StoryOut(BaseModel):
     autor: str | None = None
     ambiente: str | None
     destacado: bool
-    narracion_audio: str | None = None
-    narracion_sync: str | None = None
+    narraciones: List[NarrationOut] = []
     num_escenas: int = 0
-
-    class Config:
-        from_attributes = True
 
 
 class StoryDetailOut(StoryOut):
@@ -45,31 +48,32 @@ class StoryDetailOut(StoryOut):
     preguntas: List[Any] | None = None
 
 
+def _story_out(s: Story, cls=StoryOut, **extra):
+    return cls(
+        id=s.id,
+        titulo=s.titulo,
+        descripcion=s.descripcion,
+        portada=s.portada,
+        categoria=s.categoria,
+        autor=s.autor,
+        ambiente=s.ambiente,
+        destacado=bool(s.destacado),
+        narraciones=[NarrationOut.model_validate(n) for n in s.narraciones],
+        num_escenas=len(s.escenas or []),
+        **extra,
+    )
+
+
 @router.get("/", response_model=List[StoryOut])
 def list_stories(db: Session = Depends(get_db)):
     try:
         stories = (
             db.query(Story)
-            .options(joinedload(Story.escenas))
+            .options(selectinload(Story.escenas), selectinload(Story.narraciones))
             .order_by(Story.id)
             .all()
         )
-        return [
-            StoryOut(
-                id=s.id,
-                titulo=s.titulo,
-                descripcion=s.descripcion,
-                portada=s.portada,
-                categoria=s.categoria,
-                autor=getattr(s, "autor", None),
-                ambiente=s.ambiente,
-                destacado=s.destacado,
-                narracion_audio=getattr(s, "narracion_audio", None),
-                narracion_sync=getattr(s, "narracion_sync", None),
-                num_escenas=len(s.escenas or []),
-            )
-            for s in stories
-        ]
+        return [_story_out(s) for s in stories]
     except OperationalError:
         # Si SQLite está bloqueado, devolvemos rápido para que la UI no quede colgada.
         return []
@@ -77,7 +81,10 @@ def list_stories(db: Session = Depends(get_db)):
 
 @router.get("/{story_id}", response_model=StoryDetailOut)
 def get_story(story_id: int, db: Session = Depends(get_db)):
-    story = db.query(Story).filter(Story.id == story_id).first()
+    story = db.get(Story, story_id)
+    if not story:
+        alias = db.get(StoryAlias, story_id)
+        story = db.get(Story, alias.story_id) if alias else None
     if not story:
         raise HTTPException(status_code=404, detail="Cuento no encontrado")
     preguntas = None
@@ -86,19 +93,9 @@ def get_story(story_id: int, db: Session = Depends(get_db)):
             preguntas = json.loads(story.preguntas)
         except (TypeError, json.JSONDecodeError):
             pass
-    return StoryDetailOut(
-        id=story.id,
-        titulo=story.titulo,
-        descripcion=story.descripcion,
-        portada=story.portada,
-        categoria=story.categoria,
-        autor=getattr(story, "autor", None),
-        ambiente=story.ambiente,
-        destacado=story.destacado,
-        narracion_audio=getattr(story, "narracion_audio", None),
-        narracion_sync=getattr(story, "narracion_sync", None),
-        num_escenas=len(story.escenas or []),
-        escenas=story.escenas,
+    return _story_out(
+        story,
+        StoryDetailOut,
+        escenas=[SceneOut.model_validate(e) for e in story.escenas],
         preguntas=preguntas,
     )
-

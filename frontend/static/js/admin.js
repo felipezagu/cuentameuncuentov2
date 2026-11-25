@@ -89,6 +89,23 @@ function updateGoogleImagesLink() {
   link.href = "https://www.google.com/search?tbm=isch&q=" + encodeURIComponent(query);
 }
 
+function fillNarrationInputs(narraciones) {
+  document.querySelectorAll("[data-narr-voz]").forEach((input) => {
+    const n = narraciones.find((x) => x.voz === input.dataset.narrVoz);
+    input.value = n ? n[input.dataset.narrField] || "" : "";
+  });
+}
+
+function readNarrationInputs() {
+  const byVoz = {};
+  document.querySelectorAll("[data-narr-voz]").forEach((input) => {
+    const voz = input.dataset.narrVoz;
+    byVoz[voz] = byVoz[voz] || { voz };
+    byVoz[voz][input.dataset.narrField] = input.value.trim();
+  });
+  return Object.values(byVoz).filter((n) => n.audio && n.sync);
+}
+
 async function loadStoryIntoForm(id) {
   const res = await fetch(`/api/stories/${id}`);
   if (!res.ok) return;
@@ -100,6 +117,8 @@ async function loadStoryIntoForm(id) {
   document.getElementById("story-category-input").value = story.categoria || "";
   document.getElementById("story-featured-input").checked = !!story.destacado;
   updateGoogleImagesLink();
+
+  fillNarrationInputs(story.narraciones || []);
 
   const scenesContainer = document.getElementById("scenes-container");
   scenesContainer.innerHTML = "";
@@ -114,13 +133,17 @@ function addSceneRow(text = "", image = "", order = 1) {
   row.className =
     "flex items-start gap-2 bg-purple-50 rounded-2xl px-2 py-2 border border-purple-100";
   row.innerHTML = `
-    <input type="number" min="1" value="${order}" class="w-14 px-2 py-1 rounded-xl border border-purple-100 text-xs scene-order">
-    <textarea rows="2" class="flex-1 px-2 py-1 rounded-xl border border-purple-100 text-xs scene-text" placeholder="Texto de la escena">${text}</textarea>
+    <input type="number" min="1" class="w-14 px-2 py-1 rounded-xl border border-purple-100 text-xs scene-order">
+    <textarea rows="2" class="flex-1 px-2 py-1 rounded-xl border border-purple-100 text-xs scene-text" placeholder="Texto de la escena"></textarea>
     <div class="flex flex-col gap-1">
-      <input type="text" value="${image}" placeholder="img ruta" class="w-28 px-2 py-1 rounded-xl border border-purple-100 text-[11px] scene-image">
+      <input type="text" placeholder="img ruta" class="w-28 px-2 py-1 rounded-xl border border-purple-100 text-[11px] scene-image">
       <button type="button" class="text-[11px] text-rose-500 hover:underline self-end remove-scene">Quitar</button>
     </div>
   `;
+  // Valores por propiedad (no dentro del HTML) para que comillas o "<" del texto no rompan el formulario.
+  row.querySelector(".scene-order").value = order;
+  row.querySelector(".scene-text").value = text;
+  row.querySelector(".scene-image").value = image;
   row.querySelector(".remove-scene").addEventListener("click", () => {
     row.remove();
   });
@@ -137,6 +160,7 @@ async function saveStory(e) {
     categoria: document.getElementById("story-category-input").value || null,
     ambiente: null,
     destacado: document.getElementById("story-featured-input").checked,
+    narraciones: readNarrationInputs(),
     escenas: [],
   };
 

@@ -632,14 +632,16 @@ body.dark-mode .categoria-btn.active {
   cursor: default;
   transform: none;
   box-shadow: none;
+  opacity: 0.4;
 }
 
-.voice-choice-btn--male:disabled {
+/* Voz elegida (se cambia sin salir de la página) */
+.voice-choice-btn--male.active {
   background: #4f46e5;
   border-color: #4f46e5;
 }
 
-.voice-choice-btn--female:disabled {
+.voice-choice-btn--female.active {
   background: #ec4899;
   border-color: #ec4899;
 }
@@ -1624,7 +1626,8 @@ body.dark-mode .play-status {
 
 /* Tres estrofas por página: bloques con separación clara entre cada una */
 .karaoke-strofa {
-  font-size: inherit;
+  /* Tamaño de letra ajustable con los botones A− / A+ (interact.js) */
+  font-size: calc(100% * var(--cuc-text-scale, 1));
   line-height: 1.7;
   margin-bottom: 0;
   padding: 0.6rem 0.5rem 0.6rem;
@@ -2767,3 +2770,484 @@ body.dark-mode .home-empty {
   color: #cbd5e1 !important;
 }
 
+
+
+/* ==========================================================================
+   Interacción: palabras tocables, modo "Lo leo yo", estrellas
+   ========================================================================== */
+
+.karaoke-word {
+  cursor: pointer;
+  border-radius: 0.3em;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.karaoke-word:hover {
+  background: rgba(251, 191, 36, 0.25);
+}
+
+.karaoke-word--tapped {
+  animation: cuc-word-pop 0.6s ease;
+}
+
+@keyframes cuc-word-pop {
+  0% { background: rgba(251, 191, 36, 0); transform: scale(1); }
+  30% { background: rgba(251, 191, 36, 0.55); transform: scale(1.15); }
+  100% { background: rgba(251, 191, 36, 0); transform: scale(1); }
+}
+
+.karaoke-word--tapped {
+  display: inline-block;
+}
+
+.self-read-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 1rem;
+  padding: 0.55rem 1.25rem;
+  border-radius: 9999px;
+  border: 2px solid rgba(255, 255, 255, 0.6);
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+  font-weight: 800;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.15s ease, transform 0.15s ease;
+}
+
+.self-read-btn:hover {
+  background: rgba(255, 255, 255, 0.25);
+  transform: translateY(-1px);
+}
+
+#countdown-overlay .self-read-btn {
+  display: flex;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* El botón "Léemelo" solo aparece en modo "Lo leo yo"; ahí sobran Silencio y velocidad */
+.story-control-btn-narrate {
+  display: none;
+  background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%);
+}
+
+body.cuc-self-read .story-control-btn-narrate {
+  display: inline-flex;
+}
+
+body.cuc-self-read #btn-pause-main,
+body.cuc-self-read #story-player-dock {
+  display: none !important;
+}
+
+/* En "Lo leo yo" todo el texto de la página se ve igual de grande */
+body.cuc-self-read .story-reading-active .karaoke-sentence {
+  font-size: 1em;
+}
+
+.cuc-toast {
+  position: fixed;
+  left: 50%;
+  bottom: 1.5rem;
+  z-index: 80;
+  transform: translate(-50%, 150%);
+  width: max-content;
+  max-width: calc(100vw - 2rem);
+  text-align: center;
+  padding: 0.65rem 1.2rem;
+  border-radius: 9999px;
+  background: #1e1b4b;
+  color: #fff;
+  font-weight: 800;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.cuc-toast--show {
+  animation: cuc-toast 2.8s ease forwards;
+}
+
+@keyframes cuc-toast {
+  0% { opacity: 0; transform: translate(-50%, 150%); }
+  12% { opacity: 1; transform: translate(-50%, 0); }
+  85% { opacity: 1; transform: translate(-50%, 0); }
+  100% { opacity: 0; transform: translate(-50%, 150%); }
+}
+
+.cuc-stars-earned {
+  text-align: center;
+  margin-bottom: 0.5rem;
+}
+
+.cuc-stars-earned__stars {
+  font-size: 2.4rem;
+  line-height: 1;
+  letter-spacing: 0.15em;
+}
+
+.cuc-star {
+  display: inline-block;
+  color: #d1d5db;
+}
+
+.cuc-star--on {
+  color: #f59e0b;
+  text-shadow: 0 2px 6px rgba(245, 158, 11, 0.45);
+  animation: cuc-star-in 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+@keyframes cuc-star-in {
+  0% { transform: scale(0) rotate(-60deg); opacity: 0; }
+  100% { transform: scale(1) rotate(0); opacity: 1; }
+}
+
+.cuc-stars-earned__label {
+  margin-top: 0.25rem;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #92400e;
+}
+
+/* Home: estrellas en la tarjeta y resumen del álbum */
+.story-card-v2__stars {
+  position: absolute;
+  left: 0.5rem;
+  bottom: 0.5rem;
+  padding: 0.1rem 0.45rem;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.92);
+  color: #f59e0b;
+  font-size: 0.85rem;
+  letter-spacing: 0.05em;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+.home-album {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  max-width: 64rem;
+  margin: 0 auto 0.5rem;
+  padding: 0.75rem 1rem;
+  border-radius: 1rem;
+  background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+  color: #78350f;
+  font-weight: 700;
+}
+
+.home-album__star {
+  font-size: 1.8rem;
+}
+
+.home-album__bar {
+  flex: 1;
+  height: 0.6rem;
+  border-radius: 9999px;
+  background: rgba(120, 53, 15, 0.15);
+  overflow: hidden;
+}
+
+.home-album__fill {
+  height: 100%;
+  background: #f59e0b;
+  border-radius: inherit;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .karaoke-word--tapped,
+  .cuc-star--on,
+  .cuc-toast--show {
+    animation-duration: 0.01s;
+  }
+}
+
+/* Modo oscuro: las tarjetas informativas (bg-white/85) quedaban con texto blanco sobre fondo blanco */
+body.dark-mode .bg-white\/85 {
+  background-color: rgba(15, 23, 42, 0.78) !important;
+  border-color: rgba(148, 163, 184, 0.25) !important;
+}
+
+body.dark-mode .bg-indigo-50\/60,
+body.dark-mode .bg-amber-50\/70,
+body.dark-mode .bg-emerald-50\/70 {
+  background-color: rgba(30, 41, 59, 0.85) !important;
+  border-color: rgba(148, 163, 184, 0.2) !important;
+}
+
+/* Barra de lectura: puntos de página + tamaño de letra */
+.cuc-reading-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin: 0.75rem auto 0;
+}
+
+.cuc-reading-bar.hidden {
+  display: none;
+}
+
+.cuc-page-dots {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.cuc-page-dot {
+  width: 0.8rem;
+  height: 0.8rem;
+  padding: 0;
+  border-radius: 9999px;
+  border: 2px solid rgba(139, 92, 246, 0.7);
+  background: transparent;
+  cursor: pointer;
+  transition: width 0.25s ease, background-color 0.2s ease, transform 0.15s ease;
+}
+
+.cuc-page-dot:hover {
+  transform: scale(1.2);
+}
+
+.cuc-page-dot.is-read {
+  background: rgba(139, 92, 246, 0.45);
+}
+
+.cuc-page-dot.is-current {
+  width: 1.9rem;
+  background: #8b5cf6;
+  border-color: #8b5cf6;
+}
+
+.cuc-page-dot:focus-visible,
+.cuc-font-btn:focus-visible {
+  outline: 3px solid #f59e0b;
+  outline-offset: 2px;
+}
+
+.cuc-font-ctrl {
+  display: inline-flex;
+  border-radius: 9999px;
+  overflow: hidden;
+  border: 2px solid rgba(139, 92, 246, 0.5);
+  background: rgba(255, 255, 255, 0.85);
+}
+
+.cuc-font-btn {
+  min-width: 2.6rem;
+  min-height: 2.2rem;
+  padding: 0 0.6rem;
+  border: none;
+  background: transparent;
+  color: #5b21b6;
+  font-weight: 800;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.cuc-font-btn--big {
+  font-size: 1.1rem;
+  border-left: 2px solid rgba(139, 92, 246, 0.3);
+}
+
+.cuc-font-btn:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+body.dark-mode .cuc-font-ctrl {
+  background: rgba(30, 41, 59, 0.9);
+}
+
+body.dark-mode .cuc-font-btn {
+  color: #e9d5ff;
+}
+
+.cuc-confetti {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 90;
+  pointer-events: none;
+}
+
+/* ==========================================================================
+   Portada: cuento del día, skeleton de carga, tarjetas
+   ========================================================================== */
+
+.home-hero__art.has-story-of-day {
+  min-height: 0;
+}
+
+.home-hero__art.has-story-of-day .home-hero__blob,
+.home-hero__art.has-story-of-day .home-hero__stars {
+  opacity: 0.35;
+}
+
+/* Las estrellas decorativas no deben empujar la tarjeta */
+.home-hero__art.has-story-of-day .home-hero__stars {
+  position: absolute;
+  inset: auto 0 -0.5rem auto;
+  pointer-events: none;
+}
+
+.story-of-day {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  gap: 1rem;
+  width: 100%;
+  max-width: 26rem;
+  padding: 0.9rem;
+  border-radius: 1.5rem;
+  background: rgba(255, 255, 255, 0.16);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  box-shadow: 0 20px 45px rgba(15, 23, 42, 0.35);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  color: #fff;
+  cursor: pointer;
+  animation: story-of-day-in 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+  transition: transform 0.25s ease;
+}
+
+.story-of-day:hover {
+  transform: translateY(-4px) rotate(-0.6deg);
+}
+
+@keyframes story-of-day-in {
+  from { opacity: 0; transform: translateY(18px) scale(0.97); }
+  to { opacity: 1; transform: none; }
+}
+
+.story-of-day__img {
+  width: 7.5rem;
+  aspect-ratio: 3 / 4;
+  object-fit: cover;
+  border-radius: 1rem;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35);
+  flex-shrink: 0;
+}
+
+.story-of-day__body {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.35rem;
+  min-width: 0;
+}
+
+.story-of-day__badge {
+  font-size: 0.7rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 0.2rem 0.55rem;
+  border-radius: 9999px;
+  background: #f59e0b;
+  color: #1f1300;
+}
+
+.story-of-day__title {
+  font-family: "Fredoka", "Nunito", sans-serif;
+  font-size: 1.35rem;
+  font-weight: 700;
+  line-height: 1.15;
+}
+
+.story-of-day__desc {
+  font-size: 0.85rem;
+  line-height: 1.35;
+  opacity: 0.9;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.story-of-day__stars {
+  color: #fcd34d;
+  letter-spacing: 0.08em;
+}
+
+.story-of-day__btn {
+  margin-top: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 9999px;
+  background: linear-gradient(135deg, #22c55e, #16a34a);
+  color: #fff;
+  font-weight: 800;
+  white-space: nowrap;
+  cursor: pointer;
+  box-shadow: 0 8px 18px rgba(22, 163, 74, 0.4);
+}
+
+@media (max-width: 767px) {
+  .story-of-day {
+    max-width: none;
+  }
+  .story-of-day__img {
+    width: 6rem;
+  }
+}
+
+/* Skeleton mientras cargan los cuentos */
+.skeleton {
+  border-radius: 1rem;
+  background: linear-gradient(90deg, rgba(148, 163, 184, 0.18) 25%, rgba(148, 163, 184, 0.35) 50%, rgba(148, 163, 184, 0.18) 75%);
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.3s linear infinite;
+}
+
+.skeleton--title {
+  width: 12rem;
+  height: 1.4rem;
+  margin-bottom: 0.9rem;
+}
+
+.skeleton--card {
+  flex: 0 0 auto;
+  width: 9.5rem;
+  aspect-ratio: 3 / 4;
+}
+
+.home-row--skeleton .home-carousel__track {
+  display: flex;
+  gap: 0.9rem;
+  overflow: hidden;
+}
+
+@keyframes skeleton-shimmer {
+  from { background-position: 200% 0; }
+  to { background-position: -200% 0; }
+}
+
+/* Las portadas aparecen suavemente al cargar */
+.story-card-v2__img {
+  opacity: 0;
+  transition: opacity 0.35s ease, transform 0.4s ease;
+}
+
+.story-card-v2__cover.is-loaded .story-card-v2__img {
+  opacity: 1;
+}
+
+.story-card-v2:hover .story-card-v2__img {
+  transform: scale(1.06);
+}
+
+
+@media (prefers-reduced-motion: reduce) {
+  .story-of-day,
+  .skeleton {
+    animation: none;
+  }
+}
